@@ -5,16 +5,16 @@
 
 <p align="center">
   <a href="https://github.com/your-username/portfolio">
-    <img src="https://img.shields.io/github/stars/your-username/portfolio?style=flat-square" alt="Stars"/>
+    <img src="https://img.shields.io/github/stars/logicbyroshan/portfolio?style=flat-square" alt="Stars"/>
   </a>
   <a href="https://github.com/your-username/portfolio">
-    <img src="https://img.shields.io/github/forks/your-username/portfolio?style=flat-square" alt="Forks"/>
+    <img src="https://img.shields.io/github/forks/logicbyroshan/portfolio?style=flat-square" alt="Forks"/>
   </a>
   <a href="#">
-    <img src="https://img.shields.io/github/repo-size/your-username/portfolio?style=flat-square" alt="Repo Size"/>
+    <img src="https://img.shields.io/github/repo-size/logicbyroshan/portfolio?style=flat-square" alt="Repo Size"/>
   </a>
   <a href="#">
-    <img src="https://img.shields.io/github/last-commit/your-username/portfolio?style=flat-square" alt="Last Commit"/>
+    <img src="https://img.shields.io/github/last-commit/logicbyroshan/portfolio?style=flat-square" alt="Last Commit"/>
   </a>
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="License"/>
@@ -123,15 +123,15 @@ Steps:
 ## 📊 GitHub Stats
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=your-username&repo=portfolio&theme=radical" />
+  <img src="https://github-readme-stats.vercel.app/api/pin/?username=logicbyroshan&repo=portfolio&theme=radical" />
 </p>
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=your-username&show_icons=true&theme=radical" />
+  <img src="https://github-readme-stats.vercel.app/api?username=logicbyroshan&show_icons=true&theme=radical" />
 </p>
 
 <p align="center">
-  <img src="https://streak-stats.demolab.com?user=your-username&theme=radical" />
+  <img src="https://streak-stats.demolab.com?user=logicbyroshan&theme=radical" />
 </p>
 
 ---
