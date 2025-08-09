@@ -1,0 +1,158 @@
+{% load static %} <!-- DYNAMIC: Load Django's static file handler -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- BLOCK: Dynamic page title -->
+    <title>{% block title %}Roshan Damor - Portfolio{% endblock %}</title>
+
+    <!-- DYNAMIC: Global Stylesheet path -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    
+    <!-- BLOCK: For page-specific stylesheets -->
+    {% block extra_css %}{% endblock %}
+
+    <!-- Font Awesome & JS -->
+    <script src="https://kit.fontawesome.com/9da37a3f78.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <!-- DYNAMIC: Global JS path -->
+    <script src="{% static 'js/base.js' %}" defer></script>
+    
+    <!-- BLOCK: For page-specific scripts -->
+    {% block extra_js %}{% endblock %}
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <!-- ======================= HEADER / NAVBAR ======================= -->
+    <header class="site-header">
+        <div class="header-container">
+            <!-- Left Navigation -->
+            <nav class="nav-left">
+                <ul>
+                    <!-- DYNAMIC: URL tags for navigation -->
+                    <li><a href="{% url 'portfolio:home' %}">Home</a></li>
+                    <li><a href="{% url 'portfolio:project_list' %}">Projects</a></li>
+                    <li><a href="{% url 'portfolio:blog_list' %}">Blog</a></li>
+                </ul>
+            </nav>
+
+            <!-- Center Logo -->
+            <div class="nav-center-logo">
+                <a href="{% url 'portfolio:home' %}">
+                    <!-- DYNAMIC: Image path -->
+                    <img src="{% static 'images/logo.png' %}" alt="Roshan Damor Logo">
+                </a>
+            </div>
+
+            <!-- Right Navigation -->
+            <div class="nav-right">
+                <a href="#" id="resume-nav-btn" class="outline-btn">Resume</a>
+                <!-- DYNAMIC: URL with anchor link -->
+                <a href="{% url 'portfolio:home' %}#contact" class="filled-btn">Contact Me</a>
+            </div>
+
+            <!-- Mobile Navigation Toggle -->
+            <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-controls="primary-navigation" aria-expanded="false">
+                <span class="sr-only">Menu</span>
+                <span class="line top"></span>
+                <span class="line middle"></span>
+                <span class="line bottom"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ======================= MAIN PAGE CONTENT ======================= -->
+    <main class="main-container">
+        <!-- BLOCK: All unique page content will be injected here -->
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- ======================= FOOTER ======================= -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-top">
+                <!-- Column 1: About & Socials -->
+                <div class="footer-col-about">
+                    <h3 class="footer-logo">Roshan Damor</h3>
+                    <p>A passionate developer building AI-powered solutions and scalable web applications for a digital-first world.</p>
+                    <ul class="social-icons">
+                        <li><a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a></li>
+                        <li><a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a></li>
+                        <li><a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
+                        <li><a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 2: Quick Links -->
+                <div class="footer-col-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <!-- DYNAMIC: URL tags with anchors -->
+                        <li><a href="{% url 'portfolio:home' %}#about">About Me</a></li>
+                        <li><a href="{% url 'portfolio:home' %}#skills">Skills</a></li>
+                        <li><a href="{% url 'portfolio:experience_list' %}">Experience</a></li>
+                        <li><a href="{% url 'portfolio:home' %}#contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Explore -->
+                <div class="footer-col-links">
+                    <h4>Explore</h4>
+                    <ul>
+                        <li><a href="#">Startups</a></li>
+                        <li><a href="#">Freelance</a></li>
+                        <li><a href="#">Articles</a></li>
+                        <li><a href="#">Personal</a></li>
+                        <li><a href="#">Hobbies</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Resources -->
+                <div class="footer-col-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="{% url 'portfolio:project_list' %}">All Projects</a></li>
+                        <li><a href="{% url 'portfolio:blog_list' %}">All Blogs</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">System Status</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="copyright">&copy; {% now "Y" %} Roshan Damor. All Rights Reserved.</p> <!-- DYNAMIC: Current year -->
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ======================= RESUME MODAL ======================= -->
+    <div id="resume-modal" class="resume-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>My Resume</h3>
+                <button id="close-resume-modal" class="close-btn" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- DYNAMIC: Path to resume preview image -->
+                <img src="{% static 'images/resume_preview.png' %}" alt="Resume Preview">
+            </div>
+            <div class="modal-footer">
+                <!-- DYNAMIC: Path to resume PDF file for download -->
+                <a href="{% static 'documents/Roshan_Damor_Resume.pdf' %}" class="filled-btn" download>
+                    <i class="fas fa-download"></i> Download PDF
+                </a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

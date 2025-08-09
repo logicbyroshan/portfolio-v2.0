@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Skill: {{ skill.title }} - Roshan Damor{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/skill-detail.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/skill-detail.js' %}" defer></script>
+{% endblock %}
+
+
+{% block content %}
+    <main class="main-container">
+
+        <!-- ======================= Breadcrumb Navigation ======================= -->
+        <nav class="breadcrumb" aria-label="Breadcrumb" data-animation="fade-in-up">
+            <ul>
+                <li><a href="{% url 'portfolio:home' %}">Home</a></li>
+                <li><a href="{% url 'portfolio:home' %}#skills">Skills</a></li>
+                <li class="active" aria-current="page">{{ skill.title }}</li>
+            </ul>
+        </nav>
+
+        <div class="detail-page-container">
+            <!-- ======================= Main Content Column ======================= -->
+            <article class="detail-main-content">
+                <header>
+                    <h1 class="skill-title" data-animation="fade-in-up" data-animation-delay="100">{{ skill.title }}</h1>
+                    <p class="skill-summary" data-animation="fade-in-up" data-animation-delay="200">{{ skill.summary }}</p>
+                </header>
+                
+                <!-- Technology Stack Accordion -->
+                <div class="tech-stack-accordion" id="tech-accordion" data-animation="fade-in-up" data-animation-delay="300">
+                    
+                    <!-- DYNAMIC: Loop through the technology details for this skill -->
+                    {% for detail in skill.skilltechnologydetail_set.all %}
+                    <div class="accordion-item card">
+                        <div class="accordion-header">
+                            {% if detail.technology.icon %}
+                                <img src="{{ detail.technology.icon.url }}" alt="{{ detail.technology.name }}" class="tech-icon">
+                            {% endif %}
+                            <h3>{{ detail.technology.name }}</h3>
+                            <i class="fas fa-plus accordion-toggle"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <!-- NOTE: You can add a 'description' field to SkillTechnologyDetail for this paragraph -->
+                            
+                            <!-- NOTE: You would create a Certificate model and link it here -->
+                            <!-- <h5>Certificates:</h5>
+                            <div class="certificate-list">
+                                <a href="#" target="_blank" class="certificate-link">Example Certificate - Coursera</a>
+                            </div> -->
+                            
+                            <h5>Learning Journey:</h5>
+                            <p>{{ detail.learning_journey|linebreaks }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </article>
+
+            <!-- ======================= Sidebar ======================= -->
+            <aside class="detail-sidebar" data-animation="fade-in-up" data-animation-delay="400">
+                <div class="sidebar-card card">
+                    <h3>Skill Summary</h3>
+                    <!-- NOTE: These could be made dynamic by adding fields to the Skill model -->
+                    <ul class="summary-list">
+                        <li><i class="fas fa-star"></i><strong>Proficiency:</strong> Advanced</li>
+                        <li><i class="fas fa-history"></i><strong>Experience:</strong> 3+ Years</li>
+                        <li><i class="fas fa-project-diagram"></i><strong>Projects:</strong> {{ related_projects.count }}+</li>
+                    </ul>
+                </div>
+                <div class="sidebar-card card">
+                    <h3>Related Projects</h3>
+                    <div class="related-items-list">
+                        <!-- DYNAMIC: Loop through related projects from the view -->
+                        {% for project in related_projects %}
+                        <a href="{% url 'portfolio:project_detail' slug=project.slug %}" class="related-item">
+                            <img src="{{ project.cover_image.url }}" alt="{{ project.title }}">
+                            <div class="item-info">
+                                <h5>{{ project.title }}</h5>
+                                <p>{{ project.summary|truncatewords:7 }}</p>
+                            </div>
+                        </a>
+                        {% empty %}
+                            <p>No projects have been tagged with these technologies yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="sidebar-card card">
+                    <h3>My Role</h3>
+                    <div class="author-info">
+                        <img src="{% static 'images/author-avatar.png' %}" alt="Roshan Damor">
+                        <div>
+                            <h4>Roshan Damor</h4>
+                            <p>{{ skill.title }} Specialist</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+{% endblock %}

@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home - Roshan Damor - Portfolio{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/home.js' %}" defer></script>
+{% endblock %}
+
+
+{% block content %}
+    <!-- ========================= 1. HERO SECTION ========================= -->
+    <section class="hero-section portfolio-container">
+        <div class="home-container">
+            <div class="home-content" data-animation="fade-in-up">
+                <p>HIII, IT'S ME</p>
+                <h1>Roshan Damor</h1>
+                <h4>I am a <span id="skill-text">Web Developer</span></h4>
+                <p>GREETINGS, ALL DIGITAL EXPLORERS! I AM ROSHAN, A PASSIONATE AND INNOVATIVE DEVELOPER <b><i>"BUILDING AI-POWERED SOLUTIONS & SCALABLE WEB APPS — SDE & AI ENGINEER"</i></b> </p>
+                <div class="home-btns">
+                    <a href="#about" class="outline-btn">ABOUT ME</a>
+                    <a href="#" id="video-resume-btn" class="outline-btn">VIDEO RESUME</a>
+                </div>
+            </div>
+            <div class="home-hero-image" data-animation="zoom-in">
+                <!-- DYNAMIC: Image path -->
+                <img src="{% static 'images/hero.png' %}" alt="Roshan Damor - Hero Image">
+                <div class="hero-stat-card stat-1 card" data-animation="fade-in" data-animation-delay="200">
+                    <i class="fa-solid fa-briefcase stat-icon"></i>
+                    <div class="stat-text"><div class="stat-number">25+</div><div class="stat-label">Projects</div></div>
+                </div>
+                <div class="hero-stat-card stat-2 card" data-animation="fade-in" data-animation-delay="400">
+                    <i class="fa-solid fa-user-graduate stat-icon"></i>
+                    <div class="stat-text"><div class="stat-number">3+</div><div class="stat-label">Internships</div></div>
+                </div>
+                <div class="hero-stat-card stat-3 card" data-animation="fade-in" data-animation-delay="600">
+                    <i class="fa-solid fa-pen-nib stat-icon"></i>
+                    <div class="stat-text"><div class="stat-number">15+</div><div class="stat-label">Articles</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================= 2. ABOUT ME SECTION ========================= -->
+    <section id="about" class="about-section portfolio-container" data-animation="fade-in">
+        <div class="section-title">
+            <h2>About <span>Me</span></h2>
+            <p>A passionate developer dedicated to building beautiful, functional, and user-centric digital experiences. I thrive on turning complex problems into elegant solutions.</p>
+            <a href="#" class="awesome">Know More <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="about-content card">
+            <div class="services-column">
+                <div class="service-box box-reverse" data-animation="fade-in-right" data-animation-delay="200"><div class="icon-wrapper"><i class="fas fa-code"></i></div><div class="service-text text-reverse"><h4>Web Development</h4><p>Building robust and scalable web applications from front to back.</p></div></div>
+                <div class="service-box box-reverse" data-animation="fade-in-right" data-animation-delay="400"><div class="icon-wrapper"><i class="fas fa-database"></i></div><div class="service-text text-reverse"><h4>Database Management</h4><p>Design & manage databases for efficient data storage and retrieval.</p></div></div>
+                <div class="service-box box-reverse" data-animation="fade-in-right" data-animation-delay="600"><div class="icon-wrapper"><i class="fas fa-palette"></i></div><div class="service-text text-reverse"><h4>UI/UX Design</h4><p>Designing intuitive and engaging interfaces for user journey.</p></div></div>
+            </div>
+            <div class="about-image-wrapper" data-animation="zoom-in">
+                <!-- DYNAMIC: Image paths -->
+                <img src="{% static 'images/about.png' %}" alt="A portrait photo of Roshan Damor" class="about-img-default">
+                <img src="{% static 'images/nee.png' %}" alt="A different portrait photo of Roshan Damor" class="about-img-hover">
+            </div>
+            <div class="services-column">
+                <div class="service-box" data-animation="fade-in-left" data-animation-delay="200"><div class="icon-wrapper"><i class="fas fa-robot"></i></div><div class="service-text"><h4>AI Integration</h4><p>Leveraging ML to create smarter, data-driven applications.</p></div></div>
+                <div class="service-box" data-animation="fade-in-left" data-animation-delay="400"><div class="icon-wrapper"><i class="fas fa-mobile-screen"></i></div><div class="service-text"><h4>Mobile Development</h4><p>Creating responsive and adaptive mobile applications for all devices.</p></div></div>
+                <div class="service-box" data-animation="fade-in-left" data-animation-delay="600"><div class="icon-wrapper"><i class="fas fa-cloud-arrow-up"></i></div><div class="service-text"><h4>DevOps & CI/CD</h4><p>Automating deployment pipelines for efficient and reliable software.</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================= 3. NOW SECTION (Example Static) ========================= -->
+    <section id="now" class="now-section portfolio-container" data-animation="fade-in">
+        <div class="section-title"><h2>What I'm <span>Doing Now</span></h2><p>A real-time look into my current activities, from projects I'm building to skills I'm learning.</p></div>
+        <div class="now-wrapper card">
+            <div class="now-item" data-animation="fade-in-up"><div class="now-item-icon"><i class="fas fa-book-open"></i></div><div class="now-item-content"><h4>Learning Go (Golang)</h4><p>Diving into Go to explore its concurrency model and performance benefits for backend services.</p></div></div>
+            <div class="now-item" data-url="#" data-animation="fade-in-up" data-animation-delay="200"><div class="now-item-icon"><i class="fas fa-wrench"></i></div><div class="now-item-content"><h4>Building a Real-time Chat App</h4><p>Working on a new project using WebSockets and React. Click to see the repo!</p></div></div>
+        </div>
+    </section>
+
+    <!-- ========================= 4. SKILLS SECTION ========================= -->
+    <section id="skills" class="skills-section portfolio-container">
+        <header class="portfolio-header" data-animation="fade-in-up">
+            <div class="head"><h1>My Tech<br><span>Stack</span></h1></div>
+            <p>"From frontend development to backend architectures, I enjoy leveraging the right tools for the job."</p>
+        </header>
+        <div class="cards-container">
+            <!-- DYNAMIC: Looping through skills from the database -->
+            {% for skill in skills %}
+            <a href="{% url 'portfolio:skill_detail' slug=skill.slug %}" class="skill-card card" data-animation="fade-in-up">
+                <div class="skill-header">
+                    <i class="{{ skill.icon }} skill-icon"></i>
+                    <h3>{{ skill.title }}</h3>
+                </div>
+                <p>{{ skill.summary }}</p>
+                <div class="skill-list">
+                    <!-- DYNAMIC: Looping through technologies for each skill -->
+                    {% for tech in skill.technologies.all %}
+                        {% if tech.icon %}
+                        <img src="{{ tech.icon.url }}" alt="{{ tech.name }}" title="{{ tech.name }}">
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ========================= 5. EXPERIENCE SECTION ========================= -->
+    <section id="experience" class="experience-section portfolio-container" data-animation="fade-in">
+        <div class="section-title">
+            <h2>Where I've <span>Worked</span></h2>
+            <p>"A glimpse into my professional journey, contributing to impactful projects and collaborating with talented teams."</p>
+        </div>
+        <div class="experience-wrapper card">
+            <!-- DYNAMIC: Looping through experiences from the database -->
+            {% for exp in experiences %}
+            <a href="{% url 'portfolio:experience_detail' pk=exp.pk %}" class="exp-card" data-animation="fade-in-up">
+                <div class="exp-img">
+                    <!-- Note: Add an image field to your Experience model for logos -->
+                    <img src="https://placehold.co/80x80/010409/eaeaea?text={{ exp.company_name|slice:':2' }}" alt="{{ exp.company_name }} Logo">
+                </div>
+                <div class="exp-details">
+                    <div class="exp-header">
+                        <h3>{{ exp.role }} @ {{ exp.company_name }}</h3>
+                        <!-- DYNAMIC: Date formatting -->
+                        <span>{{ exp.start_date|date:"M Y" }} - {% if exp.end_date %}{{ exp.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
+                    </div>
+                    <p>{{ exp.summary }}</p>
+                    <div class="skills">
+                        {% for tech in exp.technologies.all %}
+                        <span class="teg">{{ tech.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ========================= 6. PROJECTS SECTION ========================= -->
+    <section class="projects-section portfolio-container">
+        <header class="portfolio-header" data-animation="fade-in-up">
+            <div class="head">
+                <h1>Things I've <br><span>Built</span></h1>
+                <!-- DYNAMIC: Link to project list page -->
+                <a href="{% url 'portfolio:project_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <p>"I love turning ideas into reality through code. Each project is a reflection of my skills, problem-solving approach, and creativity."</p>
+        </header>
+        <div class="cards-container">
+            <!-- DYNAMIC: Looping through latest projects -->
+            {% for project in projects %}
+            <div class="project-card card" data-animation="fade-in-up">
+                <a href="{% url 'portfolio:project_detail' slug=project.slug %}" class="project-image">
+                    <img src="{{ project.cover_image.url }}" alt="{{ project.title }}">
+                </a>
+                <div class="project-content">
+                    <h3><a href="{% url 'portfolio:project_detail' slug=project.slug %}">{{ project.title }}</a></h3>
+                    <p>{{ project.summary }}</p>
+                    <div class="skills">
+                        {% for tech in project.technologies.all %}
+                        <span class="teg">{{ tech.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="project-links">
+                    {% if project.github_url %}
+                    <a href="{{ project.github_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i>Github</a>
+                    {% endif %}
+                    {% if project.live_url %}
+                    <a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live Preview</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ========================= 7. ACHIEVEMENTS SECTION (Example Static) ========================= -->
+    <section id="achievements" class="achievements-section portfolio-container" data-animation="fade-in">
+        <div class="section-title"><h2>Achievements & <span>Recognition</span></h2><p>Proud moments and milestones in my journey.</p></div>
+        <div class="achievements-content card">
+            <div class="achievements-column"><div class="achievement-item box-reverse" data-animation="fade-in-right"><div class="icon-wrapper"><i class="fas fa-quote-left"></i></div><div class="achievement-text text-reverse"><h4>Endorsement</h4><p class="endorsement-quote">"Roshan's ability to tackle complex problems is remarkable."</p><span class="endorsement-author">- Jane Doe, Project Manager</span></div></div><div class="achievement-item box-reverse" data-animation="fade-in-right" data-animation-delay="200"><div class="icon-wrapper"><i class="fas fa-medal"></i></div><div class="achievement-text text-reverse"><h4>Top Performer Award</h4><p>Recognized for outstanding contributions in Summer 2023.</p></div></div></div>
+            <div class="achievement-center-icon" data-animation="zoom-in"><i class="fas fa-trophy"></i></div>
+            <div class="achievements-column"><div class="achievement-item" data-animation="fade-in-left"><div class="icon-wrapper"><i class="fas fa-laptop-code"></i></div><div class="achievement-text"><h4>Hackathon Winner</h4><p>1st place in the 'AI for Good' national hackathon.</p></div></div><div class="achievement-item" data-animation="fade-in-left" data-animation-delay="200"><div class="icon-wrapper"><i class="fas fa-graduation-cap"></i></div><div class="achievement-text"><h4>Dean's List Scholar</h4><p>Maintained academic excellence with a GPA of 3.9+.</p></div></div></div>
+        </div>
+    </section>
+
+    <!-- ========================= 8. BLOGS SECTION ========================= -->
+    <section class="blogs-section portfolio-container">
+        <header class="portfolio-header" data-animation="fade-in-up">
+            <div class="head">
+                <h1>Latest I've <br><span>Written</span></h1>
+                <!-- DYNAMIC: Link to blog list page -->
+                <a href="{% url 'portfolio:blog_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <p>"I enjoy sharing insights and experiences through writing. Check out some of my latest posts:"</p>
+        </header>
+        <div class="cards-container">
+            <!-- DYNAMIC: Looping through latest blog posts -->
+            {% for blog in blogs %}
+            <a href="{% url 'portfolio:blog_detail' slug=blog.slug %}" class="blog-card card" data-animation="fade-in-up">
+                <div class="blog-image"><img src="{{ blog.cover_image.url }}" alt="{{ blog.title }}"></div>
+                <div class="blog-content"><h4>{{ blog.title }}</h4><p>{{ blog.summary }}</p></div>
+                <div class="blog-footer">
+                    <div class="publisher">
+                        {% if blog.author_avatar %}
+                        <img src="{{ blog.author_avatar.url }}" alt="{{ blog.author_name }}">
+                        {% endif %}
+                        <span>{{ blog.author_name }}</span>
+                    </div>
+                    <span class="blog-date">{{ blog.created_date|date:"M d, Y" }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ========================= 9. FAQ SECTION ========================= -->
+    <section class="faq-section portfolio-container">
+        <header class="portfolio-header" data-animation="fade-in-up">
+            <div class="head"><h1>Got Some <br><span>Questions?</span></h1></div>
+            <p>"Here are some common questions I get asked. If you have more queries, feel free to reach out!"</p>
+        </header>
+        <div class="card-container">
+            <!-- DYNAMIC: Looping through FAQs from database -->
+            {% for faq in faqs %}
+            <div class="faq-card card" data-animation="fade-in-up">
+                <div class="faq-question"><span>{{ faq.question }}</span><i class="fa-solid fa-plus faq-icon"></i></div>
+                <div class="faq-answer"><p>{{ faq.answer }}</p></div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ========================= 10. CONTACT SECTION ========================= -->
+    <section id="contact" class="contact-section portfolio-container" data-animation="fade-in">
+        <div class="section-title"><h2>Let's Get <span>Connected!</span></h2><p>"Interested in working together or have a question? I’d love to hear from you!"</p></div>
+        <div class="contact-wrapper card">
+            <div class="mail-contact-card">
+                <div class="left-contact-info">
+                    <h3>Contact Information</h3><p>Have a project in mind or just want to say hello? Feel free to reach out.</p>
+                    <ul class="contact-details-list">
+                        <li><i class="fa-solid fa-phone"></i><span>+12 345 678 90</span></li>
+                        <li><i class="fa-solid fa-envelope"></i><span>roshan.damor@example.com</span></li>
+                        <li><i class="fa-solid fa-location-dot"></i><span>Mumbai, India</span></li>
+                    </ul>
+                </div>
+                <div class="right-contact-form">
+                    <form action="#">
+                        <div class="form-group-row"><div class="form-group"><label for="name">Your Name</label><input type="text" name="name" id="name" required></div><div class="form-group"><label for="email">Your Email</label><input type="email" name="email" id="email" required></div></div>
+                        <div class="form-group"><label for="subject">Your Subject</label><input type="text" name="subject" id="subject"></div>
+                        <div class="form-group"><label for="contact-message">Message</label><textarea name="message" id="contact-message" rows="4" required></textarea></div>
+                        <button type="submit" class="outline-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Modal is static HTML, no changes needed unless you want its content dynamic -->
+    <div id="video-modal" class="video-modal">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Video Resume</h3><button id="close-modal-btn" class="close-btn">×</button></div>
+            <div class="video-container"><iframe id="resume-video-iframe" src="https://www.youtube.com/embed/CA8FeXP61OU" title="YouTube video player" frameborder="0" allowfullscreen></iframe></div>
+        </div>
+    </div>
+{% endblock %}

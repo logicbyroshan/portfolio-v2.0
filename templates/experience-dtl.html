@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Experience: {{ experience.role }} - Roshan Damor{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/experience-detail.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/experience-detail.js' %}" defer></script>
+{% endblock %}
+
+
+{% block content %}
+    <main class="main-container">
+
+        <!-- ======================= Breadcrumb Navigation ======================= -->
+        <nav class="breadcrumb" aria-label="Breadcrumb" data-animation="fade-in-up">
+            <ul>
+                <li><a href="{% url 'portfolio:home' %}">Home</a></li>
+                <li><a href="{% url 'portfolio:experience_list' %}">Experience</a></li>
+                <li class="active" aria-current="page">{{ experience.role|truncatechars:30 }}</li>
+            </ul>
+        </nav>
+
+        <div class="detail-page-container">
+            <!-- ======================= Main Content Column ======================= -->
+            <article class="detail-main-content">
+                <header class="detail-page-header" data-animation="fade-in-up" data-animation-delay="100">
+                    <span class="teg">{{ experience.get_experience_type_display }}</span>
+                    <span class="teg"><i class="fa-regular fa-calendar-check"></i>
+                        {{ experience.start_date|date:"M Y" }} - {% if experience.end_date %}{{ experience.end_date|date:"M Y" }}{% else %}Present{% endif %}
+                    </span>
+                </header>
+
+                <h1 class="experience-title" data-animation="fade-in-up" data-animation-delay="200">{{ experience.role }}</h1>
+                <p class="experience-company" data-animation="fade-in-up" data-animation-delay="250">at <strong>{{ experience.company_name }}</strong></p>
+                
+                <!-- NOTE: You can add a cover_image field to your Experience model for a dynamic hero image -->
+                <img class="experience-hero-image" src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1200" alt="Professional office setting" data-animation="zoom-in" data-animation-delay="300">
+                
+                <!-- Main Content Body -->
+                <div class="experience-content-body" data-animation="fade-in-up">
+                    
+                    <!-- DYNAMIC: Render responsibilities from TinyMCE editor -->
+                    <h2>Role & Responsibilities</h2>
+                    {{ experience.responsibilities|safe }}
+                    
+                    <!-- DYNAMIC: Render achievements from TinyMCE editor -->
+                    <h2>Key Achievements & Contributions</h2>
+                    {{ experience.achievements|safe }}
+
+                </div>
+            </article>
+
+            <!-- ======================= Sidebar ======================= -->
+            <aside class="detail-sidebar" data-animation="fade-in-up" data-animation-delay="400">
+                <div class="sidebar-card card">
+                    <h3>Company Info</h3>
+                    <div class="company-info-list">
+                       <!-- DYNAMIC: Button only shows if URL exists -->
+                       {% if experience.company_url %}
+                       <a href="{{ experience.company_url }}" class="filled-btn" target="_blank" rel="noopener noreferrer">
+                           <i clas

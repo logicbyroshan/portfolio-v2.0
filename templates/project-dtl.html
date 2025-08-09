@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Project: {{ project.title }} - Roshan Damor{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/project-detail.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/project-detail.js' %}" defer></script>
+{% endblock %}
+
+
+{% block content %}
+    <main class="main-container">
+
+        <!-- ======================= Breadcrumb Navigation ======================= -->
+        <nav class="breadcrumb" aria-label="Breadcrumb" data-animation="fade-in-up">
+            <ul>
+                <li><a href="{% url 'portfolio:home' %}">Home</a></li>
+                <li><a href="{% url 'portfolio:project_list' %}">Projects</a></li>
+                <li class="active" aria-current="page">{{ project.title|truncatechars:30 }}</li>
+            </ul>
+        </nav>
+
+        <div class="detail-page-container">
+            <!-- ======================= Main Content Column ======================= -->
+            <article class="detail-main-content">
+                <header class="detail-page-header" data-animation="fade-in-up" data-animation-delay="100">
+                    <!-- DYNAMIC: Loop through project categories -->
+                    {% for category in project.categories.all %}
+                        <span class="teg">{{ category.name }}</span>
+                    {% endfor %}
+                    <span class="teg"><i class="fa-regular fa-calendar-check"></i>{{ project.created_date|date:"M d, Y" }}</span>
+                </header>
+
+                <h1 class="project-title" data-animation="fade-in-up" data-animation-delay="200">{{ project.title }}</h1>
+                <p class="project-description" data-animation="fade-in-up" data-animation-delay="300">{{ project.summary }}</p>
+                
+                <!-- Image Slider -->
+                <div class="hero-image-slider" id="project-slider" data-animation="zoom-in" data-animation-delay="400">
+                    <div class="slider-wrapper">
+                        <!-- DYNAMIC: Loop through related project images -->
+                        {% for p_image in project.images.all %}
+                        <div class="slide"><img src="{{ p_image.image.url }}" alt="{{ p_image.caption|default:project.title }}"></div>
+                        {% empty %}
+                        <!-- Fallback if no slider images are uploaded -->
+                        <div class="slide"><img src="{{ project.cover_image.url }}" alt="{{ project.title }}"></div>
+                        {% endfor %}
+                    </div>
+                    {% if project.images.all|length > 1 %}
+                    <button class="slider-btn prev" id="prev-slide" aria-label="Previous Slide"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="slider-btn next" id="next-slide" aria-label="Next Slide"><i class="fa-solid fa-chevron-right"></i></button>
+                    {% endif %}
+                </div>
+                
+                <!-- DYNAMIC: Main Content Body from TinyMCE, marked as 'safe' to render HTML -->
+                <div class="project-content-body" data-animation="fade-in-up">
+                    {{ project.content|safe }}
+                </div>
+            </article>
+
+            <!-- ======================= Sidebar ======================= -->
+            <aside class="detail-sidebar" data-animation="fade-in-up" data-animation-delay="500">
+                <div class="sidebar-card card">
+                    <h3>Project Info</h3>
+                    <div class="project-info-list">
+                       <!-- DYNAMIC: Buttons only show if URLs exist -->
+                       {% if project.github_url %}
+                       <a href="{{ project.github_url }}" class="filled-btn" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> View Source Code</a>
+                       {% endif %}
+                       {% if project.live_url %}
+                       <a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> View Live Site</a>
+                       {% endif %}
+                    </div>
+                </div>
+                <div class="sidebar-card card">
+                    <h3>Tech Stack</h3>
+                    <div class="project-skills-list">
+                        <!-- DYNAMIC: Loop through technologies for this project -->
+                        {% for tech in project.technologies.all %}
+                        <span class="teg">{{ tech.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="sidebar-card card">
+                    <h3>Author</h3>
+                    <div class="author-info">
+                        <img src="{% static 'images/author-avatar.png' %}" alt="Roshan Damor">
+                        <div>
+                            <h4>Roshan Damor</h4>
+                            <p>Full-Stack Developer</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+{% endblock %}

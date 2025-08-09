@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Experience - Roshan Damor{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/experience.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/experience.js' %}" defer></script>
+{% endblock %}
+
+
+{% block content %}
+    <div class="experience-container">
+        <!-- ======================= Page Header ======================= -->
+        <header class="page-header" data-animation="fade-in-up">
+            <h1>My <span>Experience</span></h1>
+            <p>A timeline of my professional journey, highlighting the roles, responsibilities, and skills I've cultivated along the way.</p>
+        </header>
+
+        <!-- ======================= Page Toolbar ======================= -->
+        <div class="page-toolbar" data-animation="fade-in-up" data-animation-delay="200">
+            <div class="categories-scroller">
+                <button class="scroll-btn" id="scroll-left" aria-label="Scroll left"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="categories-list" id="categories-list">
+                    <!-- DYNAMIC: Category links with active state check -->
+                    <a href="{% url 'portfolio:experience_list' %}" class="category-badge {% if not request.GET.category or request.GET.category == 'all' %}active{% endif %}">All</a>
+                    {% for value, label in experience_types %}
+                        <a href="?category={{ value }}" class="category-badge {% if request.GET.category == value %}active{% endif %}">{{ label }}</a>
+                    {% endfor %}
+                </div>
+                <button class="scroll-btn" id="scroll-right" aria-label="Scroll right"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+            <div class="sort-dropdown">
+                <button id="sort-button">Sort By <i class="fa-solid fa-caret-down"></i></button>
+                <ul id="sort-items">
+                    <!-- DYNAMIC: Sorting links -->
+                    <li><a href="?sort=newest{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Newest First</a></li>
+                    <li><a href="?sort=oldest{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Oldest First</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ======================= Experience Cards List ======================= -->
+        <div class="card-container" id="experience-card-container">
+            <!-- DYNAMIC: Loop through paginated experience entries -->
+            {% for exp in experiences %}
+            <a href="{% url 'portfolio:experience_detail' pk=exp.pk %}" class="exp-card card" data-animation="fade-in-up">
+                <div class="exp-img">
+                    <!-- NOTE: Add an 'image' field to your Experience model for company logos -->
+                    <img src="https://placehold.co/80x80/010409/eaeaea?text={{ exp.company_name|slice:':2'|upper }}" alt="{{ exp.company_name }} Logo">
+                </div>
+                <div class="exp-details">
+                    <div class="exp-header">
+                        <h3>{{ exp.role }} @ {{ exp.company_name }}</h3>
+                        <span>{{ exp.start_date|date:"M Y" }} - {% if exp.end_date %}{{ exp.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
+                    </div>
+                    <p>{{ exp.summary }}</p>
+                    <div class="skills">
+                        {% for tech in exp.technologies.all %}
+                        <span class="teg">{{ tech.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+                <p class="no-results-message">No experience entries found.</p>
+            {% endfor %}
+        </div>
+
+        <!-- ======================= Pagination ======================= -->
+        {% if is_paginated %}
+        <nav class="pagination" aria-label="Experience pages">
+            <!-- DYNAMIC: Previous page link -->
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="pagination-btn" aria-label="Previous Page">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+            {% else %}
+                <button class="pagination-btn" disabled><i class="fa-solid fa-arrow-left"></i></button>
+            {% endif %}
+            
+            <!-- DYNAMIC: Page number links -->
+            <div class="page-numbers">
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <a href="#" class="page-number active">{{ num }}</a>
+                    {% else %}
+                        <a href="?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="page-number">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- DYNAMIC: Next page link -->
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="pagination-btn" aria-label="Next Page">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            {% else %}
+                <button class="pagination-btn" disabled><i class="fa-solid fa-arrow-right"></i></button>
+            {% endif %}
+        </nav>
+        {% endif %}
+    </div>
+{% endblock %}
