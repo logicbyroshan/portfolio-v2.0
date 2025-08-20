@@ -1,0 +1,57 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches: [ "main" ]   # change if your default branch is different
+  workflow_dispatch:       # allow manual runs
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Optional: run tests here if you want
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.CPANEL_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Rsync code to server (excluding junk)
+        run: |
+          rsync -az --delete \
+            --exclude=".git" \
+            --exclude=".github" \
+            --exclude="venv" \
+            --exclude="node_modules" \
+            ./ ${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }}:${{ secrets.REMOTE_APP_DIR }}/
+
+      - name: Install deps, migrate, collectstatic, restart
+        env:
+          REMOTE_APP_DIR: ${{ secrets.REMOTE_APP_DIR }}
+          REMOTE_VENV_ACTIVATE: ${{ secrets.REMOTE_VENV_ACTIVATE }}
+          # If you want to pass any extra envs temporarily, add here, but prefer cPanel env vars.
+        run: |
+          ssh "${{ secrets.CPANEL_USER }}"@"${{ secrets.CPANEL_HOST }}" bash -lc "
+            set -e
+            cd \"$REMOTE_APP_DIR\"
+            # Ensure passenger_wsgi.py exists (replace the default once)
+            if [ ! -f passenger_wsgi.py ] && [ -f passenger_wsgi.py.example ]; then cp passenger_wsgi.py.example passenger_wsgi.py; fi
+
+            source \"$REMOTE_VENV_ACTIVATE\"
+            python -m pip install --upgrade pip setuptools wheel
+            pip install -r requirements.txt
+
+            # Run Django management commands
+            python manage.py migrate --noinput
+            python manage.py collectstatic --noinput
+
+            # Restart Passenger
+            mkdir -p tmp
+            touch tmp/restart.txt
+          "

@@ -1,13 +1,19 @@
 from django.urls import path
 from .views import (
+    # Page Views
     HomeView,
     ProjectListView, ProjectDetailView,
     BlogListView, BlogDetailView,
     ExperienceListView, ExperienceDetailView,
     SkillDetailView,
+
+    # Form/API Views
+    ContactSubmissionView,
+    NewsletterSubscribeHomeView,
+    NewsletterSubscribeAjaxView
 )
 
-app_name = 'portfolio'  # Namespacing for clarity
+app_name = 'portfolio'
 
 urlpatterns = [
     # Home Page
@@ -27,4 +33,9 @@ urlpatterns = [
     
     # Skill Detail Page
     path('skills/<slug:slug>/', SkillDetailView.as_view(), name='skill_detail'),
+
+    # Form Submission URLs
+    path('contact-submit/', ContactSubmissionView.as_view(), name='contact_submit'),
+    path('subscribe-home/', NewsletterSubscribeHomeView.as_view(), name='subscribe_home'),
+    path('subscribe/', NewsletterSubscribeAjaxView.as_view(), name='subscribe_ajax'),
 ]

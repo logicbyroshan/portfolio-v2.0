@@ -4,11 +4,11 @@
 {% block title %}Blog: {{ blog.title }} - Roshan Damor{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/blog-detail.css' %}">
+    <link rel="stylesheet" href="{% static 'css/blog-dtl.css' %}">
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static 'js/blog-detail.js' %}" defer></script>
+    <script src="{% static 'js/blog-dtl.js' %}" defer></script>
 {% endblock %}
 
 
@@ -50,10 +50,15 @@
                     <!-- DYNAMIC: Comment count -->
                     <h2 data-animation="fade-in-up">Comments ({{ comments.count }})</h2>
                     
-                    <!-- New Comment Form (Form handling would be added in views.py for POST requests) -->
-                    <form class="comment-form card" data-animation="fade-in-up">
+                    <!-- UPDATED: Comment Form with name/email fields and CSRF token -->
+                    <form class="comment-form card" id="comment-form" method="post" action="" data-animation="fade-in-up">
+                        {% csrf_token %}
                         <img src="{% static 'images/default_avatar.png' %}" alt="Your Avatar" class="comment-avatar">
                         <div class="form-content">
+                            <div class="comment-form-fields">
+                                <input type="text" name="name" placeholder="Your Name" required>
+                                <input type="email" name="email" placeholder="Your Email" required>
+                            </div>
                             <textarea name="body" placeholder="Join the discussion..." rows="3" required></textarea>
                             <button type="submit" class="filled-btn">Post Comment</button>
                         </div>
@@ -136,4 +141,23 @@
             </aside>
         </div>
     </main>
+    <!-- ======================= NEW: Subscribe Modal ======================= -->
+    <div class="subscribe-modal" id="subscribe-modal">
+        <div class="modal-content card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <div class="modal-header">
+                <h3 id="modal-title">Subscribe to Comment</h3>
+                <button id="close-subscribe-modal" class="close-btn" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>To keep the discussion valuable, please subscribe to my newsletter to post a comment. No spam, I promise!</p>
+                <form class="subscribe-form-modal" id="subscribe-form-modal">
+                    <!-- This CSRF token is read by JavaScript for the AJAX request -->
+                    {% csrf_token %}
+                    <input type="email" id="modal-email-input" placeholder="Enter your email..." required>
+                    <button type="submit" class="filled-btn">Subscribe</button>
+                </form>
+                <p class="modal-message" id="modal-message"></p>
+            </div>
+        </div>
+    </div>
 {% endblock %}

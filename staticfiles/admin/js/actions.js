@@ -1,4 +1,4 @@
-/*global gettext, interpolate, ngettext, Actions*/
+/*global gettext, interpolate, ngettext*/
 'use strict';
 {
     function show(selector) {
@@ -156,7 +156,7 @@
             });
         });
 
-        document.querySelector('#changelist-form button[name=index]').addEventListener('click', function(event) {
+        document.querySelector('#changelist-form button[name=index]').addEventListener('click', function() {
             if (list_editable_changed) {
                 const confirmed = confirm(gettext("You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost."));
                 if (!confirmed) {
@@ -179,9 +179,6 @@
                 }
             });
         }
-        // Sync counter when navigating to the page, such as through the back
-        // button.
-        window.addEventListener('pageshow', (event) => updateCounter(actionCheckboxes, options));
     };
 
     // Call function fn when the DOM is loaded and ready. If it is already

@@ -1,91 +1,101 @@
+from django.http import JsonResponse, HttpResponseRedirect
+from django.urls import reverse
+from django.contrib import messages
+from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
-from .models import Skill, Experience, Project, Blog, FAQ, Category, Technology
+
+# Import all models from your models.py
+from .models import (
+    Skill, Experience, Project, Blog, FAQ, Category, Technology, 
+    NewsletterSubscriber, Comment, Service, Achievement, NowItem, 
+    SiteConfiguration, Resume, VideoResume
+)
+
+# Import all forms from your forms.py
+from .forms import ContactForm, NewsletterForm
+
 
 # =========================================================================
 # HOME PAGE VIEW
 # =========================================================================
-
 class HomeView(TemplateView):
-    """
-    View for the homepage. Gathers context from multiple models.
-    """
+    """View for the homepage. Gathers context from multiple models."""
     template_name = 'home.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Fetching data for various sections of the homepage
-        context['skills'] = Skill.objects.all()
-        context['experiences'] = Experience.objects.order_by('-start_date')[:2] # Show latest 2
-        context['projects'] = Project.objects.order_by('-created_date')[:3]   # Show latest 3
-        context['blogs'] = Blog.objects.order_by('-created_date')[:3]         # Show latest 3
-        context['faqs'] = FAQ.objects.order_by('order')[:5]
-        return context
+        
+        # Using try-except blocks for singleton models is safer in case they haven't been created yet.
+        try:
+            context['config'] = SiteConfiguration.objects.get()
+            context['resume'] = Resume.objects.get()
+            context['video_resume'] = VideoResume.objects.get()
+        except (SiteConfiguration.DoesNotExist, Resume.DoesNotExist, VideoResume.DoesNotExist):
+            # Provide default empty objects if singletons don't exist yet
+            context['config'] = None # Using None is often better than an empty dict
+            context['resume'] = None
+            context['video_resume'] = None
 
+        # =================================================================
+        # NEW & UPDATED: Services with Dynamic Animation Delay
+        # =================================================================
+        services = Service.objects.order_by('order')
+        services_col1 = list(services[:2]) # Convert queryset slice to list
+        services_col2 = list(services[2:4])
+
+        # Add the calculated delay to each service object in the first column
+        for i, service in enumerate(services_col1):
+            service.animation_delay = (i + 1) * 200 # Results in 200, 400, 600
+
+        for i, service in enumerate(services_col2):
+            service.animation_delay = (i + 1) * 200 # Results in 200, 400, 600
+        
+        context['services_col1'] = services_col1
+        context['services_col2'] = services_col2
+
+        now_items = list(NowItem.objects.order_by('order')[:3]) # Convert to list to modify
+        for i, item in enumerate(now_items):
+            item.animation_delay = i * 200 # Results in 0, 200, 400
+        context['now_items'] = now_items
+
+        achievements = Achievement.objects.order_by('order')
+        achievements_col1 = list(achievements[:2])
+        achievements_col2 = list(achievements[2:4])
+
+        for i, achievement in enumerate(achievements_col1):
+            achievement.animation_delay = i * 200 # Results in 0, 200
+        
+        for i, achievement in enumerate(achievements_col2):
+            achievement.animation_delay = i * 200 # Results in 0, 200
+        
+        context['achievements_col1'] = achievements_col1
+        context['achievements_col2'] = achievements_col2
+        # =================================================================
+        # Fetch data for the rest of the homepage sections
+        # =================================================================
+        context['skills'] = Skill.objects.all()
+        context['experiences'] = Experience.objects.order_by('-start_date')[:2]
+        context['projects'] = Project.objects.order_by('-created_date')[:3]
+        context['blogs'] = Blog.objects.order_by('-created_date')[:3]
+        context['faqs'] = FAQ.objects.order_by('order')
+        
+        return context
 
 # =========================================================================
 # PROJECT VIEWS
 # =========================================================================
-
 class ProjectListView(ListView):
-    """
-    View for the main projects list page with filtering and pagination.
-    """
+    """View for the main projects list page with filtering and pagination."""
     model = Project
     template_name = 'projects.html'
     context_object_name = 'projects'
-    paginate_by = 6 # Show 6 projects per page
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        
-        # Filtering by category
-        category_slug = self.request.GET.get('category')
-        if category_slug and category_slug != 'all':
-            queryset = queryset.filter(categories__slug=category_slug)
-        
-        # Sorting
-        sort_by = self.request.GET.get('sort', 'newest') # Default to newest
-        if sort_by == 'oldest':
-            queryset = queryset.order_by('created_date')
-        else: # 'newest'
-            queryset = queryset.order_by('-created_date')
-            
-        return queryset.distinct()
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
-        return context
-
-class ProjectDetailView(DetailView):
-    """
-    View for a single project detail page.
-    """
-    model = Project
-    template_name = 'project-detail.html'
-    context_object_name = 'project'
-    slug_field = 'slug'
-    slug_url_kwarg = 'slug'
-
-
-# =========================================================================
-# BLOG VIEWS
-# =========================================================================
-
-class BlogListView(ListView):
-    """
-    View for the main blog list page with filtering and pagination.
-    """
-    model = Blog
-    template_name = 'blogs.html'
-    context_object_name = 'blogs'
     paginate_by = 6
 
     def get_queryset(self):
         queryset = super().get_queryset()
         category_slug = self.request.GET.get('category')
         if category_slug and category_slug != 'all':
-            queryset = queryset.filter(categories__slug=category_slug)
+            queryset = queryset.filter(categories__slug=category_slug, categories__category_type='PRO')
         
         sort_by = self.request.GET.get('sort', 'newest')
         if sort_by == 'oldest':
@@ -97,15 +107,51 @@ class BlogListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
+        context['categories'] = Category.objects.filter(category_type=Category.CategoryType.PROJECT)
+        return context
+
+class ProjectDetailView(DetailView):
+    """View for a single project detail page."""
+    model = Project
+    template_name = 'project-dtl.html'
+    context_object_name = 'project'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+
+# =========================================================================
+# BLOG VIEWS
+# =========================================================================
+class BlogListView(ListView):
+    """View for the main blog list page with filtering and pagination."""
+    model = Blog
+    template_name = 'blogs.html'
+    context_object_name = 'blogs'
+    paginate_by = 6
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category_slug = self.request.GET.get('category')
+        if category_slug and category_slug != 'all':
+            queryset = queryset.filter(categories__slug=category_slug, categories__category_type='BLG')
+        
+        sort_by = self.request.GET.get('sort', 'newest')
+        if sort_by == 'oldest':
+            queryset = queryset.order_by('created_date')
+        else:
+            queryset = queryset.order_by('-created_date')
+            
+        return queryset.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.filter(category_type=Category.CategoryType.BLOG)
         return context
 
 class BlogDetailView(DetailView):
-    """
-    View for a single blog post, including comments and suggested posts.
-    """
+    """Handles GET for viewing and POST for commenting."""
     model = Blog
-    template_name = 'blog-detail.html'
+    template_name = 'blog-dtl.html'
     context_object_name = 'blog'
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
@@ -113,11 +159,7 @@ class BlogDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         post = self.get_object()
-        
-        # Fetch approved comments for the post
         context['comments'] = post.comments.filter(is_approved=True)
-        
-        # Fetch suggested posts from the same category, excluding the current one
         post_categories = post.categories.all()
         context['suggested_posts'] = Blog.objects.filter(categories__in=post_categories)\
                                                  .exclude(pk=post.pk)\
@@ -125,23 +167,41 @@ class BlogDetailView(DetailView):
                                                  .order_by('-created_date')[:2]
         return context
 
+    def post(self, request, *args, **kwargs):
+        post = self.get_object()
+        author_name = request.POST.get('name')
+        email = request.POST.get('email')
+        body = request.POST.get('body')
+
+        redirect_url = reverse('portfolio:blog_detail', kwargs={'slug': post.slug}) + '#comments'
+        response = HttpResponseRedirect(redirect_url)
+
+        if author_name and email and body:
+            if NewsletterSubscriber.objects.filter(email=email).exists():
+                Comment.objects.create(post=post, author_name=author_name, body=body)
+                messages.success(request, "Your comment has been posted and is awaiting approval.")
+                response.set_cookie('is_subscriber', 'true', max_age=31536000)
+            else:
+                messages.error(request, "You must be subscribed to comment. Please subscribe first.")
+        else:
+            messages.error(request, "Please fill in all the required fields to comment.")
+            
+        return response
+
 
 # =========================================================================
 # EXPERIENCE VIEWS
 # =========================================================================
-
 class ExperienceListView(ListView):
-    """
-    View for the main experience list page.
-    """
+    """View for the main experience list page."""
     model = Experience
     template_name = 'experience.html'
     context_object_name = 'experiences'
-    paginate_by = 4 # Fewer items as they take more vertical space
+    paginate_by = 4
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        exp_type = self.request.GET.get('category') # e.g., 'FT', 'IN'
+        exp_type = self.request.GET.get('category')
         if exp_type and exp_type != 'all':
             queryset = queryset.filter(experience_type=exp_type)
 
@@ -159,9 +219,7 @@ class ExperienceListView(ListView):
         return context
 
 class ExperienceDetailView(DetailView):
-    """
-    View for a single experience detail page.
-    """
+    """View for a single experience dtl page."""
     model = Experience
     template_name = 'experience-detail.html'
     context_object_name = 'experience'
@@ -170,13 +228,10 @@ class ExperienceDetailView(DetailView):
 # =========================================================================
 # SKILL DETAIL VIEW
 # =========================================================================
-
 class SkillDetailView(DetailView):
-    """
-    View for a single skill detail page, showing related projects.
-    """
+    """View for a single skill dtl page, showing related projects."""
     model = Skill
-    template_name = 'skill-detail.html'
+    template_name = 'skill-dtl.html'
     context_object_name = 'skill'
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
@@ -184,12 +239,53 @@ class SkillDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         skill = self.get_object()
-        
-        # Fetch all technologies associated with this skill
         skill_technologies = skill.technologies.all()
-        
-        # Fetch projects that use any of these technologies
         context['related_projects'] = Project.objects.filter(technologies__in=skill_technologies)\
                                                       .distinct()\
                                                       .order_by('-created_date')[:2]
         return context
+
+
+# =========================================================================
+# FORM HANDLING & API-LIKE VIEWS
+# =========================================================================
+class ContactSubmissionView(View):
+    """Handles the submission of the main contact form."""
+    def post(self, request, *args, **kwargs):
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Thank you for your message! I'll get back to you soon.")
+        else:
+            messages.error(request, "There was an error. Please check the fields and try again.")
+        return redirect(reverse('portfolio:home') + '#contact')
+
+class NewsletterSubscribeHomeView(View):
+    """Handles the submission of the newsletter form on the homepage."""
+    def post(self, request, *args, **kwargs):
+        form = NewsletterForm(request.POST)
+        if form.is_valid():
+            subscriber, created = NewsletterSubscriber.objects.get_or_create(email=form.cleaned_data['email'])
+            if created:
+                messages.success(request, "Thanks for subscribing!")
+            else:
+                messages.info(request, "You are already subscribed!")
+        else:
+            messages.error(request, "Please provide a valid email address.")
+        return redirect(reverse('portfolio:home') + '#blogs')
+
+class NewsletterSubscribeAjaxView(View):
+    """Handles AJAX requests for newsletter subscriptions from the modal."""
+    def post(self, request, *args, **kwargs):
+        email = request.POST.get('email')
+        if not email or '@' not in email or '.' not in email:
+            return JsonResponse({'success': False, 'message': 'Please enter a valid email address.'}, status=400)
+        
+        subscriber, created = NewsletterSubscriber.objects.get_or_create(email=email)
+        
+        if created:
+            message = 'Thank you for subscribing!'
+        else:
+            message = 'You are already subscribed!'
+            
+        return JsonResponse({'success': True, 'message': message})

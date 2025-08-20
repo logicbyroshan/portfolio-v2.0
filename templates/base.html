@@ -6,23 +6,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- BLOCK: Dynamic page title -->
     <title>{% block title %}Roshan Damor - Portfolio{% endblock %}</title>
 
-    <!-- DYNAMIC: Global Stylesheet path -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
     {% block extra_css %}{% endblock %}
-
-    <!-- Font Awesome & JS -->
+    {% block extra_js %}{% endblock %}
     <script src="https://kit.fontawesome.com/9da37a3f78.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     
-    <!-- DYNAMIC: Global JS path -->
     <script src="{% static 'js/base.js' %}" defer></script>
-    
-    <!-- BLOCK: For page-specific scripts -->
-    {% block extra_js %}{% endblock %}
 </head>
 <body>
     <div id="particles-js"></div>

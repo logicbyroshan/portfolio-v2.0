@@ -17,29 +17,30 @@
     <section class="hero-section portfolio-container">
         <div class="home-container">
             <div class="home-content" data-animation="fade-in-up">
-                <p>HIII, IT'S ME</p>
-                <h1>Roshan Damor</h1>
-                <h4>I am a <span id="skill-text">Web Developer</span></h4>
-                <p>GREETINGS, ALL DIGITAL EXPLORERS! I AM ROSHAN, A PASSIONATE AND INNOVATIVE DEVELOPER <b><i>"BUILDING AI-POWERED SOLUTIONS & SCALABLE WEB APPS — SDE & AI ENGINEER"</i></b> </p>
+                <!-- DYNAMIC: from SiteConfiguration model -->
+                <p>{{ config.hero_greeting }}</p>
+                <h1>{{ config.hero_name }}</h1>
+                <h4>I am a "<span id="skill-text">{{ config.hero_tagline|safe }}</span>"</h4>
+                <p>{{ config.hero_bio|safe }}</p>
                 <div class="home-btns">
-                    <a href="#about" class="outline-btn">ABOUT ME</a>
+                    <a href="#about" class="filled-btn">ABOUT ME</a>
                     <a href="#" id="video-resume-btn" class="outline-btn">VIDEO RESUME</a>
                 </div>
             </div>
             <div class="home-hero-image" data-animation="zoom-in">
-                <!-- DYNAMIC: Image path -->
                 <img src="{% static 'images/hero.png' %}" alt="Roshan Damor - Hero Image">
+                <!-- DYNAMIC: Stats from SiteConfiguration model -->
                 <div class="hero-stat-card stat-1 card" data-animation="fade-in" data-animation-delay="200">
                     <i class="fa-solid fa-briefcase stat-icon"></i>
-                    <div class="stat-text"><div class="stat-number">25+</div><div class="stat-label">Projects</div></div>
+                    <div class="stat-text"><div class="stat-number">{{ config.hero_projects_stat }}</div><div class="stat-label">Projects</div></div>
                 </div>
                 <div class="hero-stat-card stat-2 card" data-animation="fade-in" data-animation-delay="400">
                     <i class="fa-solid fa-user-graduate stat-icon"></i>
-                    <div class="stat-text"><div class="stat-number">3+</div><div class="stat-label">Internships</div></div>
+                    <div class="stat-text"><div class="stat-number">{{ config.hero_internships_stat }}</div><div class="stat-label">Internships</div></div>
                 </div>
                 <div class="hero-stat-card stat-3 card" data-animation="fade-in" data-animation-delay="600">
                     <i class="fa-solid fa-pen-nib stat-icon"></i>
-                    <div class="stat-text"><div class="stat-number">15+</div><div class="stat-label">Articles</div></div>
+                    <div class="stat-text"><div class="stat-number">{{ config.hero_articles_stat }}</div><div class="stat-label">Articles</div></div>
                 </div>
             </div>
         </div>
@@ -48,37 +49,63 @@
     <!-- ========================= 2. ABOUT ME SECTION ========================= -->
     <section id="about" class="about-section portfolio-container" data-animation="fade-in">
         <div class="section-title">
-            <h2>About <span>Me</span></h2>
-            <p>A passionate developer dedicated to building beautiful, functional, and user-centric digital experiences. I thrive on turning complex problems into elegant solutions.</p>
+            <!-- DYNAMIC: Title and description from SiteConfiguration -->
+            <h2>{{ config.about_title|safe }}</h2>
+            <p>{{ config.about_description }}</p>
             <a href="#" class="awesome">Know More <i class="fa-solid fa-arrow-right"></i></a>
         </div>
         <div class="about-content card">
+            <!-- DYNAMIC: Loop through the first column of services -->
             <div class="services-column">
-                <div class="service-box box-reverse" data-animation="fade-in-right" data-animation-delay="200"><div class="icon-wrapper"><i class="fas fa-code"></i></div><div class="service-text text-reverse"><h4>Web Development</h4><p>Building robust and scalable web applications from front to back.</p></div></div>
-                <div class="service-box box-reverse" data-animation="fade-in-right" data-animation-delay="400"><div class="icon-wrapper"><i class="fas fa-database"></i></div><div class="service-text text-reverse"><h4>Database Management</h4><p>Design & manage databases for efficient data storage and retrieval.</p></div></div>
-                <div class="service-box box-reverse" data-animation="fade-in-right" data-animation-delay="600"><div class="icon-wrapper"><i class="fas fa-palette"></i></div><div class="service-text text-reverse"><h4>UI/UX Design</h4><p>Designing intuitive and engaging interfaces for user journey.</p></div></div>
+                {% for service in services_col1 %}
+                <!-- CORRECTED: Use the pre-calculated animation_delay -->
+                <div class="service-box box-reverse" data-animation="fade-in-right" data-animation-delay="{{ service.animation_delay }}">
+                    <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
+                    <div class="service-text text-reverse"><h4>{{ service.title }}</h4><p>{{ service.description }}</p></div>
+                </div>
+                {% endfor %}
             </div>
             <div class="about-image-wrapper" data-animation="zoom-in">
-                <!-- DYNAMIC: Image paths -->
                 <img src="{% static 'images/about.png' %}" alt="A portrait photo of Roshan Damor" class="about-img-default">
                 <img src="{% static 'images/nee.png' %}" alt="A different portrait photo of Roshan Damor" class="about-img-hover">
             </div>
+            <!-- DYNAMIC: Loop through the second column of services -->
             <div class="services-column">
-                <div class="service-box" data-animation="fade-in-left" data-animation-delay="200"><div class="icon-wrapper"><i class="fas fa-robot"></i></div><div class="service-text"><h4>AI Integration</h4><p>Leveraging ML to create smarter, data-driven applications.</p></div></div>
-                <div class="service-box" data-animation="fade-in-left" data-animation-delay="400"><div class="icon-wrapper"><i class="fas fa-mobile-screen"></i></div><div class="service-text"><h4>Mobile Development</h4><p>Creating responsive and adaptive mobile applications for all devices.</p></div></div>
-                <div class="service-box" data-animation="fade-in-left" data-animation-delay="600"><div class="icon-wrapper"><i class="fas fa-cloud-arrow-up"></i></div><div class="service-text"><h4>DevOps & CI/CD</h4><p>Automating deployment pipelines for efficient and reliable software.</p></div></div>
+                {% for service in services_col2 %}
+                <!-- CORRECTED: Use the pre-calculated animation_delay -->
+                <div class="service-box" data-animation="fade-in-left" data-animation-delay="{{ service.animation_delay }}">
+                    <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
+                    <div class="service-text"><h4>{{ service.title }}</h4><p>{{ service.description }}</p></div>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
 
-    <!-- ========================= 3. NOW SECTION (Example Static) ========================= -->
+    <!-- ========================= 3. NOW SECTION ========================= -->
     <section id="now" class="now-section portfolio-container" data-animation="fade-in">
-        <div class="section-title"><h2>What I'm <span>Doing Now</span></h2><p>A real-time look into my current activities, from projects I'm building to skills I'm learning.</p></div>
+        <div class="section-title">
+            <h2>{{ config.now_title|safe }}</h2>
+            <p>{{ config.now_description }}</p>
+        </div>
         <div class="now-wrapper card">
-            <div class="now-item" data-animation="fade-in-up"><div class="now-item-icon"><i class="fas fa-book-open"></i></div><div class="now-item-content"><h4>Learning Go (Golang)</h4><p>Diving into Go to explore its concurrency model and performance benefits for backend services.</p></div></div>
-            <div class="now-item" data-url="#" data-animation="fade-in-up" data-animation-delay="200"><div class="now-item-icon"><i class="fas fa-wrench"></i></div><div class="now-item-content"><h4>Building a Real-time Chat App</h4><p>Working on a new project using WebSockets and React. Click to see the repo!</p></div></div>
+            <!-- DYNAMIC: Looping through 'Now' items -->
+            {% for item in now_items %}
+                <!-- CORRECTED: Use the pre-calculated animation_delay from the view -->
+                <div class="now-item" {% if item.url %}data-url="{{ item.url }}"{% endif %} 
+                    data-animation="fade-in-up" 
+                    data-animation-delay="{{ item.animation_delay }}">
+                    
+                    <div class="now-item-icon"><i class="{{ item.icon }}"></i></div>
+                    <div class="now-item-content">
+                        <h4>{{ item.title }}</h4>
+                        <p>{{ item.description }}</p>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </section>
+
 
     <!-- ========================= 4. SKILLS SECTION ========================= -->
     <section id="skills" class="skills-section portfolio-container">
@@ -94,7 +121,7 @@
                     <i class="{{ skill.icon }} skill-icon"></i>
                     <h3>{{ skill.title }}</h3>
                 </div>
-                <p>{{ skill.summary }}</p>
+                <p>{{ skill.summary|truncatewords:20 }}</p>
                 <div class="skill-list">
                     <!-- DYNAMIC: Looping through technologies for each skill -->
                     {% for tech in skill.technologies.all %}
@@ -179,13 +206,44 @@
         </div>
     </section>
 
-    <!-- ========================= 7. ACHIEVEMENTS SECTION (Example Static) ========================= -->
+    <!-- ========================= 7. ACHIEVEMENTS SECTION ========================= -->
     <section id="achievements" class="achievements-section portfolio-container" data-animation="fade-in">
-        <div class="section-title"><h2>Achievements & <span>Recognition</span></h2><p>Proud moments and milestones in my journey.</p></div>
+        <div class="section-title">
+            <h2>Achievements & <span>Recognition</span></h2>
+            <p>Proud moments and milestones in my journey.</p>
+        </div>
         <div class="achievements-content card">
-            <div class="achievements-column"><div class="achievement-item box-reverse" data-animation="fade-in-right"><div class="icon-wrapper"><i class="fas fa-quote-left"></i></div><div class="achievement-text text-reverse"><h4>Endorsement</h4><p class="endorsement-quote">"Roshan's ability to tackle complex problems is remarkable."</p><span class="endorsement-author">- Jane Doe, Project Manager</span></div></div><div class="achievement-item box-reverse" data-animation="fade-in-right" data-animation-delay="200"><div class="icon-wrapper"><i class="fas fa-medal"></i></div><div class="achievement-text text-reverse"><h4>Top Performer Award</h4><p>Recognized for outstanding contributions in Summer 2023.</p></div></div></div>
+            
+            <!-- DYNAMIC: Looping through first column of achievements -->
+            <div class="achievements-column">
+                {% for achievement in achievements_col1 %}
+                    <!-- CORRECTED: Use the pre-calculated animation_delay from the view -->
+                    <div class="achievement-item box-reverse" data-animation="fade-in-right" data-animation-delay="{{ achievement.animation_delay }}">
+                        <div class="icon-wrapper"><i class="{{ achievement.icon }}"></i></div>
+                        <div class="achievement-text text-reverse">
+                            <h4>{{ achievement.title }}</h4>
+                            <p>{{ achievement.description }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
             <div class="achievement-center-icon" data-animation="zoom-in"><i class="fas fa-trophy"></i></div>
-            <div class="achievements-column"><div class="achievement-item" data-animation="fade-in-left"><div class="icon-wrapper"><i class="fas fa-laptop-code"></i></div><div class="achievement-text"><h4>Hackathon Winner</h4><p>1st place in the 'AI for Good' national hackathon.</p></div></div><div class="achievement-item" data-animation="fade-in-left" data-animation-delay="200"><div class="icon-wrapper"><i class="fas fa-graduation-cap"></i></div><div class="achievement-text"><h4>Dean's List Scholar</h4><p>Maintained academic excellence with a GPA of 3.9+.</p></div></div></div>
+
+            <!-- DYNAMIC: Looping through second column of achievements -->
+            <div class="achievements-column">
+                {% for achievement in achievements_col2 %}
+                    <!-- CORRECTED: Use the pre-calculated animation_delay from the view -->
+                    <div class="achievement-item" data-animation="fade-in-left" data-animation-delay="{{ achievement.animation_delay }}">
+                        <div class="icon-wrapper"><i class="{{ achievement.icon }}"></i></div>
+                        <div class="achievement-text">
+                            <h4>{{ achievement.title }}</h4>
+                            <p>{{ achievement.description }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
         </div>
     </section>
 
@@ -204,7 +262,7 @@
             {% for blog in blogs %}
             <a href="{% url 'portfolio:blog_detail' slug=blog.slug %}" class="blog-card card" data-animation="fade-in-up">
                 <div class="blog-image"><img src="{{ blog.cover_image.url }}" alt="{{ blog.title }}"></div>
-                <div class="blog-content"><h4>{{ blog.title }}</h4><p>{{ blog.summary }}</p></div>
+                <div class="blog-content"><h4>{{ blog.title }}</h4><p>{{ blog.summary | truncatewords:25 }}</p></div>
                 <div class="blog-footer">
                     <div class="publisher">
                         {% if blog.author_avatar %}
@@ -250,22 +308,26 @@
                     </ul>
                 </div>
                 <div class="right-contact-form">
-                    <form action="#">
+                    <!-- DYNAMIC: Added CSRF token and action URL -->
+                    <form method="post" action="{% url 'portfolio:contact_submit' %}">
+                        {% csrf_token %}
                         <div class="form-group-row"><div class="form-group"><label for="name">Your Name</label><input type="text" name="name" id="name" required></div><div class="form-group"><label for="email">Your Email</label><input type="email" name="email" id="email" required></div></div>
                         <div class="form-group"><label for="subject">Your Subject</label><input type="text" name="subject" id="subject"></div>
                         <div class="form-group"><label for="contact-message">Message</label><textarea name="message" id="contact-message" rows="4" required></textarea></div>
-                        <button type="submit" class="outline-btn">Send Message</button>
+                        <button type="submit" class="filled-btn">Send Message</button>
                     </form>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Video Modal is static HTML, no changes needed unless you want its content dynamic -->
+    <!-- DYNAMIC: Video Resume URL -->
     <div id="video-modal" class="video-modal">
         <div class="modal-content">
             <div class="modal-header"><h3>Video Resume</h3><button id="close-modal-btn" class="close-btn">×</button></div>
-            <div class="video-container"><iframe id="resume-video-iframe" src="https://www.youtube.com/embed/CA8FeXP61OU" title="YouTube video player" frameborder="0" allowfullscreen></iframe></div>
+            <div class="video-container">
+                <iframe id="resume-video-iframe" src="{{ video_resume.youtube_embed_url }}" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+            </div>
         </div>
     </div>
 {% endblock %}

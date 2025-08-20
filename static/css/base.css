@@ -139,7 +139,7 @@ img { max-width: 100%; height: auto; display: block; }
     background: var(--accent-color-hover); 
     border-color: var(--accent-color-hover); 
     transform: translateY(-2px); 
-    box-shadow: 0 4px 15px rgba(0, 169, 255, 0.3); 
+    color: #fff; 
 }
 .outline-btn { 
     background: transparent; 
@@ -259,7 +259,7 @@ img { max-width: 100%; height: auto; display: block; }
     backdrop-filter: blur(10px);
     border: 1px solid var(--card-border);
     border-radius: 12px;
-    padding: 10px 25px;
+    padding: 15px 15px;
 }
 .nav-left ul {
     list-style: none;
