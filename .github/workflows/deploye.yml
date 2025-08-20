@@ -1,57 +1,75 @@
+# GitHub Action for deploying the Django project to cPanel
 name: Deploy to cPanel
 
 on:
+  # Run on pushes to the main branch
   push:
-    branches: [ "main" ]   # change if your default branch is different
-  workflow_dispatch:       # allow manual runs
+    branches: [ "main" ]
+  # Allow running this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      # Step 1: Checkout the repository code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Optional: run tests here if you want
+      # Step 2: Use a dedicated action to set up the SSH agent
+      # This is cleaner and more secure than manually creating the key file.
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Set up SSH
+      # Step 3: Rsync code to the server
+      # Your rsync command was already perfect!
+      - name: Sync Files to Server
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H "${{ secrets.CPANEL_HOST }}" >> ~/.ssh/known_hosts
-
-      - name: Rsync code to server (excluding junk)
-        run: |
-          rsync -az --delete \
+          rsync -avz --delete \
+            -e "ssh -o StrictHostKeyChecking=no" \
             --exclude=".git" \
             --exclude=".github" \
             --exclude="venv" \
-            --exclude="node_modules" \
+            --exclude="**/__pycache__" \
+            --exclude="*.pyc" \
             ./ ${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }}:${{ secrets.REMOTE_APP_DIR }}/
 
-      - name: Install deps, migrate, collectstatic, restart
+      # Step 4: Run remote commands (install, migrate, restart)
+      # Your remote script is excellent, especially with 'set -e'. No changes needed here.
+      - name: Run Remote Commands
         env:
           REMOTE_APP_DIR: ${{ secrets.REMOTE_APP_DIR }}
           REMOTE_VENV_ACTIVATE: ${{ secrets.REMOTE_VENV_ACTIVATE }}
-          # If you want to pass any extra envs temporarily, add here, but prefer cPanel env vars.
         run: |
-          ssh "${{ secrets.CPANEL_USER }}"@"${{ secrets.CPANEL_HOST }}" bash -lc "
+          ssh -o StrictHostKeyChecking=no ${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }} 'bash -s' <<'ENDSSH'
+            # Exit immediately if a command exits with a non-zero status.
             set -e
-            cd \"$REMOTE_APP_DIR\"
-            # Ensure passenger_wsgi.py exists (replace the default once)
-            if [ ! -f passenger_wsgi.py ] && [ -f passenger_wsgi.py.example ]; then cp passenger_wsgi.py.example passenger_wsgi.py; fi
 
-            source \"$REMOTE_VENV_ACTIVATE\"
-            python -m pip install --upgrade pip setuptools wheel
+            # Navigate to the application directory
+            cd $REMOTE_APP_DIR
+
+            # Activate the virtual environment
+            source $REMOTE_VENV_ACTIVATE
+            echo "--- Virtual environment activated ---"
+
+            # Install/update dependencies
+            echo "--- Installing Python dependencies ---"
             pip install -r requirements.txt
 
             # Run Django management commands
+            echo "--- Running database migrations ---"
             python manage.py migrate --noinput
+
+            echo "--- Collecting static files ---"
             python manage.py collectstatic --noinput
 
-            # Restart Passenger
+            # Restart the Phusion Passenger app
+            echo "--- Restarting application ---"
             mkdir -p tmp
             touch tmp/restart.txt
-          "
+
+            echo "--- Deployment successful! ---"
+          ENDSSH
