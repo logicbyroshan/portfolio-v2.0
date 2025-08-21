@@ -95,7 +95,7 @@ Access at: **http://127.0.0.1:8000/**
 ## 🛠 Tech Stack
 | Technology | Purpose |
 |------------|---------|
-| **Python 3.x** | Programming language |
+| **Python 3.7.9 | Programming language |
 | **Django** | Backend framework |
 | **HTML5/CSS3/JS** | Frontend |
 | **SQLite** | Default database |
