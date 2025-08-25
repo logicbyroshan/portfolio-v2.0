@@ -3,7 +3,11 @@
    1. Google Fonts & Root Variables
    2. Global Resets & Body Styles
    3. Reusable Components (Cards, Buttons, Tags)
-   4. Responsive Design
+   4. Header / Navbar
+   5. Footer
+   6. Resume Modal
+   7. Video Modal
+   8. Responsive Design
    ========================================================================== */
 
 
@@ -139,7 +143,11 @@ img { max-width: 100%; height: auto; display: block; }
     background: var(--accent-color-hover); 
     border-color: var(--accent-color-hover); 
     transform: translateY(-2px); 
+<<<<<<< HEAD
     color: #fff; 
+=======
+    color: #fff;
+>>>>>>> test
 }
 .outline-btn { 
     background: transparent; 
@@ -184,59 +192,6 @@ img { max-width: 100%; height: auto; display: block; }
     font-weight: 500; 
 }
 
-/* ==========================================================================
-   4. Responsive Design
-   ========================================================================== */
-
-/* For Tablets and smaller desktops */
-@media (max-width: 992px) {
-    .main-container {
-        gap: 120px;
-    }
-}
-
-/* For small tablets and large phones */
-@media (max-width: 768px) {
-    body {
-        padding: 20px 0;
-    }
-    .main-container {
-        gap: 100px;
-        padding: 0 15px;
-    }
-    
-    /* General Heading Adjustments */
-    .section-title h2, .portfolio-header .head h1 {
-        font-size: 40px;
-    }
-    .section-title p, .portfolio-header p {
-        font-size: 16px;
-    }
-}
-
-/* For Mobile Devices */
-@media (max-width: 576px) {
-    .main-container {
-        gap: 80px;
-    }
-
-    /* General Heading Adjustments for Mobile */
-    .section-title h2, .portfolio-header .head h1 {
-        font-size: 32px;
-        line-height: 1.2;
-    }
-
-    /* General Card Padding for Mobile */
-    .card {
-        padding: 20px;
-    }
-    
-    /* General Button Adjustments for Mobile */
-    .filled-btn, .outline-btn {
-        padding: 10px 14px;
-        font-size: 14px;
-    }
-}
 
 /* ==========================================================================
    4. Header / Navbar
@@ -246,7 +201,7 @@ img { max-width: 100%; height: auto; display: block; }
     top: 20px;
     z-index: 100;
     width: 100%;
-    padding: 0 20px;
+    padding: 0 10px;
     margin-bottom: -100px; /* Pulls the main content up */
 }
 .header-container {
@@ -259,7 +214,11 @@ img { max-width: 100%; height: auto; display: block; }
     backdrop-filter: blur(10px);
     border: 1px solid var(--card-border);
     border-radius: 12px;
+<<<<<<< HEAD
     padding: 15px 15px;
+=======
+    padding: 10px 10px;
+>>>>>>> test
 }
 .nav-left ul {
     list-style: none;
@@ -288,7 +247,7 @@ img { max-width: 100%; height: auto; display: block; }
     color: var(--title-color);
 }
 .nav-center-logo img {
-    height: 40px;
+    height: 50px;
 }
 .nav-right {
     display: flex;
@@ -475,14 +434,61 @@ img { max-width: 100%; height: auto; display: block; }
     margin-right: 8px;
 }
 
+/* ==========================================================================
+   7. Video Modal
+   ========================================================================== */
+.video-modal {
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(1, 4, 9, 0.7);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.video-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+/* The .modal-content and .modal-header styles from above apply here too */
+.video-modal.active .modal-content {
+    transform: scale(1);
+}
+.video-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+    border-radius: 10px;
+    background-color: #000;
+}
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
 
 /* ==========================================================================
-   7. Responsive Design
+   8. Responsive Design
    ========================================================================== */
-/* ... existing responsive styles ... */
 @media (max-width: 992px) {
+    .main-container { gap: 120px; }
     /* Navbar Responsive */
-    .nav-left, .nav-right { display: none; }
+    .nav-left { display: none; }
+    /* Show mobile right nav buttons inside the expanded menu */
+    .nav-right { display: none; } 
     .mobile-nav-toggle {
         display: block;
         background: transparent;
@@ -511,19 +517,21 @@ img { max-width: 100%; height: auto; display: block; }
     .site-header.mobile-menu-active .mobile-nav-toggle .middle { opacity: 0; }
     .site-header.mobile-menu-active .mobile-nav-toggle .bottom { transform: rotate(-45deg) translate(6px, -6px); }
 
-    .site-header.mobile-menu-active .nav-left {
+    .site-header.mobile-menu-active .nav-left,
+    .site-header.mobile-menu-active .nav-right {
         display: flex;
         flex-direction: column;
         position: absolute;
         top: calc(100% + 10px);
-        left: 0;
-        width: 100%;
         background: rgba(22, 27, 34, 0.9);
         backdrop-filter: blur(10px);
         border-radius: 12px;
         padding: 20px;
         border: 1px solid var(--card-border);
+        gap: 20px;
     }
+    .site-header.mobile-menu-active .nav-left { left: 0; width: 100%; }
+    .site-header.mobile-menu-active .nav-right { top: calc(100% + 10px + 150px); width: 100%; } /* Position below nav-left */
     .site-header.mobile-menu-active .nav-left ul {
         flex-direction: column;
         align-items: center;
@@ -535,11 +543,19 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 @media (max-width: 768px) {
-    /* ... existing responsive styles ... */
-    
-    /* Footer Responsive */
+    body { padding: 20px 0; }
+    .main-container { gap: 100px; padding: 0 15px; }
+    .section-title h2, .portfolio-header .head h1 { font-size: 40px; }
+    .section-title p, .portfolio-header p { font-size: 16px; }
     .footer-top { grid-template-columns: 1fr; }
     .footer-col-about { text-align: center; align-items: center; }
     .social-icons { justify-content: center; }
     .footer-bottom { flex-direction: column; gap: 10px; }
+}
+
+@media (max-width: 576px) {
+    .main-container { gap: 80px; }
+    .section-title h2, .portfolio-header .head h1 { font-size: 32px; line-height: 1.2; }
+    .card { padding: 20px; }
+    .filled-btn, .outline-btn { padding: 10px 14px; font-size: 14px; }
 }

@@ -5,7 +5,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Hero Section Typing Effect
     const skillTextElement = document.getElementById('skill-text');
     if (skillTextElement) {
-        const skillsToType = ["Web Developer", "AI Enthusiast", "Python Programmer", "Creative Coder"];
+        // MODIFIED: Load skills dynamically with a fallback
+        let skillsToType = ["Web Developer", "AI Enthusiast", "Python Programmer", "Creative Coder"]; // Default skills if DB is empty
+        
+        try {
+            const skillsDataElement = document.getElementById('skills-data');
+            if (skillsDataElement) {
+                const skillsFromDB = JSON.parse(skillsDataElement.textContent);
+                // Use skills from DB only if the array is not empty
+                if (skillsFromDB && skillsFromDB.length > 0) {
+                    skillsToType = skillsFromDB;
+                }
+            }
+        } catch (e) {
+            console.error("Could not parse skills data from Django. Using default skills.", e);
+        }
+        // END OF MODIFICATION
+
         let skillIndex = 0;
         let charIndex = 0;
         let isDeleting = false;
@@ -42,56 +58,16 @@ document.addEventListener('DOMContentLoaded', () => {
     faqCards.forEach(card => {
         card.addEventListener('click', () => {
             const isActive = card.classList.contains('active');
-            faqCards.forEach(otherCard => {
-                otherCard.classList.remove('active');
-            });
             if (!isActive) {
                 card.classList.add('active');
+            } else {
+                card.classList.remove('active');
             }
         });
     });
 
-    // 3. Video Resume Modal Functionality
-    const videoResumeBtn = document.getElementById('video-resume-btn');
-    const videoModal = document.getElementById('video-modal');
-    
-    if (videoResumeBtn && videoModal) {
-        const closeModalBtn = document.getElementById('close-modal-btn');
-        const videoIframe = document.getElementById('resume-video-iframe');
-        const originalVideoSrc = videoIframe ? videoIframe.src : "";
 
-        const openModal = () => {
-            videoModal.style.display = 'flex';
-            setTimeout(() => videoModal.classList.add('active'), 10);
-            document.body.style.overflow = 'hidden';
-        };
-
-        const closeModal = () => {
-            videoModal.classList.remove('active');
-            setTimeout(() => {
-                videoModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-                if(videoIframe) {
-                    videoIframe.src = originalVideoSrc;
-                }
-            }, 300);
-        };
-
-        videoResumeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            openModal();
-        });
-
-        if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
-
-        videoModal.addEventListener('click', (e) => {
-            if (e.target === videoModal) {
-                closeModal();
-            }
-        });
-    }
-
-    // 4. Clickable Cards (UPDATED)
+    // 3. Clickable Cards (UPDATED)
     // This now targets any element with a 'data-url' attribute, making it reusable.
     const clickableElements = document.querySelectorAll('[data-url]');
     clickableElements.forEach(card => {
@@ -104,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 5. Newsletter Form Submission Simulation
+    // 4. Newsletter Form Submission Simulation
     const ctaForm = document.querySelector('.cta-form');
     if (ctaForm) {
         ctaForm.addEventListener('submit', (e) => {
@@ -115,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 6. Contact Form Submission Simulation
+    // 5. Contact Form Submission Simulation
     const contactForm = document.querySelector('.right-contact-form form');
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
@@ -125,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 7. On-Scroll Animation Functionality
+    // 6. On-Scroll Animation Functionality
     const animatedElements = document.querySelectorAll('[data-animation]');
     
     const observer = new IntersectionObserver((entries) => {
@@ -146,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(el);
     });
 
-    // 8. Particles.js Initialization
+    // 7. Particles.js Initialization
     if (document.getElementById('particles-js')) {
         particlesJS('particles-js', {
             "particles": {

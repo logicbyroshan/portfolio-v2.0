@@ -44,8 +44,8 @@
             <!-- Right Navigation -->
             <div class="nav-right">
                 <a href="#" id="resume-nav-btn" class="outline-btn">Resume</a>
-                <!-- DYNAMIC: URL with anchor link -->
-                <a href="{% url 'portfolio:home' %}#contact" class="filled-btn">Contact Me</a>
+                <!-- UPDATED: "Contact Me" button changed to "Video Resume" -->
+                <a href="#" id="video-resume-nav-btn" class="filled-btn">Video Resume</a>
             </div>
 
             <!-- Mobile Navigation Toggle -->
@@ -142,6 +142,19 @@
                 <a href="{% static 'documents/Roshan_Damor_Resume.pdf' %}" class="filled-btn" download>
                     <i class="fas fa-download"></i> Download PDF
                 </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================= VIDEO RESUME MODAL ======================= -->
+    <div id="video-modal" class="video-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Video Resume</h3>
+                <button id="close-video-modal" class="close-btn" aria-label="Close modal">×</button>
+            </div>
+            <div class="video-container">
+                <iframe id="resume-video-iframe" src="https://www.youtube.com/embed/CA8FeXP61OU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
     </div>

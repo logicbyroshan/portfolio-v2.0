@@ -46,6 +46,44 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
+    // VIDEO RESUME MODAL LOGIC
+    // =========================================================================
+    const videoModal = document.getElementById('video-modal');
+    const openVideoBtn = document.getElementById('video-resume-nav-btn');
+    const closeVideoBtn = document.getElementById('close-video-modal');
+    const videoIframe = document.getElementById('resume-video-iframe');
+
+    if (videoModal && openVideoBtn && closeVideoBtn && videoIframe) {
+        const originalVideoSrc = videoIframe.src;
+
+        const openVideoModal = () => {
+            videoModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeVideoModal = () => {
+            videoModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            // Reset the iframe src to stop the video from playing in the background
+            videoIframe.src = originalVideoSrc;
+        };
+
+        openVideoBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openVideoModal();
+        });
+
+        closeVideoBtn.addEventListener('click', closeVideoModal);
+
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) {
+                closeVideoModal();
+            }
+        });
+    }
+
+
+    // =========================================================================
     // PARTICLES.JS INITIALIZATION (GLOBAL)
     // =========================================================================
     if (document.getElementById('particles-js')) {
