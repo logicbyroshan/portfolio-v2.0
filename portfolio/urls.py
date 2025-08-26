@@ -1,11 +1,11 @@
 from django.urls import path
 from .views import (
     # Page Views
-    HomeView,
+    HomeView, SkillListView,
     ProjectListView, ProjectDetailView,
     BlogListView, BlogDetailView,
     ExperienceListView, ExperienceDetailView,
-    SkillDetailView,
+    SkillDetailView, AchievementListView,
 
     # Form/API Views
     ContactSubmissionView,
@@ -32,10 +32,13 @@ urlpatterns = [
     path('experience/<int:pk>/', ExperienceDetailView.as_view(), name='experience_detail'),
     
     # Skill Detail Page
+    path('skills/', SkillListView.as_view(), name='skill_list'),
     path('skills/<slug:slug>/', SkillDetailView.as_view(), name='skill_detail'),
 
     # Form Submission URLs
     path('contact-submit/', ContactSubmissionView.as_view(), name='contact_submit'),
     path('subscribe-home/', NewsletterSubscribeHomeView.as_view(), name='subscribe_home'),
     path('subscribe/', NewsletterSubscribeAjaxView.as_view(), name='subscribe_ajax'),
+    path('achievements/', AchievementListView.as_view(), name='achievements_list'),
+
 ]

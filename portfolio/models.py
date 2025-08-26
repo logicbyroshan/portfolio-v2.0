@@ -173,28 +173,6 @@ class Service(models.Model):
     def __str__(self):
         return self.title
 
-class Achievement(models.Model):
-    """NEW: For an achievement in the 'Achievements' section."""
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    icon = models.CharField(max_length=50, help_text="Font Awesome icon class (e.g., 'fas fa-medal')")
-    order = models.PositiveIntegerField(default=0)
-    class Meta:
-        ordering = ['order']
-    def __str__(self):
-        return self.title
-
-class NowItem(models.Model):
-    """NEW: For an item in the 'What I'm Doing Now' section."""
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    icon = models.CharField(max_length=50, help_text="Font Awesome icon class (e.g., 'fas fa-book-open')")
-    url = models.URLField(blank=True, null=True)
-    order = models.PositiveIntegerField(default=0)
-    class Meta:
-        ordering = ['order']
-    def __str__(self):
-        return self.title
 
 class Resume(SingletonModel):
     """NEW: Singleton model for the Resume modal."""
@@ -262,3 +240,25 @@ class FAQ(models.Model):
         ordering = ['order']
     def __str__(self):
         return self.question
+
+class Achievement(models.Model):
+    # Choices for the type of achievement for easy filtering
+    class AchievementType(models.TextChoices):
+        CERTIFICATION = 'CERT', 'Certification'
+        AWARD = 'AWRD', 'Award'
+        PUBLICATION = 'PUBL', 'Publication'
+        HONOR = 'HONR', 'Honor'
+
+    title = models.CharField(max_length=200)
+    issuing_organization = models.CharField(max_length=200)
+    summary = models.TextField(help_text="A brief description of the achievement.")
+    date_issued = models.DateField()
+    credential_url = models.URLField(max_length=255, blank=True, null=True, help_text="Link to verify the credential, if available.")
+    image = models.ImageField(upload_to='achievements/', blank=True, null=True, help_text="Optional: A scan or image of the certificate/award.")
+    category = models.CharField(max_length=4, choices=AchievementType.choices, default=AchievementType.CERTIFICATION)
+
+    class Meta:
+        ordering = ['-date_issued'] # Show newest first by default
+
+    def __str__(self):
+        return f"{self.title} from {self.issuing_organization}"

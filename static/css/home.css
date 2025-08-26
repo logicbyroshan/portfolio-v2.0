@@ -8,7 +8,7 @@
       - About Me Section
       - Experience Section
       - Projects & Blog Cards
-      - CTA / Newsletter Section
+      - Newsletter CTA Section (NEW)
       - FAQ Section
       - Contact Section
    4. On-Scroll Animations
@@ -156,7 +156,8 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
 .hero-section { margin-top: 150px; }
 .home-container { display: flex; align-items: center; justify-content: space-between; gap: 40px; width: 100%; }
 .home-content { display: flex; flex-direction: column; gap: 20px; max-width: 55%; z-index: 2; }
-.home-content p:first-child { font-weight: 500; color: var(--title-color); }
+.home-content p:first-of-type { font-weight: 500; color: var(--title-color); }
+.home-content p b { color: var(--accent-color); }
 .home-content h1 { font-family: var(--heading-font); font-size: 72px; color: var(--title-color); line-height: 1; letter-spacing: 3px; }
 .home-content h4 { font-size: 24px; font-weight: 400; color: var(--paragraph-color); }
 .home-content h4 span { color: var(--title-color); font-weight: 600; }
@@ -173,17 +174,6 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
 .stat-1 { top: 25%; right: -5%; }
 .stat-2 { bottom: 0%; right: 20%; }
 .stat-3 { top: 35%; left: -5%; }
-
-/* AI Query Bar */
-.ai-query-container { margin-top: 25px; width: 100%; }
-.ai-query-form { display: flex; align-items: center; gap: 10px; background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 50px; padding: 8px 10px 8px 15px; transition: all 0.3s ease; }
-.ai-query-form:focus-within { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(0, 169, 255, 0.2); }
-.ai-query-form input { flex-grow: 1; border: none; background: transparent; outline: none; color: var(--title-color); font-size: 16px; padding: 5px; }
-.ai-query-form input::placeholder { color: var(--paragraph-color); }
-.ai-query-form button { background: none; border: none; cursor: pointer; color: var(--paragraph-color); font-size: 18px; display: flex; align-items: center; justify-content: center; transition: color 0.3s ease; padding: 8px; }
-.ai-query-form button:hover { color: var(--accent-color); }
-.ai-query-form .submit-btn { background-color: var(--accent-color); color: #fff; border-radius: 50%; width: 36px; height: 36px; font-size: 16px; }
-.ai-query-form .submit-btn:hover { background-color: var(--accent-color-hover); }
 
 /* About Me Section */
 .about-content { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
@@ -217,7 +207,7 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
 .project-card:hover .project-image img, .blog-card:hover .blog-image img { transform: scale(1.05); }
 .project-content, .blog-content { display: flex; flex-direction: column; gap: 15px; flex-grow: 1; }
 .blog-content h4, .project-content h3 { font-size: 22px; color: var(--title-color); }
-.blog-content h4 a, .project-content h3 a { color: inherit; } /* Inherit color from h3/h4 */
+.blog-content h4 a, .project-content h3 a { color: inherit; }
 .skills { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .project-links { margin-top: auto; padding-top: 10px; display: flex; gap: 15px; flex-wrap: wrap; }
 .blog-card { cursor: pointer; }
@@ -226,16 +216,35 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
 .publisher img { width: 30px; height: 30px; border-radius: 50%; }
 .blog-date { font-size: 14px; color: var(--paragraph-color); }
 
-/* CTA / Newsletter Section */
-.cta-container { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 40px; }
-.cta-left-content { max-width: 40%; }
-.cta-left-content img { width: 100%; height: auto; max-width: 150px; }
-.cta-right-content { flex-grow: 1; }
+/* NEW: Newsletter CTA Section */
+.cta-container { display: flex; align-items: center; justify-content: space-between; gap: 40px; padding: 40px; }
+.cta-left-content { max-width: 45%; }
+.cta-left-content i { font-size: 48px; color: var(--accent-color); margin-bottom: 15px; }
+.cta-left-content h2 { font-family: var(--heading-font); font-size: 36px; color: var(--title-color); margin-bottom: 10px; line-height: 1.2; }
+.cta-right-content { flex-grow: 1; width: 100%; }
 .cta-form { display: flex; gap: 10px; }
-.cta-form input { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--card-border); background-color: var(--bg-gradient-mid); color: var(--title-color); font-size: 16px; }
-.cta-form input::placeholder { color: var(--paragraph-color); }
-.cta-form .outline-btn { flex-shrink: 0; }
-.cta-success-message { color: var(--accent-color); font-weight: 500; }
+.cta-form input { 
+    width: 100%; 
+    padding: 12px 15px; 
+    border-radius: 8px; 
+    border: 1px solid var(--card-border); 
+    background-color: var(--card-bg); 
+    color: var(--title-color); 
+    font-size: 16px; 
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.cta-form input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(0, 169, 255, 0.2);
+}
+.cta-form input::placeholder { color: var(--paragraph-color); opacity: 0.8; }
+.cta-form .filled-btn { flex-shrink: 0; }
+.newsletter-messages .message { padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; font-weight: 500; }
+.newsletter-messages .success { background-color: rgba(0, 169, 255, 0.1); border: 1px solid var(--accent-color); color: var(--accent-color); }
+.newsletter-messages .error { background-color: rgba(255, 82, 82, 0.1); border: 1px solid #ff5252; color: #ff5252; }
+.newsletter-messages .info { background-color: rgba(255, 180, 0, 0.1); border: 1px solid #ffb400; color: #ffb400; }
+
 
 /* FAQ Section */
 .faq-card { cursor: pointer; }
@@ -291,10 +300,10 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
     .home-container { flex-direction: column; text-align: center; }
     .home-content { max-width: 100%; align-items: center; order: 2; }
     .home-hero-image { order: 1; max-width: 60%; margin-bottom: 30px; }
-    .ai-query-container { max-width: 600px; }
     .portfolio-header { align-items: center; text-align: center; }
     .portfolio-header .head { justify-content: center; text-align: center; }
     .cta-container { flex-direction: column; text-align: center; }
+    .cta-left-content { max-width: 100%; }
     .contact-section .mail-contact-card { grid-template-columns: 1fr; }
     .left-contact-info { border-radius: 16px 16px 0 0; }
     .right-contact-form { border-radius: 0 0 16px 16px; }

@@ -17,7 +17,7 @@
     
     <script src="{% static 'js/base.js' %}" defer></script>
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
     <div id="particles-js"></div>
 
     <!-- ======================= HEADER / NAVBAR ======================= -->
@@ -27,9 +27,9 @@
             <nav class="nav-left">
                 <ul>
                     <!-- DYNAMIC: URL tags for navigation -->
-                    <li><a href="{% url 'portfolio:home' %}">Home</a></li>
-                    <li><a href="{% url 'portfolio:project_list' %}">Projects</a></li>
-                    <li><a href="{% url 'portfolio:blog_list' %}">Blog</a></li>
+                    <li><a href="{% url 'portfolio:skill_list' %}">Skills</a></li>
+                    <li><a href="{% url 'portfolio:achievements_list' %}">Achievements</a></li>
+                    <li><a href="{% url 'portfolio:experience_list' %}">Experiences</a></li>
                 </ul>
             </nav>
 
@@ -74,10 +74,10 @@
                     <h3 class="footer-logo">Roshan Damor</h3>
                     <p>A passionate developer building AI-powered solutions and scalable web applications for a digital-first world.</p>
                     <ul class="social-icons">
-                        <li><a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a></li>
-                        <li><a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a></li>
-                        <li><a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
-                        <li><a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a></li>
+                        <li><a href="https://x.com/logicbyroshan" aria-label="Twitter"><i class="fab fa-twitter"></i></a></li>
+                        <li><a href="https://github.com/logicbyroshan" aria-label="GitHub"><i class="fab fa-github"></i></a></li>
+                        <li><a href="https://www.linkedin.com/in/logicbyroshan" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
+                        <li><a href="https://www.youtube.com/channel/logicbyroshan" aria-label="YouTube"><i class="fab fa-youtube"></i></a></li>
                     </ul>
                 </div>
 
@@ -87,8 +87,8 @@
                     <ul>
                         <!-- DYNAMIC: URL tags with anchors -->
                         <li><a href="{% url 'portfolio:home' %}#about">About Me</a></li>
-                        <li><a href="{% url 'portfolio:home' %}#skills">Skills</a></li>
-                        <li><a href="{% url 'portfolio:experience_list' %}">Experience</a></li>
+                        <li><a href="{% url 'portfolio:skill_list' %}">Skills</a></li>
+                        <li><a href="{% url 'portfolio:home' %}#experience">Experience</a></li>
                         <li><a href="{% url 'portfolio:home' %}#contact">Contact</a></li>
                     </ul>
                 </div>
@@ -97,11 +97,10 @@
                 <div class="footer-col-links">
                     <h4>Explore</h4>
                     <ul>
-                        <li><a href="#">Startups</a></li>
-                        <li><a href="#">Freelance</a></li>
-                        <li><a href="#">Articles</a></li>
-                        <li><a href="#">Personal</a></li>
-                        <li><a href="#">Hobbies</a></li>
+                        <li><a href="https://www.ideamitra.roshanproject.site">Startups</a></li>
+                        <li><a href="https://www.gigmitra.roshanproject.site">Freelance</a></li>
+                        <li><a href="https://www.blogmitra.roshanproject.site">Articles</a></li>
+                        <li><a href="https://www.knowroshan.roshanproject.site">Personal</a></li>
                     </ul>
                 </div>
 
@@ -111,8 +110,8 @@
                     <ul>
                         <li><a href="{% url 'portfolio:project_list' %}">All Projects</a></li>
                         <li><a href="{% url 'portfolio:blog_list' %}">All Blogs</a></li>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">System Status</a></li>
+                        <li><a href="{% url 'portfolio:achievements_list' %}">All Achievements</a></li>
+                        <li><a href="{% url 'portfolio:experience_list' %}">All Experiences</a></li>
                     </ul>
                 </div>
             </div>
@@ -135,7 +134,7 @@
             </div>
             <div class="modal-body">
                 <!-- DYNAMIC: Path to resume preview image -->
-                <img src="{% static 'images/resume_preview.png' %}" alt="Resume Preview">
+                <img src="{% static 'images/resume_preview.jpg' %}" alt="Resume Preview">
             </div>
             <div class="modal-footer">
                 <!-- DYNAMIC: Path to resume PDF file for download -->
@@ -154,7 +153,15 @@
                 <button id="close-video-modal" class="close-btn" aria-label="Close modal">×</button>
             </div>
             <div class="video-container">
-                <iframe id="resume-video-iframe" src="https://www.youtube.com/embed/CA8FeXP61OU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                {% if video_resume and video_resume.youtube_embed_url %}
+                    <iframe id="resume-video-iframe" src="{{ video_resume.youtube_embed_url }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                {% else %}
+                    <div class="no-video-message">
+                        <i class="fa-solid fa-video-slash"></i>
+                        <h4>No Video Resume Available</h4>
+                        <p>Please add a video resume URL in the admin panel.</p>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

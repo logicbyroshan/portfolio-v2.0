@@ -1,0 +1,279 @@
+/* AI Query Form Styles */
+
+.ai-query-container {
+    margin-top: 25px;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+}
+
+/* Integration with home page hero section */
+.home-content .ai-query-container {
+    margin-top: 30px;
+    max-width: 600px;
+}
+
+.ai-query-form {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background-color: var(--card-bg, #161B22);
+    border: 1px solid var(--card-border, #30363D);
+    border-radius: 12px;
+    padding: 10px 12px 10px 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.ai-query-form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 169, 255, 0.05) 0%, rgba(0, 169, 255, 0.02) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.ai-query-form:focus-within::before {
+    opacity: 1;
+}
+
+.ai-query-form:focus-within {
+    border-color: var(--accent-color, #00A9FF);
+    box-shadow: 0 4px 20px rgba(0, 169, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.ai-query-form textarea {
+    flex-grow: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    color: var(--title-color, #EAEAEA);
+    font-size: 16px;
+    font-family: var(--paragraph-font, 'Inter', sans-serif);
+    padding: 8px 6px;
+    line-height: 1.5;
+    resize: none;
+    overflow-y: hidden;
+    min-height: 30px;
+    max-height: 120px;
+    z-index: 1;
+    position: relative;
+}
+
+.ai-query-form textarea::placeholder {
+    color: var(--paragraph-color, #A0A0A0);
+    font-style: italic;
+    opacity: 0.8;
+}
+
+.ai-query-form textarea:focus::placeholder {
+    opacity: 0.6;
+}
+
+.ai-query-form button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--paragraph-color, #A0A0A0);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    padding: 8px;
+    margin-top: 2px;
+    border-radius: 8px;
+    z-index: 1;
+    position: relative;
+}
+
+.ai-query-form button:hover {
+    color: var(--accent-color, #00A9FF);
+    background-color: rgba(0, 169, 255, 0.1);
+    transform: scale(1.05);
+}
+
+.ai-query-form .attach-btn {
+    width: 36px;
+    height: 36px;
+}
+
+.ai-query-form .attach-btn:hover {
+    background-color: rgba(0, 169, 255, 0.1);
+}
+
+.ai-query-form .submit-btn {
+    background: linear-gradient(135deg, var(--accent-color, #00A9FF) 0%, var(--accent-color-hover, #0087cc) 100%);
+    color: #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 169, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.ai-query-form .submit-btn:hover {
+    background: linear-gradient(135deg, var(--accent-color-hover, #0087cc) 0%, var(--accent-color, #00A9FF) 100%);
+    box-shadow: 0 4px 16px rgba(0, 169, 255, 0.4);
+    transform: translateY(-1px) scale(1.05);
+}
+
+.ai-query-form .submit-btn:active {
+    transform: translateY(0) scale(0.95);
+    box-shadow: 0 2px 8px rgba(0, 169, 255, 0.3);
+}
+
+#file-display-container {
+    margin-top: 12px;
+    padding-left: 16px;
+    text-align: left;
+}
+
+.file-display-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(0, 169, 255, 0.15) 0%, rgba(0, 169, 255, 0.08) 100%);
+    border: 1px solid rgba(0, 169, 255, 0.3);
+    color: var(--title-color, #EAEAEA);
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    margin: 2px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+.file-display-item:hover {
+    background: linear-gradient(135deg, rgba(0, 169, 255, 0.2) 0%, rgba(0, 169, 255, 0.12) 100%);
+    border-color: rgba(0, 169, 255, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 169, 255, 0.2);
+}
+
+.clear-file-btn {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--paragraph-color, #A0A0A0);
+    transition: all 0.2s ease;
+    padding: 2px;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.clear-file-btn:hover {
+    color: #ff4757;
+    background-color: rgba(255, 71, 87, 0.1);
+    transform: scale(1.1);
+}
+
+/* Animation for form expansion */
+@keyframes expandForm {
+    from {
+        transform: scaleY(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+.ai-query-container {
+    animation: expandForm 0.5s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .ai-query-form {
+        padding: 8px 10px 8px 12px;
+        gap: 8px;
+    }
+    
+    .ai-query-form textarea {
+        font-size: 14px;
+        padding: 6px 4px;
+    }
+    
+    .ai-query-form .submit-btn,
+    .ai-query-form .attach-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    
+    .file-display-item {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ai-query-container {
+        margin-top: 20px;
+    }
+    
+    .ai-query-form {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .ai-query-form .submit-btn {
+        align-self: flex-end;
+    }
+    
+    #file-display-container {
+        padding-left: 0;
+    }
+}
+
+/* Loading state */
+.ai-query-form.loading .submit-btn {
+    background: linear-gradient(135deg, #666 0%, #555 100%);
+    pointer-events: none;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* Success state */
+.ai-query-form.success {
+    border-color: #2ed573;
+    box-shadow: 0 4px 20px rgba(46, 213, 115, 0.2);
+}
+
+.ai-query-form.success .submit-btn {
+    background: linear-gradient(135deg, #2ed573 0%, #26c968 100%);
+}
+
+/* Error state */
+.ai-query-form.error {
+    border-color: #ff4757;
+    box-shadow: 0 4px 20px rgba(255, 71, 87, 0.2);
+}
+
+.ai-query-form.error .submit-btn {
+    background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%);
+}

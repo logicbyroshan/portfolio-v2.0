@@ -1,0 +1,17 @@
+{% load static %}
+
+<!-- This partial contains the AI query form -->
+<div class="ai-query-container">
+    <form id="ai-form" class="ai-query-form" action="{% url 'ai:submit_ai_query' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <button type="button" class="attach-btn" id="attach-file-btn" title="Attach Files">
+            <i class="fa-solid fa-paperclip"></i>
+        </button>
+        <input type="file" name="attachment" id="ai-file-input" hidden>
+        <textarea name="question" placeholder="Ask anything about me, e.g., 'What are your key skills?'" rows="1"></textarea>
+        <button type="submit" class="submit-btn" title="Submit">
+            <i class="fa-solid fa-arrow-up"></i>
+        </button>
+    </form>
+    <div id="file-display-container"></div>
+</div>

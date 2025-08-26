@@ -4,7 +4,7 @@ from django.contrib import admin
 from solo.admin import SingletonModelAdmin
 from .models import (
     SiteConfiguration, Technology, Category, Project, ProjectImage, Blog, Comment, 
-    Experience, FAQ, Skill, SkillTechnologyDetail, Service, Achievement, NowItem,
+    Experience, FAQ, Skill, SkillTechnologyDetail, Service, Achievement,
     Resume, VideoResume, NewsletterSubscriber, ContactSubmission
 )
 
@@ -123,15 +123,6 @@ class ServiceAdmin(admin.ModelAdmin):
     list_display = ('title', 'order')
     list_editable = ('order',)
 
-@admin.register(Achievement)
-class AchievementAdmin(admin.ModelAdmin):
-    list_display = ('title', 'order')
-    list_editable = ('order',)
-
-@admin.register(NowItem)
-class NowItemAdmin(admin.ModelAdmin):
-    list_display = ('title', 'order')
-    list_editable = ('order',)
 
 @admin.register(NewsletterSubscriber)
 class NewsletterSubscriberAdmin(admin.ModelAdmin):
@@ -162,3 +153,9 @@ class ContactSubmissionAdmin(admin.ModelAdmin):
     @admin.action(description='Mark selected submissions as read')
     def mark_as_read(self, request, queryset):
         queryset.update(is_read=True)
+
+@admin.register(Achievement)
+class AchievementAdmin(admin.ModelAdmin):
+    list_display = ('title', 'issuing_organization', 'category', 'date_issued')
+    list_filter = ('category', 'date_issued')
+    search_fields = ('title', 'issuing_organization', 'summary')

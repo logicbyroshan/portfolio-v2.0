@@ -5,15 +5,9 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-<<<<<<< HEAD
-SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
-=======
 SECRET_KEY = "django-insecure-6d0sc!g!$b+ecm0!uttm8)zco12u72)*gmtc61j3n_t0(lgf7v"
 DEBUG = True
-ALLOWED_HOSTS = []  
->>>>>>> test
+ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -25,6 +19,7 @@ INSTALLED_APPS = [
     'tinymce',
     'solo',
     'portfolio',
+    'ai',
 ]
 
 MIDDLEWARE = [
@@ -62,17 +57,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-  "default": {
-    "ENGINE": "django.db.backends.mysql",
-    "NAME": os.getenv("MYSQL_DB"),
-    "USER": os.getenv("MYSQL_USER"),
-    "PASSWORD": os.getenv("MYSQL_PASSWORD"),
-    "HOST": os.getenv("MYSQL_HOST", "localhost"),
-    "PORT": os.getenv("MYSQL_PORT", "3306"),
-    "OPTIONS": {"charset": "utf8mb4", "init_command": "SET sql_mode='STRICT_ALL_TABLES'"},
-  }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
-
 
 
 # Password validation

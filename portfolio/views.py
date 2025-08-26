@@ -7,7 +7,7 @@ from django.views.generic import TemplateView, ListView, DetailView
 # Import all models from your models.py
 from .models import (
     Skill, Experience, Project, Blog, FAQ, Category, Technology, 
-    NewsletterSubscriber, Comment, Service, Achievement, NowItem, 
+    NewsletterSubscriber, Comment, Service, Achievement, 
     SiteConfiguration, Resume, VideoResume
 )
 
@@ -25,15 +25,20 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        # Using try-except blocks for singleton models is safer in case they haven't been created yet.
+        # Handle singleton models separately for better error handling
         try:
             context['config'] = SiteConfiguration.objects.get()
+        except SiteConfiguration.DoesNotExist:
+            context['config'] = None
+            
+        try:
             context['resume'] = Resume.objects.get()
-            context['video_resume'] = VideoResume.objects.get()
-        except (SiteConfiguration.DoesNotExist, Resume.DoesNotExist, VideoResume.DoesNotExist):
-            # Provide default empty objects if singletons don't exist yet
-            context['config'] = None # Using None is often better than an empty dict
+        except Resume.DoesNotExist:
             context['resume'] = None
+            
+        try:
+            context['video_resume'] = VideoResume.objects.get()
+        except VideoResume.DoesNotExist:
             context['video_resume'] = None
 
         # =================================================================
@@ -53,23 +58,7 @@ class HomeView(TemplateView):
         context['services_col1'] = services_col1
         context['services_col2'] = services_col2
 
-        now_items = list(NowItem.objects.order_by('order')[:3]) # Convert to list to modify
-        for i, item in enumerate(now_items):
-            item.animation_delay = i * 200 # Results in 0, 200, 400
-        context['now_items'] = now_items
 
-        achievements = Achievement.objects.order_by('order')
-        achievements_col1 = list(achievements[:2])
-        achievements_col2 = list(achievements[2:4])
-
-        for i, achievement in enumerate(achievements_col1):
-            achievement.animation_delay = i * 200 # Results in 0, 200
-        
-        for i, achievement in enumerate(achievements_col2):
-            achievement.animation_delay = i * 200 # Results in 0, 200
-        
-        context['achievements_col1'] = achievements_col1
-        context['achievements_col2'] = achievements_col2
         # =================================================================
         # Fetch data for the rest of the homepage sections
         # =================================================================
@@ -252,27 +241,69 @@ class SkillDetailView(DetailView):
 class ContactSubmissionView(View):
     """Handles the submission of the main contact form."""
     def post(self, request, *args, **kwargs):
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Thank you for your message! I'll get back to you soon.")
+        # Check if it's an AJAX request
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            form = ContactForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return JsonResponse({
+                    'status': 'success', 
+                    'message': "Thank you for your message! I'll get back to you soon."
+                })
+            else:
+                errors = []
+                for field, field_errors in form.errors.items():
+                    for error in field_errors:
+                        errors.append(f"{field}: {error}")
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': "Please check the fields: " + ", ".join(errors)
+                }, status=400)
         else:
-            messages.error(request, "There was an error. Please check the fields and try again.")
-        return redirect(reverse('portfolio:home') + '#contact')
+            # Fallback for non-AJAX requests
+            form = ContactForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Thank you for your message! I'll get back to you soon.")
+            else:
+                messages.error(request, "There was an error. Please check the fields and try again.")
+            return redirect(reverse('portfolio:home') + '#contact')
 
 class NewsletterSubscribeHomeView(View):
     """Handles the submission of the newsletter form on the homepage."""
     def post(self, request, *args, **kwargs):
-        form = NewsletterForm(request.POST)
-        if form.is_valid():
-            subscriber, created = NewsletterSubscriber.objects.get_or_create(email=form.cleaned_data['email'])
-            if created:
-                messages.success(request, "Thanks for subscribing!")
+        # Check if it's an AJAX request
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            form = NewsletterForm(request.POST)
+            if form.is_valid():
+                subscriber, created = NewsletterSubscriber.objects.get_or_create(email=form.cleaned_data['email'])
+                if created:
+                    return JsonResponse({
+                        'status': 'success', 
+                        'message': "Thanks for subscribing! You'll receive updates soon."
+                    })
+                else:
+                    return JsonResponse({
+                        'status': 'info', 
+                        'message': "You are already subscribed!"
+                    })
             else:
-                messages.info(request, "You are already subscribed!")
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': "Please provide a valid email address."
+                }, status=400)
         else:
-            messages.error(request, "Please provide a valid email address.")
-        return redirect(reverse('portfolio:home') + '#blogs')
+            # Fallback for non-AJAX requests
+            form = NewsletterForm(request.POST)
+            if form.is_valid():
+                subscriber, created = NewsletterSubscriber.objects.get_or_create(email=form.cleaned_data['email'])
+                if created:
+                    messages.success(request, "Thanks for subscribing!")
+                else:
+                    messages.info(request, "You are already subscribed!")
+            else:
+                messages.error(request, "Please provide a valid email address.")
+            return redirect(reverse('portfolio:home') + '#newsletter')
 
 class NewsletterSubscribeAjaxView(View):
     """Handles AJAX requests for newsletter subscriptions from the modal."""
@@ -289,3 +320,39 @@ class NewsletterSubscribeAjaxView(View):
             message = 'You are already subscribed!'
             
         return JsonResponse({'success': True, 'message': message})
+
+class AchievementListView(ListView):
+    model = Achievement
+    template_name = 'achievements.html'
+    context_object_name = 'achievements'
+    paginate_by = 6  # Show 6 achievements per page
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        # Filtering by category
+        category = self.request.GET.get('category')
+        if category and category != 'all':
+            queryset = queryset.filter(category=category)
+            
+        # Sorting
+        sort_by = self.request.GET.get('sort', 'newest')
+        if sort_by == 'oldest':
+            queryset = queryset.order_by('date_issued')
+        else: # Default to newest
+            queryset = queryset.order_by('-date_issued')
+            
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Pass the category choices to the template for the filter toolbar
+        context['achievement_types'] = Achievement.AchievementType.choices
+        return context
+
+
+class SkillListView(ListView):
+    model = Skill
+    template_name = 'skills.html'
+    context_object_name = 'skills'
+    paginate_by = 9

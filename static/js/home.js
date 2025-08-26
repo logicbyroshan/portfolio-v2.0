@@ -91,15 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 5. Contact Form Submission Simulation
-    const contactForm = document.querySelector('.right-contact-form form');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert("Thank you for your message! I'll get back to you soon.");
-            contactForm.reset();
-        });
-    }
+    // Contact form is now handled by contact_form.js with toast notifications
 
     // 6. On-Scroll Animation Functionality
     const animatedElements = document.querySelectorAll('[data-animation]');

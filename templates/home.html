@@ -5,10 +5,14 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ai_query.css' %}">
 {% endblock %}
 
 {% block extra_js %}
     <script src="{% static 'js/home.js' %}" defer></script>
+    <script src="{% static 'js/ai_query.js' %}" defer></script>
+    <script src="{% static 'js/contact_form.js' %}" defer></script>
+    <script src="{% static 'js/newsletter_form.js' %}" defer></script>
 {% endblock %}
 
 
@@ -17,47 +21,26 @@
     <section class="hero-section portfolio-container">
         <div class="home-container">
             <div class="home-content" data-animation="fade-in-up">
-<<<<<<< HEAD
-                <!-- DYNAMIC: from SiteConfiguration model -->
-                <p>{{ config.hero_greeting }}</p>
-                <h1>{{ config.hero_name }}</h1>
-                <h4>I am a "<span id="skill-text">{{ config.hero_tagline|safe }}</span>"</h4>
-                <p>{{ config.hero_bio|safe }}</p>
-                <div class="home-btns">
-                    <a href="#about" class="filled-btn">ABOUT ME</a>
-                    <a href="#" id="video-resume-btn" class="outline-btn">VIDEO RESUME</a>
-=======
                 <p>HIII, IT'S ME</p>
                 <h1>Roshan Damor</h1>
                 <h4>I am a <span id="skill-text">Web Developer</span></h4>
                 <p>GREETINGS, ALL DIGITAL EXPLORERS! I AM ROSHAN, A PASSIONATE AND INNOVATIVE DEVELOPER <b><i>"BUILDING AI-POWERED SOLUTIONS & SCALABLE WEB APPS — SDE & AI ENGINEER"</i></b> </p>
-                <div class="ai-query-container">
-                    <div class="ai-query-form">
-                        <button class="attach-btn" title="Attach Files">
-                            <i class="fa-solid fa-paperclip"></i>
-                        </button>
-                        <input type="text" placeholder="Ask anything about me, e.g., 'What are your key skills?'">
-                        <button type="submit" class="submit-btn" title="Submit">
-                            <i class="fa-solid fa-arrow-up"></i>
-                        </button>
-                    </div>
->>>>>>> test
-                </div>
+                {% include 'ai/query_form.html' %}
             </div>
             <div class="home-hero-image" data-animation="zoom-in">
                 <img src="{% static 'images/hero.png' %}" alt="Roshan Damor - Hero Image">
                 <!-- DYNAMIC: Stats from SiteConfiguration model -->
                 <div class="hero-stat-card stat-1 card" data-animation="fade-in" data-animation-delay="200">
                     <i class="fa-solid fa-briefcase stat-icon"></i>
-                    <div class="stat-text"><div class="stat-number">{{ config.hero_projects_stat }}</div><div class="stat-label">Projects</div></div>
+                    <div class="stat-text"><div class="stat-number">{{ config.hero_projects_stat|default:"25+" }}</div><div class="stat-label">Projects</div></div>
                 </div>
                 <div class="hero-stat-card stat-2 card" data-animation="fade-in" data-animation-delay="400">
                     <i class="fa-solid fa-user-graduate stat-icon"></i>
-                    <div class="stat-text"><div class="stat-number">{{ config.hero_internships_stat }}</div><div class="stat-label">Internships</div></div>
+                    <div class="stat-text"><div class="stat-number">{{ config.hero_internships_stat|default:"3+" }}</div><div class="stat-label">Internships</div></div>
                 </div>
                 <div class="hero-stat-card stat-3 card" data-animation="fade-in" data-animation-delay="600">
                     <i class="fa-solid fa-pen-nib stat-icon"></i>
-                    <div class="stat-text"><div class="stat-number">{{ config.hero_articles_stat }}</div><div class="stat-label">Articles</div></div>
+                    <div class="stat-text"><div class="stat-number">{{ config.hero_articles_stat|default:"15+" }}</div><div class="stat-label">Articles</div></div>
                 </div>
             </div>
         </div>
@@ -66,160 +49,58 @@
     <!-- ========================= 2. ABOUT ME SECTION ========================= -->
     <section id="about" class="about-section portfolio-container" data-animation="fade-in">
         <div class="section-title">
-            <!-- DYNAMIC: Title and description from SiteConfiguration -->
-            <h2>{{ config.about_title|safe }}</h2>
-            <p>{{ config.about_description }}</p>
+            <h2>{{ config.about_title|safe|default:"About <span>Me</span>" }}</h2>
+            <p>{{ config.about_description|default:"A passionate developer dedicated to building beautiful, functional, and user-centric digital experiences." }}</p>
             <a href="#" class="awesome">Know More <i class="fa-solid fa-arrow-right"></i></a>
         </div>
         <div class="about-content card">
-            <!-- DYNAMIC: Loop through the first column of services -->
             <div class="services-column">
-<<<<<<< HEAD
                 {% for service in services_col1 %}
-                <!-- CORRECTED: Use the pre-calculated animation_delay -->
                 <div class="service-box box-reverse" data-animation="fade-in-right" data-animation-delay="{{ service.animation_delay }}">
                     <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
                     <div class="service-text text-reverse"><h4>{{ service.title }}</h4><p>{{ service.description }}</p></div>
                 </div>
                 {% endfor %}
-=======
-                <div class="service-box box-reverse" data-animation="fade-in-right" data-animation-delay="200"><div class="icon-wrapper"><i class="fas fa-code"></i></div><div class="service-text text-reverse"><h4>Web Development</h4><p>Building robust and scalable web applications from front to back.</p></div></div>
-                <div class="service-box box-reverse" data-animation="fade-in-right" data-animation-delay="400"><div class="icon-wrapper"><i class="fas fa-database"></i></div><div class="service-text text-reverse"><h4>Database Management</h4><p>Design & manage databases for efficient data storage and retrieval.</p></div></div>
->>>>>>> test
             </div>
             <div class="about-image-wrapper" data-animation="zoom-in">
                 <img src="{% static 'images/about.png' %}" alt="A portrait photo of Roshan Damor" class="about-img-default">
                 <img src="{% static 'images/nee.png' %}" alt="A different portrait photo of Roshan Damor" class="about-img-hover">
             </div>
-            <!-- DYNAMIC: Loop through the second column of services -->
             <div class="services-column">
-<<<<<<< HEAD
                 {% for service in services_col2 %}
-                <!-- CORRECTED: Use the pre-calculated animation_delay -->
                 <div class="service-box" data-animation="fade-in-left" data-animation-delay="{{ service.animation_delay }}">
                     <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
                     <div class="service-text"><h4>{{ service.title }}</h4><p>{{ service.description }}</p></div>
                 </div>
                 {% endfor %}
-=======
-                <div class="service-box" data-animation="fade-in-left" data-animation-delay="200"><div class="icon-wrapper"><i class="fas fa-robot"></i></div><div class="service-text"><h4>AI Integration</h4><p>Leveraging ML to create smarter, data-driven applications.</p></div></div>
-                <div class="service-box" data-animation="fade-in-left" data-animation-delay="400"><div class="icon-wrapper"><i class="fas fa-mobile-screen"></i></div><div class="service-text"><h4>Mobile Development</h4><p>Creating responsive and adaptive mobile applications for all devices.</p></div></div>
->>>>>>> test
             </div>
         </div>
     </section>
 
-<<<<<<< HEAD
-    <!-- ========================= 3. NOW SECTION ========================= -->
-    <section id="now" class="now-section portfolio-container" data-animation="fade-in">
-        <div class="section-title">
-            <h2>{{ config.now_title|safe }}</h2>
-            <p>{{ config.now_description }}</p>
-        </div>
-        <div class="now-wrapper card">
-            <!-- DYNAMIC: Looping through 'Now' items -->
-            {% for item in now_items %}
-                <!-- CORRECTED: Use the pre-calculated animation_delay from the view -->
-                <div class="now-item" {% if item.url %}data-url="{{ item.url }}"{% endif %} 
-                    data-animation="fade-in-up" 
-                    data-animation-delay="{{ item.animation_delay }}">
-                    
-                    <div class="now-item-icon"><i class="{{ item.icon }}"></i></div>
-                    <div class="now-item-content">
-                        <h4>{{ item.title }}</h4>
-                        <p>{{ item.description }}</p>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </section>
-
-
-    <!-- ========================= 4. SKILLS SECTION ========================= -->
-    <section id="skills" class="skills-section portfolio-container">
-        <header class="portfolio-header" data-animation="fade-in-up">
-            <div class="head"><h1>My Tech<br><span>Stack</span></h1></div>
-            <p>"From frontend development to backend architectures, I enjoy leveraging the right tools for the job."</p>
-        </header>
-        <div class="cards-container">
-            <!-- DYNAMIC: Looping through skills from the database -->
-            {% for skill in skills %}
-            <a href="{% url 'portfolio:skill_detail' slug=skill.slug %}" class="skill-card card" data-animation="fade-in-up">
-                <div class="skill-header">
-                    <i class="{{ skill.icon }} skill-icon"></i>
-                    <h3>{{ skill.title }}</h3>
-                </div>
-                <p>{{ skill.summary|truncatewords:20 }}</p>
-                <div class="skill-list">
-                    <!-- DYNAMIC: Looping through technologies for each skill -->
-                    {% for tech in skill.technologies.all %}
-                        {% if tech.icon %}
-                        <img src="{{ tech.icon.url }}" alt="{{ tech.name }}" title="{{ tech.name }}">
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </a>
-            {% endfor %}
-        </div>
-    </section>
-
-    <!-- ========================= 5. EXPERIENCE SECTION ========================= -->
-=======
     <!-- ========================= 3. EXPERIENCE SECTION ========================= -->
->>>>>>> test
     <section id="experience" class="experience-section portfolio-container" data-animation="fade-in">
         <div class="section-title">
             <h2>Where I've <span>Worked</span></h2>
             <p>"A glimpse into my professional journey, contributing to impactful projects and collaborating with talented teams."</p>
         </div>
         <div class="experience-wrapper card">
-            <!-- DYNAMIC: Looping through experiences from the database with fallback -->
             {% if experiences %}
                 {% for exp in experiences %}
-                <a href="{% url 'portfolio:experience_detail' pk=exp.pk %}" class="exp-card" data-animation="fade-in-up">
-                    <div class="exp-img">
-                        <img src="https://placehold.co/80x80/010409/eaeaea?text={{ exp.company_name|slice:':2' }}" alt="{{ exp.company_name }} Logo">
-                    </div>
+                <a href="#" class="exp-card" data-animation="fade-in-up">
+                    <div class="exp-img"><img src="https://placehold.co/80x80/010409/eaeaea?text={{ exp.company_name|slice:':2' }}" alt="{{ exp.company_name }} Logo"></div>
                     <div class="exp-details">
                         <div class="exp-header">
                             <h3>{{ exp.role }} @ {{ exp.company_name }}</h3>
                             <span>{{ exp.start_date|date:"M Y" }} - {% if exp.end_date %}{{ exp.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
                         </div>
                         <p>{{ exp.summary }}</p>
-                        <div class="skills">
-                            {% for tech in exp.technologies.all %}
-                            <span class="teg">{{ tech.name }}</span>
-                            {% endfor %}
-                        </div>
+                        <div class="skills">{% for tech in exp.technologies.all %}<span class="teg">{{ tech.name }}</span>{% endfor %}</div>
                     </div>
                 </a>
                 {% endfor %}
             {% else %}
-                <!-- Mock Experience Data -->
-                <div class="exp-card" data-animation="fade-in-up">
-                    <div class="exp-img"><img src="https://placehold.co/80x80/010409/eaeaea?text=SC" alt="Sample Company Logo"></div>
-                    <div class="exp-details">
-                        <div class="exp-header"><h3>SDE Intern @ Sample Company</h3><span>Jan 2023 - Present</span></div>
-                        <p>This is a placeholder for a professional experience. It demonstrates the layout when no data is available from the database.</p>
-                        <div class="skills"><span class="teg">Python</span><span class="teg">Django</span><span class="teg">PostgreSQL</span></div>
-                    </div>
-                </div>
-                <div class="exp-card" data-animation="fade-in-up">
-                    <div class="exp-img"><img src="https://placehold.co/80x80/010409/eaeaea?text=TC" alt="Tech Corp Logo"></div>
-                    <div class="exp-details">
-                        <div class="exp-header"><h3>AI Engineer @ Tech Corp</h3><span>Jun 2022 - Dec 2022</span></div>
-                        <p>Another mock entry to show how multiple experiences would look. I worked on exciting AI-powered solutions here.</p>
-                        <div class="skills"><span class="teg">PyTorch</span><span class="teg">Scikit-learn</span><span class="teg">FastAPI</span></div>
-                    </div>
-                </div>
-                <div class="exp-card" data-animation="fade-in-up">
-                    <div class="exp-img"><img src="https://placehold.co/80x80/010409/eaeaea?text=TC" alt="Tech Corp Logo"></div>
-                    <div class="exp-details">
-                        <div class="exp-header"><h3>AI Engineer @ Tech Corp</h3><span>Jun 2022 - Dec 2022</span></div>
-                        <p>Another mock entry to show how multiple experiences would look. I worked on exciting AI-powered solutions here.</p>
-                        <div class="skills"><span class="teg">PyTorch</span><span class="teg">Scikit-learn</span><span class="teg">FastAPI</span></div>
-                    </div>
-                </div>
+                <div class="exp-card" data-animation="fade-in-up"><div class="exp-img"><img src="https://placehold.co/80x80/010409/eaeaea?text=SC" alt="Sample Logo"></div><div class="exp-details"><div class="exp-header"><h3>SDE Intern @ Sample Company</h3><span>Jan 2023 - Present</span></div><p>This is a placeholder for a professional experience. It demonstrates the layout when no data is available from the database.</p><div class="skills"><span class="teg">Python</span><span class="teg">Django</span></div></div></div>
+                <div class="exp-card" data-animation="fade-in-up"><div class="exp-img"><img src="https://placehold.co/80x80/010409/eaeaea?text=TC" alt="Tech Corp Logo"></div><div class="exp-details"><div class="exp-header"><h3>AI Engineer @ Tech Corp</h3><span>Jun 2022 - Dec 2022</span></div><p>Another mock entry to show how multiple experiences would look. I worked on exciting AI-powered solutions here.</p><div class="skills"><span class="teg">PyTorch</span><span class="teg">FastAPI</span></div></div></div>
             {% endif %}
         </div>
     </section>
@@ -227,217 +108,88 @@
     <!-- ========================= 4. PROJECTS SECTION ========================= -->
     <section class="projects-section portfolio-container">
         <header class="portfolio-header" data-animation="fade-in-up">
-            <div class="head">
-                <h1>Things I've <br><span>Built</span></h1>
-                <a href="{% url 'portfolio:project_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a>
-            </div>
+            <div class="head"><h1>Things I've <br><span>Built</span></h1><a href="{% url 'portfolio:project_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a></div>
             <p>"I love turning ideas into reality through code. Each project is a reflection of my skills, problem-solving approach, and creativity."</p>
         </header>
         <div class="cards-container">
-            <!-- DYNAMIC: Looping through latest projects with fallback -->
             {% if projects %}
                 {% for project in projects %}
-                <div class="project-card card" data-animation="fade-in-up">
-                    <a href="{% url 'portfolio:project_detail' slug=project.slug %}" class="project-image"><img src="{{ project.cover_image.url }}" alt="{{ project.title }}"></a>
-                    <div class="project-content">
-                        <h3><a href="{% url 'portfolio:project_detail' slug=project.slug %}">{{ project.title }}</a></h3>
-                        <p>{{ project.summary }}</p>
-                        <div class="skills">{% for tech in project.technologies.all %}<span class="teg">{{ tech.name }}</span>{% endfor %}</div>
-                    </div>
-                    <div class="project-links">
-                        {% if project.github_url %}<a href="{{ project.github_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i>Github</a>{% endif %}
-                        {% if project.live_url %}<a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live Preview</a>{% endif %}
-                    </div>
-                </div>
+                <div class="project-card card" data-animation="fade-in-up"><a href="#" class="project-image"><img src="{{ project.cover_image.url }}" alt="{{ project.title }}"></a><div class="project-content"><h3><a href="#">{{ project.title }}</a></h3><p>{{ project.summary }}</p><div class="skills">{% for tech in project.technologies.all %}<span class="teg">{{ tech.name }}</span>{% endfor %}</div></div><div class="project-links">{% if project.github_url %}<a href="{{ project.github_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i>Github</a>{% endif %}{% if project.live_url %}<a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live</a>{% endif %}</div></div>
                 {% endfor %}
             {% else %}
-                <!-- Mock Project Data -->
-                <div class="project-card card" data-animation="fade-in-up">
-                    <a href="#" class="project-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Project+One" alt="Mock Project One"></a>
-                    <div class="project-content">
-                        <h3><a href="#">Mock Project One</a></h3>
-                        <p>This is a summary for a placeholder project to demonstrate the layout when no projects are in the database.</p>
-                        <div class="skills"><span class="teg">Django</span><span class="teg">JavaScript</span></div>
-                    </div>
-                    <div class="project-links">
-                        <a href="#" class="outline-btn"><i class="fa-brands fa-github"></i>Github</a>
-                        <a href="#" class="outline-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live Preview</a>
-                    </div>
-                </div>
-                <div class="project-card card" data-animation="fade-in-up">
-                    <a href="#" class="project-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Project+Two" alt="Mock Project Two"></a>
-                    <div class="project-content">
-                        <h3><a href="#">Mock Project Two</a></h3>
-                        <p>A second placeholder project showing an AI-powered application, showcasing a different set of skills and technologies.</p>
-                        <div class="skills"><span class="teg">React</span><span class="teg">Node.js</span><span class="teg">AI</span></div>
-                    </div>
-                    <div class="project-links">
-                        <a href="#" class="outline-btn"><i class="fa-brands fa-github"></i>Github</a>
-                    </div>
-                </div>
-                <div class="project-card card" data-animation="fade-in-up">
-                    <a href="#" class="project-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Project+Two" alt="Mock Project Two"></a>
-                    <div class="project-content">
-                        <h3><a href="#">Mock Project Two</a></h3>
-                        <p>A second placeholder project showing an AI-powered application, showcasing a different set of skills and technologies.</p>
-                        <div class="skills"><span class="teg">React</span><span class="teg">Node.js</span><span class="teg">AI</span></div>
-                    </div>
-                    <div class="project-links">
-                        <a href="#" class="outline-btn"><i class="fa-brands fa-github"></i>Github</a>
-                    </div>
-                </div>
+                <div class="project-card card" data-animation="fade-in-up"><a href="#" class="project-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Project+One" alt="Mock Project"></a><div class="project-content"><h3><a href="#">Mock Project One</a></h3><p>This is a summary for a placeholder project to demonstrate the layout when no projects are in the database.</p><div class="skills"><span class="teg">Django</span><span class="teg">JS</span></div></div><div class="project-links"><a href="#" class="outline-btn"><i class="fa-brands fa-github"></i>Github</a><a href="#" class="outline-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live</a></div></div>
+                <div class="project-card card" data-animation="fade-in-up"><a href="#" class="project-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Project+Two" alt="Mock Project"></a><div class="project-content"><h3><a href="#">Mock Project Two</a></h3><p>A second placeholder project showing an AI-powered application, showcasing a different set of skills and technologies.</p><div class="skills"><span class="teg">React</span><span class="teg">AI</span></div></div><div class="project-links"><a href="#" class="outline-btn"><i class="fa-brands fa-github"></i>Github</a></div></div>
+                <div class="project-card card" data-animation="fade-in-up"><a href="#" class="project-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Project+Three" alt="Mock Project"></a><div class="project-content"><h3><a href="#">Mock Project Three</a></h3><p>A third demo project card to ensure the grid looks complete and visually balanced when populated with fallback data.</p><div class="skills"><span class="teg">Flutter</span><span class="teg">Firebase</span></div></div><div class="project-links"><a href="#" class="outline-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live</a></div></div>
             {% endif %}
         </div>
     </section>
 
-<<<<<<< HEAD
-    <!-- ========================= 7. ACHIEVEMENTS SECTION ========================= -->
-    <section id="achievements" class="achievements-section portfolio-container" data-animation="fade-in">
-        <div class="section-title">
-            <h2>Achievements & <span>Recognition</span></h2>
-            <p>Proud moments and milestones in my journey.</p>
-        </div>
-        <div class="achievements-content card">
-            
-            <!-- DYNAMIC: Looping through first column of achievements -->
-            <div class="achievements-column">
-                {% for achievement in achievements_col1 %}
-                    <!-- CORRECTED: Use the pre-calculated animation_delay from the view -->
-                    <div class="achievement-item box-reverse" data-animation="fade-in-right" data-animation-delay="{{ achievement.animation_delay }}">
-                        <div class="icon-wrapper"><i class="{{ achievement.icon }}"></i></div>
-                        <div class="achievement-text text-reverse">
-                            <h4>{{ achievement.title }}</h4>
-                            <p>{{ achievement.description }}</p>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-
-            <div class="achievement-center-icon" data-animation="zoom-in"><i class="fas fa-trophy"></i></div>
-
-            <!-- DYNAMIC: Looping through second column of achievements -->
-            <div class="achievements-column">
-                {% for achievement in achievements_col2 %}
-                    <!-- CORRECTED: Use the pre-calculated animation_delay from the view -->
-                    <div class="achievement-item" data-animation="fade-in-left" data-animation-delay="{{ achievement.animation_delay }}">
-                        <div class="icon-wrapper"><i class="{{ achievement.icon }}"></i></div>
-                        <div class="achievement-text">
-                            <h4>{{ achievement.title }}</h4>
-                            <p>{{ achievement.description }}</p>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-
-        </div>
-    </section>
-
-    <!-- ========================= 8. BLOGS SECTION ========================= -->
-=======
     <!-- ========================= 5. BLOGS SECTION ========================= -->
->>>>>>> test
     <section class="blogs-section portfolio-container">
         <header class="portfolio-header" data-animation="fade-in-up">
-            <div class="head">
-                <h1>Latest I've <br><span>Written</span></h1>
-                <a href="{% url 'portfolio:blog_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a>
-            </div>
+            <div class="head"><h1>Latest I've <br><span>Written</span></h1><a href="{% url 'portfolio:blog_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a></div>
             <p>"I enjoy sharing insights and experiences through writing. Check out some of my latest posts:"</p>
         </header>
         <div class="cards-container">
-<<<<<<< HEAD
-            <!-- DYNAMIC: Looping through latest blog posts -->
-            {% for blog in blogs %}
-            <a href="{% url 'portfolio:blog_detail' slug=blog.slug %}" class="blog-card card" data-animation="fade-in-up">
-                <div class="blog-image"><img src="{{ blog.cover_image.url }}" alt="{{ blog.title }}"></div>
-                <div class="blog-content"><h4>{{ blog.title }}</h4><p>{{ blog.summary | truncatewords:25 }}</p></div>
-                <div class="blog-footer">
-                    <div class="publisher">
-                        {% if blog.author_avatar %}
-                        <img src="{{ blog.author_avatar.url }}" alt="{{ blog.author_name }}">
-                        {% endif %}
-                        <span>{{ blog.author_name }}</span>
-=======
-            <!-- DYNAMIC: Looping through latest blog posts with fallback -->
             {% if blogs %}
                 {% for blog in blogs %}
-                <a href="{% url 'portfolio:blog_detail' slug=blog.slug %}" class="blog-card card" data-animation="fade-in-up">
-                    <div class="blog-image"><img src="{{ blog.cover_image.url }}" alt="{{ blog.title }}"></div>
-                    <div class="blog-content"><h4>{{ blog.title }}</h4><p>{{ blog.summary }}</p></div>
-                    <div class="blog-footer">
-                        <div class="publisher">
-                            {% if blog.author_avatar %}<img src="{{ blog.author_avatar.url }}" alt="{{ blog.author_name }}">{% endif %}
-                            <span>{{ blog.author_name }}</span>
-                        </div>
-                        <span class="blog-date">{{ blog.created_date|date:"M d, Y" }}</span>
->>>>>>> test
-                    </div>
-                </a>
+                <a href="#" class="blog-card card" data-animation="fade-in-up"><div class="blog-image"><img src="{{ blog.cover_image.url }}" alt="{{ blog.title }}"></div><div class="blog-content"><h4>{{ blog.title }}</h4><p>{{ blog.summary }}</p></div><div class="blog-footer"><div class="publisher">{% if blog.author_avatar %}<img src="{{ blog.author_avatar.url }}" alt="{{ blog.author_name }}">{% endif %}<span>{{ blog.author_name }}</span></div><span class="blog-date">{{ blog.created_date|date:"M d, Y" }}</span></div></a>
                 {% endfor %}
             {% else %}
-                <!-- Mock Blog Data -->
-                <a href="#" class="blog-card card" data-animation="fade-in-up">
-                    <div class="blog-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Blog+Post+One" alt="Blog Post One"></div>
-                    <div class="blog-content"><h4>My First Mock Blog Post</h4><p>This is a placeholder for a blog post, showing how the card looks when no real blog data is available.</p></div>
-                    <div class="blog-footer">
-                        <div class="publisher"><img src="https://placehold.co/40x40/010409/eaeaea?text=RD" alt="Roshan Damor"><span>Roshan Damor</span></div>
-                        <span class="blog-date">Oct 26, 2023</span>
-                    </div>
-                </a>
-                <a href="#" class="blog-card card" data-animation="fade-in-up">
-                    <div class="blog-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Blog+Post+Two" alt="Blog Post Two"></div>
-                    <div class="blog-content"><h4>Exploring AI in Web Development</h4><p>A sample article discussing the integration of AI. This is mock content to fill the space and maintain design consistency.</p></div>
-                    <div class="blog-footer">
-                        <div class="publisher"><img src="https://placehold.co/40x40/010409/eaeaea?text=RD" alt="Roshan Damor"><span>Roshan Damor</span></div>
-                        <span class="blog-date">Oct 20, 2023</span>
-                    </div>
-                </a>
-                <a href="#" class="blog-card card" data-animation="fade-in-up">
-                    <div class="blog-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Blog+Post+Two" alt="Blog Post Two"></div>
-                    <div class="blog-content"><h4>Exploring AI in Web Development</h4><p>A sample article discussing the integration of AI. This is mock content to fill the space and maintain design consistency.</p></div>
-                    <div class="blog-footer">
-                        <div class="publisher"><img src="https://placehold.co/40x40/010409/eaeaea?text=RD" alt="Roshan Damor"><span>Roshan Damor</span></div>
-                        <span class="blog-date">Oct 20, 2023</span>
-                    </div>
-                </a>
+                <a href="#" class="blog-card card" data-animation="fade-in-up"><div class="blog-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Blog+One" alt="Blog One"></div><div class="blog-content"><h4>My First Mock Blog Post</h4><p>This is a placeholder for a blog post, showing how the card looks when no real blog data is available.</p></div><div class="blog-footer"><div class="publisher"><img src="https://placehold.co/40x40/010409/eaeaea?text=RD" alt="RD"><span>Roshan Damor</span></div><span class="blog-date">Oct 26, 2023</span></div></a>
+                <a href="#" class="blog-card card" data-animation="fade-in-up"><div class="blog-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Blog+Two" alt="Blog Two"></div><div class="blog-content"><h4>Exploring AI in Web Development</h4><p>A sample article discussing AI integration. This is mock content to fill the space and maintain design consistency.</p></div><div class="blog-footer"><div class="publisher"><img src="https://placehold.co/40x40/010409/eaeaea?text=RD" alt="RD"><span>Roshan Damor</span></div><span class="blog-date">Oct 20, 2023</span></div></a>
+                <a href="#" class="blog-card card" data-animation="fade-in-up"><div class="blog-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Blog+Three" alt="Blog Three"></div><div class="blog-content"><h4>A Guide to Modern CSS</h4><p>A third demo article to ensure the grid is fully populated with fallback content, providing a better visual experience.</p></div><div class="blog-footer"><div class="publisher"><img src="https://placehold.co/40x40/010409/eaeaea?text=RD" alt="RD"><span>Roshan Damor</span></div><span class="blog-date">Oct 15, 2023</span></div></a>
             {% endif %}
         </div>
     </section>
 
-    <!-- ========================= 6. FAQ SECTION ========================= -->
+    <!-- ========================= 6. NEWSLETTER CTA SECTION (NEW) ========================= -->
+    <section id="newsletter" class="cta-section portfolio-container" data-animation="fade-in">
+        <div class="cta-container card">
+            <div class="cta-left-content">
+                <i class="fa-solid fa-paper-plane"></i>
+                <h2>Stay Updated</h2>
+                <p>Subscribe to my newsletter for the latest articles, project updates, and tech insights delivered straight to your inbox.</p>
+            </div>
+            <div class="cta-right-content">
+                <!-- Message Display Area -->
+                {% if messages %}
+                    <div class="newsletter-messages">
+                        {% for message in messages %}
+                            <div class="message {{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <!-- Newsletter Form -->
+                <form id="newsletter-form" class="cta-form" method="post" action="{% url 'portfolio:subscribe_home' %}">
+                    {% csrf_token %}
+                    <input type="email" name="email" id="newsletter-email" placeholder="Enter your email address" required>
+                    <button type="submit" class="filled-btn" id="newsletter-submit-btn">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================= 7. FAQ SECTION ========================= -->
     <section class="faq-section portfolio-container">
         <header class="portfolio-header" data-animation="fade-in-up">
             <div class="head"><h1>Got Some <br><span>Questions?</span></h1></div>
             <p>"Here are some common questions I get asked. If you have more queries, feel free to reach out!"</p>
         </header>
         <div class="card-container">
-            <!-- DYNAMIC: Looping through FAQs from database with fallback -->
             {% if faqs %}
                 {% for faq in faqs %}
-                <div class="faq-card card" data-animation="fade-in-up">
-                    <div class="faq-question"><span>{{ faq.question }}</span><i class="fa-solid fa-plus faq-icon"></i></div>
-                    <div class="faq-answer"><p>{{ faq.answer }}</p></div>
-                </div>
+                <div class="faq-card card" data-animation="fade-in-up"><div class="faq-question"><span>{{ faq.question }}</span><i class="fa-solid fa-plus faq-icon"></i></div><div class="faq-answer"><p>{{ faq.answer }}</p></div></div>
                 {% endfor %}
             {% else %}
-                <!-- Mock FAQ Data -->
-                <div class="faq-card card" data-animation="fade-in-up">
-                    <div class="faq-question"><span>What are your primary technical skills?</span><i class="fa-solid fa-plus faq-icon"></i></div>
-                    <div class="faq-answer"><p>This is a mock answer. My key skills include Python, Django, JavaScript, and AI/ML frameworks like PyTorch. The real answer would come from the database.</p></div>
-                </div>
-                <div class="faq-card card active" data-animation="fade-in-up">
-                    <div class="faq-question"><span>Are you available for freelance projects?</span><i class="fa-solid fa-plus faq-icon"></i></div>
-                    <div class="faq-answer"><p>Yes, this is a sample answer showing the accordion functionality. I am open to discussing new opportunities. Feel free to contact me with your project details.</p></div>
-                </div>
-                 <div class="faq-card card" data-animation="fade-in-up">
-                    <div class="faq-question"><span>Where did you study?</span><i class="fa-solid fa-plus faq-icon"></i></div>
-                    <div class="faq-answer"><p>This is placeholder text. Information about my education would be populated from the CMS or database.</p></div>
-                </div>
+                <div class="faq-card card" data-animation="fade-in-up"><div class="faq-question"><span>What are your primary technical skills?</span><i class="fa-solid fa-plus faq-icon"></i></div><div class="faq-answer"><p>This is a mock answer. My key skills include Python, Django, JavaScript, and AI/ML frameworks like PyTorch.</p></div></div>
+                <div class="faq-card card active" data-animation="fade-in-up"><div class="faq-question"><span>Are you available for freelance projects?</span><i class="fa-solid fa-plus faq-icon"></i></div><div class="faq-answer"><p>Yes, this is a sample answer showing the accordion. I am open to discussing new opportunities. Feel free to contact me.</p></div></div>
+                <div class="faq-card card" data-animation="fade-in-up"><div class="faq-question"><span>Where did you study?</span><i class="fa-solid fa-plus faq-icon"></i></div><div class="faq-answer"><p>This is placeholder text. Information about my education would be populated from the CMS or database.</p></div></div>
             {% endif %}
         </div>
     </section>
 
-    <!-- ========================= 7. CONTACT SECTION ========================= -->
+    <!-- ========================= 8. CONTACT SECTION ========================= -->
     <section id="contact" class="contact-section portfolio-container" data-animation="fade-in">
         <div class="section-title"><h2>Let's Get <span>Connected!</span></h2><p>"Interested in working together or have a question? I’d love to hear from you!"</p></div>
         <div class="contact-wrapper card">
@@ -451,35 +203,16 @@
                     </ul>
                 </div>
                 <div class="right-contact-form">
-                    <!-- DYNAMIC: Added CSRF token and action URL -->
-                    <form method="post" action="{% url 'portfolio:contact_submit' %}">
+                    <form id="contact-form" method="post" action="{% url 'portfolio:contact_submit' %}">
                         {% csrf_token %}
                         <div class="form-group-row"><div class="form-group"><label for="name">Your Name</label><input type="text" name="name" id="name" required></div><div class="form-group"><label for="email">Your Email</label><input type="email" name="email" id="email" required></div></div>
                         <div class="form-group"><label for="subject">Your Subject</label><input type="text" name="subject" id="subject"></div>
-<<<<<<< HEAD
-                        <div class="form-group"><label for="contact-message">Message</label><textarea name="message" id="contact-message" rows="4" required></textarea></div>
-                        <button type="submit" class="filled-btn">Send Message</button>
-=======
                         <div class="form-group"><label for="contact-message">Your Message</label><textarea name="message" id="contact-message" rows="4" required></textarea></div>
-                        <button type="submit" class="outline-btn">Send Message</button>
->>>>>>> test
+                        <button type="submit" class="outline-btn" id="contact-submit-btn">Send Message</button>
                     </form>
                 </div>
             </div>
         </div>
     </section>
-<<<<<<< HEAD
-
-    <!-- DYNAMIC: Video Resume URL -->
-    <div id="video-modal" class="video-modal">
-        <div class="modal-content">
-            <div class="modal-header"><h3>Video Resume</h3><button id="close-modal-btn" class="close-btn">×</button></div>
-            <div class="video-container">
-                <iframe id="resume-video-iframe" src="{{ video_resume.youtube_embed_url }}" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
-            </div>
-        </div>
-    </div>
-=======
     {{ skills_for_js|json_script:"skills-data" }}
->>>>>>> test
 {% endblock %}

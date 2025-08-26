@@ -143,11 +143,7 @@ img { max-width: 100%; height: auto; display: block; }
     background: var(--accent-color-hover); 
     border-color: var(--accent-color-hover); 
     transform: translateY(-2px); 
-<<<<<<< HEAD
-    color: #fff; 
-=======
     color: #fff;
->>>>>>> test
 }
 .outline-btn { 
     background: transparent; 
@@ -214,11 +210,7 @@ img { max-width: 100%; height: auto; display: block; }
     backdrop-filter: blur(10px);
     border: 1px solid var(--card-border);
     border-radius: 12px;
-<<<<<<< HEAD
-    padding: 15px 15px;
-=======
     padding: 10px 10px;
->>>>>>> test
 }
 .nav-left ul {
     list-style: none;
@@ -457,9 +449,51 @@ img { max-width: 100%; height: auto; display: block; }
     opacity: 1;
     visibility: visible;
 }
-/* The .modal-content and .modal-header styles from above apply here too */
+.video-modal .modal-content {
+    background-color: var(--card-bg);
+    padding: 25px;
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 850px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
 .video-modal.active .modal-content {
     transform: scale(1);
+}
+.video-modal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+.video-modal .modal-header h3 {
+    font-family: var(--heading-font);
+    font-size: 24px;
+    color: var(--title-color);
+}
+.video-modal .close-btn {
+    background: none;
+    border: none;
+    color: var(--title-color);
+    font-size: 40px;
+    cursor: pointer;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+}
+.video-modal .close-btn:hover {
+    color: var(--accent-color);
 }
 .video-container {
     position: relative;
@@ -477,6 +511,28 @@ img { max-width: 100%; height: auto; display: block; }
     width: 100%;
     height: 100%;
     border: none;
+}
+.no-video-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--text-color);
+    padding: 2rem;
+}
+.no-video-message i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+}
+.no-video-message h4 {
+    margin: 1rem 0 0.5rem;
+    font-size: 1.5rem;
+}
+.no-video-message p {
+    opacity: 0.8;
+    margin: 0;
 }
 
 

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Achievements & Certifications - Roshan Damor{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/achievements.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/achievements.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="achievements-container">
+    <!-- Page Header -->
+    <header class="page-header" data-animation="fade-in-up">
+        <h1>Certifications & <span>Awards</span></h1>
+        <p>A showcase of my credentials, awards, and other recognitions that mark my commitment to continuous learning and excellence.</p>
+    </header>
+
+    <!-- Page Toolbar -->
+    <div class="page-toolbar" data-animation="fade-in-up" data-animation-delay="200">
+        <div class="categories-scroller">
+            <button class="scroll-btn" id="scroll-left" aria-label="Scroll left"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="categories-list" id="categories-list">
+                <a href="{% url 'portfolio:achievements_list' %}" class="category-badge {% if not request.GET.category or request.GET.category == 'all' %}active{% endif %}">All</a>
+                {% for value, label in achievement_types %}
+                    <a href="?category={{ value }}" class="category-badge {% if request.GET.category == value %}active{% endif %}">{{ label }}</a>
+                {% endfor %}
+            </div>
+            <button class="scroll-btn" id="scroll-right" aria-label="Scroll right"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        <div class="sort-dropdown">
+            <button id="sort-button">Sort By <i class="fa-solid fa-caret-down"></i></button>
+            <ul id="sort-items">
+                <li><a href="?sort=newest{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Newest First</a></li>
+                <li><a href="?sort=oldest{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Oldest First</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Achievements Grid -->
+    <div class="achievements-grid" id="achievements-card-container">
+        {% if achievements %}
+            {% for ach in achievements %}
+            <div class="achievement-card card" data-animation="zoom-in">
+                <div class="card-banner">{{ ach.get_category_display }}</div>
+                {% if ach.image %}
+                <div class="ach-image">
+                    <img src="{{ ach.image.url }}" alt="{{ ach.title }} Preview">
+                </div>
+                {% endif %}
+                <div class="ach-content">
+                    <h3>{{ ach.title }}</h3>
+                    <p class="issuer">Issued by <strong>{{ ach.issuing_organization }}</strong> on {{ ach.date_issued|date:"M d, Y" }}</p>
+                    <p>{{ ach.summary }}</p>
+                </div>
+                {% if ach.credential_url %}
+                <div class="ach-footer">
+                    <a href="{{ ach.credential_url }}" class="credential-link" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> View Credential
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- FALLBACK DEMO CONTENT -->
+            <div class="achievement-card card" data-animation="zoom-in">
+                <div class="card-banner">Certification</div>
+                <div class="ach-content">
+                    <h3>Demo: Certified AI Professional</h3>
+                    <p class="issuer">Issued by <strong>Global Tech Institute</strong> on Jan 15, 2023</p>
+                    <p>A sample certification to demonstrate the card layout when no data is available from the database.</p>
+                </div>
+                <div class="ach-footer">
+                    <a href="#" class="credential-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> View Credential</a>
+                </div>
+            </div>
+            <div class="achievement-card card" data-animation="zoom-in">
+                <div class="card-banner">Award</div>
+                <div class="ach-content">
+                    <h3>Placeholder: Innovator of the Year Award</h3>
+                    <p class="issuer">Issued by <strong>Annual Tech Awards</strong> on Sep 05, 2022</p>
+                    <p>This is a placeholder for an award, ensuring the page always looks complete and professionally designed.</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav class="pagination" aria-label="Achievement pages">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="pagination-btn" aria-label="Previous Page"><i class="fa-solid fa-arrow-left"></i></a>
+        {% else %}
+            <button class="pagination-btn" disabled><i class="fa-solid fa-arrow-left"></i></button>
+        {% endif %}
+        <div class="page-numbers">
+            {% for num in page_obj.paginator.page_range %}
+                <a href="?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="page-number {% if page_obj.number == num %}active{% endif %}">{{ num }}</a>
+            {% endfor %}
+        </div>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="pagination-btn" aria-label="Next Page"><i class="fa-solid fa-arrow-right"></i></a>
+        {% else %}
+            <button class="pagination-btn" disabled><i class="fa-solid fa-arrow-right"></i></button>
+        {% endif %}
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

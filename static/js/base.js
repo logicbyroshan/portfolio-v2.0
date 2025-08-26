@@ -53,8 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeVideoBtn = document.getElementById('close-video-modal');
     const videoIframe = document.getElementById('resume-video-iframe');
 
-    if (videoModal && openVideoBtn && closeVideoBtn && videoIframe) {
-        const originalVideoSrc = videoIframe.src;
+    if (videoModal && openVideoBtn && closeVideoBtn) {
+        const originalVideoSrc = videoIframe ? videoIframe.src : null;
 
         const openVideoModal = () => {
             videoModal.classList.add('active');
@@ -65,7 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
             videoModal.classList.remove('active');
             document.body.style.overflow = 'auto';
             // Reset the iframe src to stop the video from playing in the background
-            videoIframe.src = originalVideoSrc;
+            if (videoIframe && originalVideoSrc) {
+                videoIframe.src = originalVideoSrc;
+            }
         };
 
         openVideoBtn.addEventListener('click', (e) => {

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Skills - Roshan Damor{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/skills.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/skills.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="skills-container">
+    <!-- Page Header -->
+    <header class="page-header" data-animation="fade-in-up">
+        <h1>My Technical <span>Skills</span></h1>
+        <p>A breakdown of my core competencies and the technologies I use to build robust, scalable, and innovative solutions.</p>
+    </header>
+
+    <!-- Skills Grid -->
+    <div class="skills-grid" id="skills-card-container">
+        {% if skills %}
+            {% for skill in skills %}
+            <div class="skill-card card" data-animation="zoom-in">
+                <div class="skill-header">
+                    <div class="skill-icon-wrapper"><i class="{{ skill.icon }}"></i></div>
+                    <h3>{{ skill.title }}</h3>
+                </div>
+                <p class="skill-summary">{{ skill.summary }}</p>
+                <div class="tech-stack">
+                    <h4>Core Technologies:</h4>
+                    <div class="tech-icons">
+                        {% for tech in skill.technologies.all %}
+                        <div class="tech-icon" title="{{ tech.name }}">
+                            <img src="{{ tech.icon.url }}" alt="{{ tech.name }} icon">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- FALLBACK DEMO CONTENT -->
+            <div class="skill-card card" data-animation="zoom-in">
+                <div class="skill-header">
+                    <div class="skill-icon-wrapper"><i class="fas fa-server"></i></div>
+                    <h3>Backend Development</h3>
+                </div>
+                <p class="skill-summary">This is a demo card for backend skills. I build robust server-side logic, APIs, and database structures for scalable applications.</p>
+                <div class="tech-stack">
+                    <h4>Core Technologies:</h4>
+                    <div class="tech-icons">
+                        <div class="tech-icon" title="Python"><img src="https://placehold.co/40x40/010409/eaeaea?text=Py" alt="Python icon"></div>
+                        <div class="tech-icon" title="Django"><img src="https://placehold.co/40x40/010409/eaeaea?text=Dj" alt="Django icon"></div>
+                        <div class="tech-icon" title="PostgreSQL"><img src="https://placehold.co/40x40/010409/eaeaea?text=PS" alt="PostgreSQL icon"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="skill-card card" data-animation="zoom-in">
+                <div class="skill-header">
+                    <div class="skill-icon-wrapper"><i class="fas fa-robot"></i></div>
+                    <h3>Artificial Intelligence</h3>
+                </div>
+                <p class="skill-summary">A sample card for AI. I leverage machine learning frameworks to build intelligent, data-driven features and applications.</p>
+                <div class="tech-stack">
+                    <h4>Core Technologies:</h4>
+                    <div class="tech-icons">
+                         <div class="tech-icon" title="PyTorch"><img src="https://placehold.co/40x40/010409/eaeaea?text=PT" alt="PyTorch icon"></div>
+                         <div class="tech-icon" title="Scikit-learn"><img src="https://placehold.co/40x40/010409/eaeaea?text=SK" alt="Scikit-learn icon"></div>
+                    </div>
+                </div>
+            </div>
+             <div class="skill-card card" data-animation="zoom-in">
+                <div class="skill-header">
+                    <div class="skill-icon-wrapper"><i class="fas fa-code"></i></div>
+                    <h3>Frontend Development</h3>
+                </div>
+                <p class="skill-summary">This placeholder shows frontend skills. I create responsive, user-friendly interfaces with modern web technologies.</p>
+                <div class="tech-stack">
+                    <h4>Core Technologies:</h4>
+                    <div class="tech-icons">
+                        <div class="tech-icon" title="JavaScript"><img src="https://placehold.co/40x40/010409/eaeaea?text=JS" alt="JavaScript icon"></div>
+                        <div class="tech-icon" title="CSS3"><img src="https://placehold.co/40x40/010409/eaeaea?text=C3" alt="CSS3 icon"></div>
+                        <div class="tech-icon" title="HTML5"><img src="https://placehold.co/40x40/010409/eaeaea?text=H5" alt="HTML5 icon"></div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav class="pagination" aria-label="Skill pages">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn" aria-label="Previous Page"><i class="fa-solid fa-arrow-left"></i></a>
+        {% else %}
+            <button class="pagination-btn" disabled><i class="fa-solid fa-arrow-left"></i></button>
+        {% endif %}
+        <div class="page-numbers">
+            {% for num in page_obj.paginator.page_range %}
+                <a href="?page={{ num }}" class="page-number {% if page_obj.number == num %}active{% endif %}">{{ num }}</a>
+            {% endfor %}
+        </div>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn" aria-label="Next Page"><i class="fa-solid fa-arrow-right"></i></a>
+        {% else %}
+            <button class="pagination-btn" disabled><i class="fa-solid fa-arrow-right"></i></button>
+        {% endif %}
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
