@@ -1,13 +1,15 @@
 import os, sys
+from dotenv import load_dotenv
+load_dotenv()
 import pymysql
 pymysql.install_as_MySQLdb()
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-6d0sc!g!$b+ecm0!uttm8)zco12u72)*gmtc61j3n_t0(lgf7v"
-DEBUG = True
-ALLOWED_HOSTS = []
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG", "False") == "True"
+ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS", "").split(",")]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -19,7 +21,6 @@ INSTALLED_APPS = [
     'tinymce',
     'solo',
     'portfolio',
-    'ai',
 ]
 
 MIDDLEWARE = [
@@ -58,8 +59,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv("MYSQL_DB"),
+        'USER': os.getenv("MYSQL_USER"),
+        'PASSWORD': os.getenv("MYSQL_PASSWORD"),
+        'HOST': os.getenv("MYSQL_HOST"),
+        'PORT': os.getenv("MYSQL_PORT"),
     }
 }
 

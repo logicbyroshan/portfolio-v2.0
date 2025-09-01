@@ -28,7 +28,7 @@ jobs:
           DJANGO_SETTINGS_MODULE: config.settings
           SECRET_KEY: django-insecure-6d0sc!g!$b+ecm0!uttm8)zco12u72)*gmtc61j3n_t0(lgf7v
           DEBUG: "0"
-          ALLOWED_HOSTS: "blogmitra.roshanproject.site"
+          ALLOWED_HOSTS: "roshandamor.me"
           GITHUB_ACTIONS: "true"
         run: |
           python manage.py collectstatic --noinput
@@ -37,11 +37,11 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: blogmitra.roshanproject.site   
-          username: ${{ secrets.FTP_USERNAME }}  
-          password: ${{ secrets.FTP_PASSWORD }}  # set this in GitHub Secrets
-          protocol: ftp                         # try ftps first
+          username: ${{ secrets.FTP_USER }}  
+          password: ${{ secrets.FTP_PASS }}
+          protocol: ftp       
           port: 21
-          server-dir: ./  # 👈 from cPanel "Path"
+          server-dir: ./
           passive: true
           security: loose
           log-level: verbose
