@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block body_class %}experience-detail-page{% endblock %}
+
 {% block title %}Experience: {{ experience.role }} - Roshan Damor{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/experience-detail.css' %}">
+    <link rel="stylesheet" href="{% static 'css/experience-dtl.css' %}">
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static 'js/experience-detail.js' %}" defer></script>
+    <script src="{% static 'js/experience-dtl.js' %}" defer></script>
 {% endblock %}
 
 
@@ -62,4 +64,55 @@
                        <!-- DYNAMIC: Button only shows if URL exists -->
                        {% if experience.company_url %}
                        <a href="{{ experience.company_url }}" class="filled-btn" target="_blank" rel="noopener noreferrer">
-                           <i clas
+                           <i class="fas fa-external-link-alt"></i> Visit Company
+                       </a>
+                       {% endif %}
+                    </div>
+                    <div class="experience-details">
+                        <div class="detail-item">
+                            <strong>Duration:</strong>
+                            <span>{{ experience.start_date|date:"M Y" }} - {% if experience.end_date %}{{ experience.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Type:</strong>
+                            <span>{{ experience.get_experience_type_display }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Company:</strong>
+                            <span>{{ experience.company_name }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-card card">
+                    <h3>Technologies Used</h3>
+                    <div class="experience-skills-list">
+                        <!-- DYNAMIC: Loop through technologies for this experience -->
+                        {% for tech in experience.technologies.all %}
+                        <span class="teg">{{ tech.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="sidebar-card card">
+                    <h3>Summary</h3>
+                    <div class="experience-summary">
+                        <p>{{ experience.summary }}</p>
+                    </div>
+                </div>
+                
+                <div class="sidebar-card card">
+                    <h3>Author</h3>
+                    <div class="author-info">
+                        <img src="{% static 'images/author-avatar.png' %}" alt="Roshan Damor">
+                        <div>
+                            <h4>Roshan Damor</h4>
+                            <p>Full-Stack Developer</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>        
+
+    </main>
+{% endblock %}

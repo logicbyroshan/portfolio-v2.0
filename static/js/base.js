@@ -8,8 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (mobileNavToggle && siteHeader) {
         mobileNavToggle.addEventListener('click', () => {
+            console.log('Mobile toggle clicked'); // Debug log
             siteHeader.classList.toggle('mobile-menu-active');
+            console.log('Header classes:', siteHeader.className); // Debug log
         });
+    } else {
+        console.log('Mobile nav elements not found:', { mobileNavToggle, siteHeader }); // Debug log
     }
 
     // =========================================================================
@@ -18,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resumeModal = document.getElementById('resume-modal');
     const openResumeBtn = document.getElementById('resume-nav-btn');
     const closeResumeBtn = document.getElementById('close-resume-modal');
+    const mobileResumeBtn = document.getElementById('mobile-resume-btn');
 
     if (resumeModal && openResumeBtn && closeResumeBtn) {
         const openModal = () => {
@@ -34,6 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             openModal();
         });
+
+        if (mobileResumeBtn) {
+            mobileResumeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal();
+                siteHeader.classList.remove('mobile-menu-active'); // Close mobile menu
+            });
+        }
 
         closeResumeBtn.addEventListener('click', closeModal);
 
@@ -52,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const openVideoBtn = document.getElementById('video-resume-nav-btn');
     const closeVideoBtn = document.getElementById('close-video-modal');
     const videoIframe = document.getElementById('resume-video-iframe');
+    const mobileVideoResumeBtn = document.getElementById('mobile-video-resume-btn');
 
     if (videoModal && openVideoBtn && closeVideoBtn) {
         const originalVideoSrc = videoIframe ? videoIframe.src : null;
@@ -74,6 +88,14 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             openVideoModal();
         });
+
+        if (mobileVideoResumeBtn) {
+            mobileVideoResumeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                openVideoModal();
+                siteHeader.classList.remove('mobile-menu-active'); // Close mobile menu
+            });
+        }
 
         closeVideoBtn.addEventListener('click', closeVideoModal);
 

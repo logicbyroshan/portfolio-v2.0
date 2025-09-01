@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block body_class %}blog-list-page{% endblock %}
+
 {% block title %}My Blog - Roshan Damor{% endblock %}
 
 {% block extra_css %}
@@ -50,7 +52,7 @@
                 <!-- DYNAMIC: Loop through paginated blog posts -->
                 {% for blog in blogs %}
                 <a href="{% url 'portfolio:blog_detail' slug=blog.slug %}" class="blog-card card" data-animation="zoom-in">
-                    <div class="blog-image"><img src="{{ blog.cover_image.url }}" alt="{{ blog.title }}"></div>
+                    <div class="blog-image"><img src="{% if blog.cover_image %}{{ blog.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ blog.title|urlencode }}{% endif %}" alt="{{ blog.title }}"></div>
                     <div class="blog-content">
                         <h4>{{ blog.title }}</h4>
                         <p>{{ blog.summary|truncatewords:25 }}</p> {# Truncate for consistency #}

@@ -301,7 +301,13 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
     .home-content { max-width: 100%; align-items: center; order: 2; }
     .home-hero-image { order: 1; max-width: 60%; margin-bottom: 30px; }
     .portfolio-header { align-items: center; text-align: center; }
-    .portfolio-header .head { justify-content: center; text-align: center; }
+    .portfolio-header .head { 
+        flex-direction: column; 
+        justify-content: center; 
+        text-align: center; 
+        align-items: center;
+        gap: 15px;
+    }
     .cta-container { flex-direction: column; text-align: center; }
     .cta-left-content { max-width: 100%; }
     .contact-section .mail-contact-card { grid-template-columns: 1fr; }
@@ -336,6 +342,7 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
     .about-section .text-reverse { text-align: center; }
     .exp-card { flex-direction: column; text-align: center; gap: 15px; }
     .exp-header { flex-direction: column; gap: 5px; }
+    .exp-card .skills { justify-content: center; }
     .cta-form { flex-direction: column; width: 100%; }
     .form-group-row { flex-direction: column; gap: 20px; }
     .left-contact-info, .right-contact-form { padding: 25px; }

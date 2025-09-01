@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block body_class %}project-list-page{% endblock %}
+
 {% block title %}My Projects - Roshan Damor{% endblock %}
 
 {% block extra_css %}
@@ -49,9 +51,9 @@
             {% if projects %}
                 <!-- DYNAMIC: Loop through paginated project objects -->
                 {% for project in projects %}
-                <div class="project-card card" data-animation="zoom-in">
+                <div class="project-card card clickable-card" data-animation="zoom-in" data-url="{% url 'portfolio:project_detail' slug=project.slug %}">
                     <a href="{% url 'portfolio:project_detail' slug=project.slug %}" class="project-image">
-                        <img src="{{ project.cover_image.url }}" alt="{{ project.title }}">
+                        <img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ project.title|urlencode }}{% endif %}" alt="{{ project.title }}">
                     </a>
                     <div class="project-content">
                         <h3><a href="{% url 'portfolio:project_detail' slug=project.slug %}">{{ project.title }}</a></h3>
@@ -64,10 +66,10 @@
                     </div>
                     <div class="project-links">
                         {% if project.github_url %}
-                            <a href="{{ project.github_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i>Github</a>
+                            <a href="{{ project.github_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-brands fa-github"></i>Github</a>
                         {% endif %}
                         {% if project.live_url %}
-                            <a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live Preview</a>
+                            <a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live Preview</a>
                         {% endif %}
                     </div>
                 </div>

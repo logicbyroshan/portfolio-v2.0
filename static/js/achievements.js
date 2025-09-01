@@ -1,6 +1,11 @@
 // js/achievements.js
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Exit early if this is not the achievements list page
+    if (!document.body.classList.contains('achievements-list-page')) {
+        return;
+    }
+
     // On-Scroll Animation
     const animatedElements = document.querySelectorAll('[data-animation]');
     if (animatedElements.length > 0) {

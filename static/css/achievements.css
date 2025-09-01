@@ -60,7 +60,7 @@
 }
 .ach-image {
     width: 100%;
-    max-height: 200px;
+    height: 400px;
     overflow: hidden;
 }
 .ach-image img {

@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
+from django.db import models
 
 # Import all models from your models.py
 from .models import (
@@ -210,8 +211,18 @@ class ExperienceListView(ListView):
 class ExperienceDetailView(DetailView):
     """View for a single experience dtl page."""
     model = Experience
-    template_name = 'experience-detail.html'
+    template_name = 'experience-dtl.html'
     context_object_name = 'experience'
+    pk_url_kwarg = 'pk'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        experience = self.get_object()
+        # Get related experiences (excluding current one, limit to 3)
+        context['related_experiences'] = Experience.objects.exclude(
+            id=experience.id
+        ).order_by('-start_date')[:3]
+        return context
 
 
 # =========================================================================
@@ -356,3 +367,34 @@ class SkillListView(ListView):
     template_name = 'skills.html'
     context_object_name = 'skills'
     paginate_by = 9
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        # Filtering by technology (if specified)
+        tech = self.request.GET.get('tech')
+        if tech and tech != 'all':
+            queryset = queryset.filter(technologies__slug=tech)
+            
+        # Search functionality
+        search = self.request.GET.get('search')
+        if search:
+            queryset = queryset.filter(
+                models.Q(title__icontains=search) | 
+                models.Q(summary__icontains=search)
+            )
+            
+        # Sorting
+        sort_by = self.request.GET.get('sort', 'name')
+        if sort_by == 'newest':
+            queryset = queryset.order_by('-id', 'title')  # Using id as proxy for creation date
+        else: # Default to alphabetical
+            queryset = queryset.order_by('title')
+            
+        return queryset.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add available technologies for filtering
+        context['technologies'] = Technology.objects.all()
+        return context

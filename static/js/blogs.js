@@ -123,4 +123,21 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.pagination')?.style.setProperty('display', 'none');
         }
     }
+
+    // =========================================================================
+    // BLOG CARDS HOVER EFFECTS
+    // =========================================================================
+    const blogCards = document.querySelectorAll('.blog-card');
+    
+    blogCards.forEach(card => {
+        // Add hover effects for better UX
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
 });

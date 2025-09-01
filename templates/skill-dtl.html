@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block body_class %}skill-detail-page{% endblock %}
+
 {% block title %}Skill: {{ skill.title }} - Roshan Damor{% endblock %}
 
 {% block extra_css %}
@@ -8,7 +10,7 @@
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static 'js/skill-detail.js' %}" defer></script>
+    <script src="{% static 'js/skill-detial.js' %}" defer></script>
 {% endblock %}
 
 
@@ -80,7 +82,7 @@
                         <!-- DYNAMIC: Loop through related projects from the view -->
                         {% for project in related_projects %}
                         <a href="{% url 'portfolio:project_detail' slug=project.slug %}" class="related-item">
-                            <img src="{{ project.cover_image.url }}" alt="{{ project.title }}">
+                            <img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/80x80/010409/eaeaea?text={{ project.title|slice:':2'|upper }}{% endif %}" alt="{{ project.title }}">
                             <div class="item-info">
                                 <h5>{{ project.title }}</h5>
                                 <p>{{ project.summary|truncatewords:7 }}</p>

@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block body_class %}blog-detail-page{% endblock %}
+
 {% block title %}Blog: {{ blog.title }} - Roshan Damor{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/blog-dtl.css' %}">
+    <link rel="stylesheet" href="{% static 'css/blog-detail.css' %}">
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static 'js/blog-dtl.js' %}" defer></script>
+    <script src="{% static 'js/blog-detail.js' %}" defer></script>
 {% endblock %}
 
 
@@ -38,7 +40,9 @@
                 <h1 class="blog-title" data-animation="fade-in-up" data-animation-delay="200">{{ blog.title }}</h1>
                 <p class="blog-summary" data-animation="fade-in-up" data-animation-delay="300">{{ blog.summary }}</p>
                 
+                {% if blog.cover_image %}
                 <img class="blog-hero-image" src="{{ blog.cover_image.url }}" alt="{{ blog.title }}" data-animation="zoom-in" data-animation-delay="400">
+                {% endif %}
                 
                 <!-- DYNAMIC: Main Content Body from TinyMCE, marked as 'safe' to render HTML -->
                 <div class="blog-content-body" data-animation="fade-in-up">
@@ -127,7 +131,7 @@
                         <!-- DYNAMIC: Loop through suggested posts from the view -->
                         {% for post in suggested_posts %}
                         <a href="{% url 'portfolio:blog_detail' slug=post.slug %}" class="suggested-post">
-                            <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
+                            <img src="{% if post.cover_image %}{{ post.cover_image.url }}{% else %}https://placehold.co/80x80/010409/eaeaea?text={{ post.title|slice:':2'|upper }}{% endif %}" alt="{{ post.title }}">
                             <div class="post-info">
                                 <h5>{{ post.title }}</h5>
                                 <span>{{ post.created_date|date:"M d, Y" }}</span>

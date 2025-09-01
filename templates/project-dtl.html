@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block body_class %}project-detail-page{% endblock %}
+
 {% block title %}Project: {{ project.title }} - Roshan Damor{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/project-detail.css' %}">
+    <link rel="stylesheet" href="{% static 'css/project-dtl.css' %}">
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static 'js/project-detail.js' %}" defer></script>
+    <script src="{% static 'js/project-dtl.js' %}" defer></script>
 {% endblock %}
 
 
@@ -46,7 +48,7 @@
                         <div class="slide"><img src="{{ p_image.image.url }}" alt="{{ p_image.caption|default:project.title }}"></div>
                         {% empty %}
                         <!-- Fallback if no slider images are uploaded -->
-                        <div class="slide"><img src="{{ project.cover_image.url }}" alt="{{ project.title }}"></div>
+                        <div class="slide"><img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/800x600/010409/eaeaea?text={{ project.title|urlencode }}{% endif %}" alt="{{ project.title }}"></div>
                         {% endfor %}
                     </div>
                     {% if project.images.all|length > 1 %}

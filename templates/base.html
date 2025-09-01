@@ -56,6 +56,21 @@
                 <span class="line bottom"></span>
             </button>
         </div>
+        
+        <!-- Mobile Navigation Menu -->
+        <div class="mobile-nav-menu" id="mobile-nav-menu">
+            <div class="mobile-menu-content">
+                <nav class="mobile-nav-links">
+                    <a href="{% url 'portfolio:skill_list' %}">Skills</a>
+                    <a href="{% url 'portfolio:achievements_list' %}">Achievements</a>
+                    <a href="{% url 'portfolio:experience_list' %}">Experiences</a>
+                </nav>
+                <div class="mobile-nav-buttons">
+                    <a href="#" id="mobile-resume-btn" class="outline-btn">Resume</a>
+                    <a href="#" id="mobile-video-resume-btn" class="filled-btn">Video Resume</a>
+                </div>
+            </div>
+        </div>
     </header>
 
     <!-- ======================= MAIN PAGE CONTENT ======================= -->
@@ -71,13 +86,27 @@
             <div class="footer-top">
                 <!-- Column 1: About & Socials -->
                 <div class="footer-col-about">
-                    <h3 class="footer-logo">Roshan Damor</h3>
-                    <p>A passionate developer building AI-powered solutions and scalable web applications for a digital-first world.</p>
+                    <h3 class="footer-logo">{{ config.hero_name|default:"Roshan Damor" }}</h3>
+                    <p>{{ config.hero_bio|default:"A passionate developer building AI-powered solutions and scalable web applications for a digital-first world." }}</p>
                     <ul class="social-icons">
-                        <li><a href="https://x.com/logicbyroshan" aria-label="Twitter"><i class="fab fa-twitter"></i></a></li>
-                        <li><a href="https://github.com/logicbyroshan" aria-label="GitHub"><i class="fab fa-github"></i></a></li>
-                        <li><a href="https://www.linkedin.com/in/logicbyroshan" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
-                        <li><a href="https://www.youtube.com/channel/logicbyroshan" aria-label="YouTube"><i class="fab fa-youtube"></i></a></li>
+                        {% if config.twitter_url %}
+                            <li><a href="{{ config.twitter_url }}" aria-label="Twitter" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                        {% endif %}
+                        {% if config.github_url %}
+                            <li><a href="{{ config.github_url }}" aria-label="GitHub" target="_blank"><i class="fab fa-github"></i></a></li>
+                        {% endif %}
+                        {% if config.linkedin_url %}
+                            <li><a href="{{ config.linkedin_url }}" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
+                        {% endif %}
+                        {% if config.youtube_url %}
+                            <li><a href="{{ config.youtube_url }}" aria-label="YouTube" target="_blank"><i class="fab fa-youtube"></i></a></li>
+                        {% endif %}
+                        {% if config.instagram_url %}
+                            <li><a href="{{ config.instagram_url }}" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a></li>
+                        {% endif %}
+                        {% if config.facebook_url %}
+                            <li><a href="{{ config.facebook_url }}" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                        {% endif %}
                     </ul>
                 </div>
 
@@ -129,18 +158,56 @@
     <div id="resume-modal" class="resume-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>My Resume</h3>
+                <h3>{{ resume.title|default:"My Resume" }}</h3>
                 <button id="close-resume-modal" class="close-btn" aria-label="Close modal">&times;</button>
             </div>
             <div class="modal-body">
-                <!-- DYNAMIC: Path to resume preview image -->
-                <img src="{% static 'images/resume_preview.jpg' %}" alt="Resume Preview">
+                {% if resume and resume.preview_image %}
+                    <img src="{{ resume.preview_image.url }}" alt="Resume Preview">
+                {% else %}
+                    <!-- Fallback to static image -->
+                    <img src="{% static 'images/resume_preview.jpg' %}" alt="Resume Preview">
+                {% endif %}
+                
+                {% if resume and resume.description %}
+                    <div class="resume-description">
+                        <p>{{ resume.description }}</p>
+                        {% if resume.years_experience or resume.total_projects or resume.technologies_used %}
+                            <div class="resume-stats">
+                                {% if resume.years_experience %}
+                                    <div class="stat-item">
+                                        <strong>{{ resume.years_experience }}</strong>
+                                        <span>Years Experience</span>
+                                    </div>
+                                {% endif %}
+                                {% if resume.total_projects %}
+                                    <div class="stat-item">
+                                        <strong>{{ resume.total_projects }}</strong>
+                                        <span>Projects</span>
+                                    </div>
+                                {% endif %}
+                                {% if resume.technologies_used %}
+                                    <div class="stat-item">
+                                        <strong>{{ resume.technologies_used }}</strong>
+                                        <span>Technologies</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </div>
             <div class="modal-footer">
-                <!-- DYNAMIC: Path to resume PDF file for download -->
-                <a href="{% static 'documents/Roshan_Damor_Resume.pdf' %}" class="filled-btn" download>
-                    <i class="fas fa-download"></i> Download PDF
-                </a>
+                {% if resume and resume.downloadable_file %}
+                    <a href="{{ resume.downloadable_file.url }}" class="filled-btn" download>
+                        <i class="fas fa-download"></i> Download PDF
+                    </a>
+                {% else %}
+                    <!-- Fallback to static file -->
+                    <a href="{% static 'documents/Roshan_Damor_Resume.pdf' %}" class="filled-btn" download>
+                        <i class="fas fa-download"></i> Download PDF
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -79,14 +79,17 @@
 
     <!-- ========================= 3. EXPERIENCE SECTION ========================= -->
     <section id="experience" class="experience-section portfolio-container" data-animation="fade-in">
-        <div class="section-title">
-            <h2>Where I've <span>Worked</span></h2>
+        <div class="portfolio-header">
+            <div class="head">
+                <h1>Where I've <span>Worked</span></h1>
+                <a href="{% url 'portfolio:experience_list' %}" class="view-all-link">View All</a>
+            </div>
             <p>"A glimpse into my professional journey, contributing to impactful projects and collaborating with talented teams."</p>
         </div>
         <div class="experience-wrapper card">
             {% if experiences %}
                 {% for exp in experiences %}
-                <a href="#" class="exp-card" data-animation="fade-in-up">
+                <a href="{% url 'portfolio:experience_detail' pk=exp.pk %}" class="exp-card" data-animation="fade-in-up">
                     <div class="exp-img"><img src="https://placehold.co/80x80/010409/eaeaea?text={{ exp.company_name|slice:':2' }}" alt="{{ exp.company_name }} Logo"></div>
                     <div class="exp-details">
                         <div class="exp-header">
@@ -114,7 +117,7 @@
         <div class="cards-container">
             {% if projects %}
                 {% for project in projects %}
-                <div class="project-card card" data-animation="fade-in-up"><a href="#" class="project-image"><img src="{{ project.cover_image.url }}" alt="{{ project.title }}"></a><div class="project-content"><h3><a href="#">{{ project.title }}</a></h3><p>{{ project.summary }}</p><div class="skills">{% for tech in project.technologies.all %}<span class="teg">{{ tech.name }}</span>{% endfor %}</div></div><div class="project-links">{% if project.github_url %}<a href="{{ project.github_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i>Github</a>{% endif %}{% if project.live_url %}<a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live</a>{% endif %}</div></div>
+                <div class="project-card card clickable-card" data-animation="fade-in-up" data-url="{% url 'portfolio:project_detail' slug=project.slug %}"><a href="{% url 'portfolio:project_detail' slug=project.slug %}" class="project-image"><img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ project.title|urlencode }}{% endif %}" alt="{{ project.title }}"></a><div class="project-content"><h3><a href="{% url 'portfolio:project_detail' slug=project.slug %}">{{ project.title }}</a></h3><p>{{ project.summary }}</p><div class="skills">{% for tech in project.technologies.all %}<span class="teg">{{ tech.name }}</span>{% endfor %}</div></div><div class="project-links">{% if project.github_url %}<a href="{{ project.github_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-brands fa-github"></i>Github</a>{% endif %}{% if project.live_url %}<a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live</a>{% endif %}</div></div>
                 {% endfor %}
             {% else %}
                 <div class="project-card card" data-animation="fade-in-up"><a href="#" class="project-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Project+One" alt="Mock Project"></a><div class="project-content"><h3><a href="#">Mock Project One</a></h3><p>This is a summary for a placeholder project to demonstrate the layout when no projects are in the database.</p><div class="skills"><span class="teg">Django</span><span class="teg">JS</span></div></div><div class="project-links"><a href="#" class="outline-btn"><i class="fa-brands fa-github"></i>Github</a><a href="#" class="outline-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live</a></div></div>
@@ -133,7 +136,7 @@
         <div class="cards-container">
             {% if blogs %}
                 {% for blog in blogs %}
-                <a href="#" class="blog-card card" data-animation="fade-in-up"><div class="blog-image"><img src="{{ blog.cover_image.url }}" alt="{{ blog.title }}"></div><div class="blog-content"><h4>{{ blog.title }}</h4><p>{{ blog.summary }}</p></div><div class="blog-footer"><div class="publisher">{% if blog.author_avatar %}<img src="{{ blog.author_avatar.url }}" alt="{{ blog.author_name }}">{% endif %}<span>{{ blog.author_name }}</span></div><span class="blog-date">{{ blog.created_date|date:"M d, Y" }}</span></div></a>
+                <a href="{% url 'portfolio:blog_detail' slug=blog.slug %}" class="blog-card card clickable-card" data-animation="fade-in-up" data-url="{% url 'portfolio:blog_detail' slug=blog.slug %}"><div class="blog-image"><img src="{% if blog.cover_image %}{{ blog.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ blog.title|urlencode }}{% endif %}" alt="{{ blog.title }}"></div><div class="blog-content"><h4>{{ blog.title }}</h4><p>{{ blog.summary }}</p></div><div class="blog-footer"><div class="publisher">{% if blog.author_avatar %}<img src="{{ blog.author_avatar.url }}" alt="{{ blog.author_name }}">{% endif %}<span>{{ blog.author_name }}</span></div><span class="blog-date">{{ blog.created_date|date:"M d, Y" }}</span></div></a>
                 {% endfor %}
             {% else %}
                 <a href="#" class="blog-card card" data-animation="fade-in-up"><div class="blog-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Blog+One" alt="Blog One"></div><div class="blog-content"><h4>My First Mock Blog Post</h4><p>This is a placeholder for a blog post, showing how the card looks when no real blog data is available.</p></div><div class="blog-footer"><div class="publisher"><img src="https://placehold.co/40x40/010409/eaeaea?text=RD" alt="RD"><span>Roshan Damor</span></div><span class="blog-date">Oct 26, 2023</span></div></a>

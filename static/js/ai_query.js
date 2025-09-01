@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Enhanced Textarea Auto-Resize with smooth animation
         function autoResizeTextarea() {
             questionTextarea.style.height = 'auto';
-            const newHeight = Math.min(questionTextarea.scrollHeight, 120); // Max height 120px
+            const newHeight = Math.min(questionTextarea.scrollHeight, 150); // Max height 150px (matching CSS)
             questionTextarea.style.height = `${newHeight}px`;
         }
 

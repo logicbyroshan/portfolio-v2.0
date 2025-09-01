@@ -32,6 +32,20 @@ class SiteConfiguration(SingletonModel):
     skills_description = models.TextField(blank=True)
     experience_title = models.CharField(max_length=200, default="Where I've Worked")
     experience_description = models.TextField(blank=True)
+    
+    # --- Social Media Links ---
+    twitter_url = models.URLField(blank=True, default="https://x.com/logicbyroshan")
+    github_url = models.URLField(blank=True, default="https://github.com/logicbyroshan")
+    linkedin_url = models.URLField(blank=True, default="https://www.linkedin.com/in/logicbyroshan")
+    youtube_url = models.URLField(blank=True, default="https://www.youtube.com/channel/logicbyroshan")
+    instagram_url = models.URLField(blank=True, null=True)
+    facebook_url = models.URLField(blank=True, null=True)
+    
+    # --- Contact Information ---
+    email = models.EmailField(blank=True, default="contact@roshanproject.site")
+    phone = models.CharField(max_length=20, blank=True)
+    location = models.CharField(max_length=100, blank=True, default="India")
+    
     # ... and so on for every other section ...
     
     class Meta:
@@ -152,8 +166,10 @@ class Experience(models.Model):
     achievements = HTMLField()
     technologies = models.ManyToManyField(Technology, related_name="experiences")
     experience_type = models.CharField(max_length=2, choices=ExperienceType.choices, default=ExperienceType.FULL_TIME)
+    
     class Meta:
         ordering = ['-start_date']
+    
     def __str__(self):
         return f"{self.role} at {self.company_name}"
 
@@ -175,11 +191,32 @@ class Service(models.Model):
 
 
 class Resume(SingletonModel):
-    """NEW: Singleton model for the Resume modal."""
-    preview_image = models.ImageField(upload_to='resume/')
-    downloadable_file = models.FileField(upload_to='resume/')
+    """Enhanced Resume modal with dynamic content."""
+    # Main resume file and preview
+    preview_image = models.ImageField(
+        upload_to='resume/', 
+        help_text="Upload a preview image of your resume (JPG/PNG recommended)"
+    )
+    downloadable_file = models.FileField(
+        upload_to='resume/', 
+        help_text="Upload your resume PDF file"
+    )
+    
+    # Additional resume information
+    title = models.CharField(max_length=200, default="My Resume")
+    description = models.TextField(
+        blank=True, 
+        default="Download my latest resume to learn more about my experience and skills."
+    )
+    last_updated = models.DateTimeField(auto_now=True)
+    
+    # Resume stats/highlights
+    years_experience = models.CharField(max_length=10, blank=True, default="3+")
+    total_projects = models.CharField(max_length=10, blank=True, default="25+")
+    technologies_used = models.CharField(max_length=10, blank=True, default="15+")
+    
     def __str__(self):
-        return "My Resume"
+        return self.title
 
 class VideoResume(SingletonModel):
     """NEW: Singleton model for the Video Resume modal."""
