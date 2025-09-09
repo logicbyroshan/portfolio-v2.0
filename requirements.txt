@@ -3,7 +3,6 @@ asttokens==3.0.0
 colorama==0.4.6
 decorator==5.2.1
 Django==5.2.5
-django-allauth==65.4.0
 django-extensions==4.1
 django-solo==2.4.0
 django-tinymce==4.1.0

@@ -149,6 +149,20 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comment by {self.author_name} on {self.post.title}"
 
+class ProjectComment(models.Model):
+    project = models.ForeignKey(Project, related_name='comments', on_delete=models.CASCADE)
+    author_name = models.CharField(max_length=100, default="Anonymous")
+    body = models.TextField()
+    likes = models.PositiveIntegerField(default=0)
+    created_date = models.DateTimeField(auto_now_add=True)
+    is_approved = models.BooleanField(default=True)
+    class Meta:
+        ordering = ['created_date']
+        verbose_name = "Project Comment"
+        verbose_name_plural = "Project Comments"
+    def __str__(self):
+        return f"Comment by {self.author_name} on {self.project.title}"
+
 class Experience(models.Model):
     class ExperienceType(models.TextChoices):
         FULL_TIME = 'FT', 'Full-Time'

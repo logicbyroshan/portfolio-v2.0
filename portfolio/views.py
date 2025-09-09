@@ -1,6 +1,7 @@
 from django.http import JsonResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
 from django.db import models
@@ -8,7 +9,7 @@ from django.db import models
 # Import all models from your models.py
 from .models import (
     Skill, Experience, Project, Blog, FAQ, Category, Technology, 
-    NewsletterSubscriber, Comment, Service, Achievement, 
+    NewsletterSubscriber, Comment, ProjectComment, Service, Achievement, 
     SiteConfiguration, Resume, VideoResume
 )
 
@@ -88,12 +89,71 @@ class ProjectListView(ListView):
         return context
 
 class ProjectDetailView(DetailView):
-    """View for a single project detail page."""
+    """View for a single project detail page with comment functionality."""
     model = Project
     template_name = 'project-dtl.html'
     context_object_name = 'project'
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project = self.get_object()
+        
+        # Get initial 5 comments for display
+        initial_comments = project.comments.filter(is_approved=True).order_by('-created_date')[:5]
+        context['comments'] = initial_comments
+        
+        # Check if there are more comments beyond the initial 5
+        total_comments_count = project.comments.filter(is_approved=True).count()
+        context['has_more_comments'] = total_comments_count > 5
+        context['total_comments'] = total_comments_count
+        
+        return context
+
+    def post(self, request, *args, **kwargs):
+        project = self.get_object()
+        body = request.POST.get('body')
+
+        redirect_url = reverse('portfolio:project_detail', kwargs={'slug': project.slug}) + '#comments'
+        response = HttpResponseRedirect(redirect_url)
+
+        if body:
+            # Create comment with anonymous user
+            ProjectComment.objects.create(project=project, author_name="Anonymous", body=body)
+            messages.success(request, "Your comment has been posted and is awaiting approval.")
+        else:
+            messages.error(request, "Please enter your comment.")
+            
+        return response
+
+
+def load_more_project_comments(request, slug):
+    """AJAX view to load more project comments."""
+    if request.method == 'GET':
+        project = get_object_or_404(Project, slug=slug)
+        offset = int(request.GET.get('offset', 0))
+        
+        # Load 10 comments starting from the offset
+        comments = project.comments.filter(is_approved=True).order_by('-created_date')[offset:offset+10]
+        total_comments = project.comments.filter(is_approved=True).count()
+        
+        comments_data = []
+        for comment in comments:
+            comments_data.append({
+                'id': comment.id,
+                'author_name': comment.author_name,
+                'body': comment.body,
+                'likes': comment.likes,
+                'created_at': comment.created_date.strftime('%B %d, %Y at %I:%M %p'),
+            })
+        
+        return JsonResponse({
+            'comments': comments_data,
+            'has_more': total_comments > (offset + 10)
+        })
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
 # =========================================================================
@@ -146,19 +206,17 @@ class BlogDetailView(DetailView):
 
     def post(self, request, *args, **kwargs):
         post = self.get_object()
-        author_name = request.POST.get('name')
-        email = request.POST.get('email')
         body = request.POST.get('body')
 
         redirect_url = reverse('portfolio:blog_detail', kwargs={'slug': post.slug}) + '#comments'
         response = HttpResponseRedirect(redirect_url)
 
-        if author_name and email and body:
-            # Create comment directly without newsletter subscription requirement
-            Comment.objects.create(post=post, author_name=author_name, body=body)
+        if body:
+            # Create comment with anonymous user
+            Comment.objects.create(post=post, author_name="Anonymous", body=body)
             messages.success(request, "Your comment has been posted and is awaiting approval.")
         else:
-            messages.error(request, "Please fill in all the required fields to comment.")
+            messages.error(request, "Please enter your comment.")
             
         return response
 

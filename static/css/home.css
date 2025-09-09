@@ -113,13 +113,11 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
     padding: 8px 16px;
 }
 .filled-btn { background: var(--accent-color); color: #fff; border: 2px solid var(--accent-color); }
-.filled-btn:hover { background: var(--accent-color-hover); border-color: var(--accent-color-hover); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0, 169, 255, 0.3); }
+.filled-btn:hover { border-color: var(--accent-color-hover); }
 .outline-btn { background: transparent; border: 2px solid var(--card-border); color: var(--title-color); display: inline-flex; align-items: center; gap: 6px; }
-.outline-btn:hover { background-color: rgba(0, 169, 255, 0.1); border-color: var(--accent-color); color: var(--accent-color); }
+.outline-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
 .awesome { display: inline-flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 500; color: var(--title-color); padding: 0; }
-.awesome:hover { gap: 15px; color: var(--accent-color); }
-.awesome i { transition: transform 0.3s ease; }
-.awesome:hover i { transform: translateX(5px); }
+.awesome:hover { color: var(--accent-color); }
 
 /* ==========================================================================
    3. Section-Specific Styles
@@ -222,7 +220,7 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
 .project-card, .blog-card { display: flex; flex-direction: column; gap: 15px; height: 100%; }
 .project-image, .blog-image { display: block; overflow: hidden; border-radius: 10px; }
 .project-image img, .blog-image img { border-radius: 10px; width: 100%; height: 200px; object-fit: cover; transition: transform 0.4s ease; }
-.project-card:hover .project-image img, .blog-card:hover .blog-image img { transform: scale(1.05); }
+/* Removed hover transform for simplified styling */
 .project-content, .blog-content { display: flex; flex-direction: column; gap: 15px; flex-grow: 1; }
 .blog-content h4, .project-content h3 { font-size: 22px; color: var(--title-color); }
 .blog-content h4 a, .project-content h3 a { color: inherit; }

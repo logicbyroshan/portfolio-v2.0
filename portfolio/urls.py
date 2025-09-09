@@ -10,7 +10,8 @@ from .views import (
     # Form/API Views
     ContactSubmissionView,
     NewsletterSubscribeHomeView,
-    NewsletterSubscribeAjaxView
+    NewsletterSubscribeAjaxView,
+    load_more_project_comments
 )
 
 app_name = 'portfolio'
@@ -22,6 +23,7 @@ urlpatterns = [
     # Project Pages
     path('projects/', ProjectListView.as_view(), name='project_list'),
     path('projects/<slug:slug>/', ProjectDetailView.as_view(), name='project_detail'),
+    path('projects/<slug:slug>/load-more-comments/', load_more_project_comments, name='load_more_project_comments'),
 
     # Blog Pages
     path('blog/', BlogListView.as_view(), name='blog_list'),

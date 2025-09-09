@@ -108,12 +108,7 @@
                     <!-- UPDATED: Comment Form with name/email fields and CSRF token -->
                     <form class="comment-form card" id="comment-form" method="post" action="{% url 'portfolio:blog_detail' slug=blog.slug %}" data-animation="fade-in-up">
                         {% csrf_token %}
-                        <img src="{% static 'images/default_avatar.png' %}" alt="Your Avatar" class="comment-avatar">
                         <div class="form-content">
-                            <div class="comment-form-fields">
-                                <input type="text" name="name" placeholder="Your Name" required>
-                                <input type="email" name="email" placeholder="Your Email" required>
-                            </div>
                             <textarea name="body" placeholder="Join the discussion..." rows="3" required></textarea>
                             <button type="submit" class="filled-btn">Post Comment</button>
                         </div>

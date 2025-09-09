@@ -52,6 +52,9 @@
                         {% endfor %}
                     </div>
                     {% if project.images.all|length > 1 %}
+                    <div class="image-counter">
+                        <span id="current-slide">1</span> / <span id="total-slides">{{ project.images.all|length }}</span>
+                    </div>
                     <button class="slider-btn prev" id="prev-slide" aria-label="Previous Slide"><i class="fa-solid fa-chevron-left"></i></button>
                     <button class="slider-btn next" id="next-slide" aria-label="Next Slide"><i class="fa-solid fa-chevron-right"></i></button>
                     {% endif %}
@@ -61,6 +64,53 @@
                 <div class="project-content-body" data-animation="fade-in-up">
                     {{ project.content|safe }}
                 </div>
+
+                <!-- ======================= Comments Section ======================= -->
+                <section class="comments-section" id="comments">
+                    <!-- DYNAMIC: Comment count -->
+                    <h2 data-animation="fade-in-up">Comments ({{ comments.count }})</h2>
+                    
+                    <!-- Comment Form -->
+                    <form class="comment-form card" id="comment-form" method="post" action="{% url 'portfolio:project_detail' slug=project.slug %}" data-animation="fade-in-up">
+                        {% csrf_token %}
+                        <div class="form-content">
+                            <textarea name="body" placeholder="Share your thoughts about this project..." rows="3" required></textarea>
+                            <button type="submit" class="filled-btn">Post Comment</button>
+                        </div>
+                    </form>
+
+                    <!-- List of Comments -->
+                    <div class="comment-list" id="comment-list">
+                        <!-- DYNAMIC: Loop through comments from the view -->
+                        {% for comment in comments %}
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <img src="/static/images/author-avatar.png" alt="Author Avatar" class="comment-avatar">
+                                <div class="comment-meta">
+                                    <h4 class="comment-author">{{ comment.author_name }}</h4>
+                                    <span class="comment-date">{{ comment.created_date|date:"F d, Y \a\t g:i A" }}</span>
+                                </div>
+                            </div>
+                            <div class="comment-body">
+                                <p>{{ comment.body|linebreaks }}</p>
+                            </div>
+                            <div class="comment-actions">
+                                <button class="like-btn" data-comment-id="{{ comment.id }}">
+                                    <i class="fa-regular fa-heart"></i>
+                                    <span class="like-count">{{ comment.likes }}</span>
+                                </button>
+                            </div>
+                        </div>
+                        {% empty %}
+                            <p>Be the first to leave a comment about this project!</p>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Load More Button (controlled by JS) -->
+                    {% if has_more_comments %}
+                        <button class="outline-btn" id="load-more-comments">Load More Comments</button>
+                    {% endif %}
+                </section>
             </article>
 
             <!-- ======================= Sidebar ======================= -->
