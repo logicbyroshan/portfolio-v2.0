@@ -9,10 +9,31 @@
     gap: 40px;
     margin-top: 200px;
 }
-.page-header { width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-.page-header h1 { font-family: var(--heading-font); font-size: 50px; color: var(--title-color); line-height: 1.1; letter-spacing: 2px; }
-.page-header h1 span { color: var(--accent-color); }
-.page-header p { font-size: 18px; color: var(--paragraph-color); max-width: 800px; margin: 0 auto; }
+/* Portfolio Header - matches projects page styling */
+.portfolio-header {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+.portfolio-header h1 {
+    font-family: var(--heading-font);
+    font-size: 50px;
+    color: var(--title-color);
+    line-height: 1.1;
+    letter-spacing: 2px;
+}
+.portfolio-header h1 span {
+    color: var(--accent-color);
+}
+.portfolio-header p {
+    font-size: 18px;
+    color: var(--paragraph-color);
+    max-width: 800px;
+    margin: 0 auto;
+}
 
 /* Page Toolbar */
 .page-toolbar { 
@@ -64,7 +85,7 @@
 }
 
 .search-form button:hover {
-    background: var(--accent-color-hover);
+    border-color: var(--accent-color-hover);
 }
 
 .categories-scroller { 
@@ -88,21 +109,24 @@
 }
 
 .category-badge { 
-    padding: 8px 16px; 
-    background-color: rgba(255, 255, 255, 0.05); 
-    border: 1px solid var(--card-border); 
-    border-radius: 20px; 
-    color: var(--paragraph-color); 
-    text-decoration: none; 
-    font-size: 14px; 
-    white-space: nowrap; 
-    transition: all 0.3s ease; 
+    background-color: transparent !important;
+    border: 1px solid var(--card-border);
+    color: var(--paragraph-color);
+    padding: 6px 16px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .category-badge:hover, .category-badge.active { 
-    background-color: var(--accent-color); 
-    border-color: var(--accent-color); 
-    color: #fff; 
+    background-color: var(--accent-color) !important; 
+    border-color: var(--accent-color) !important; 
+    color: #fff !important; 
 }
 
 .scroll-btn { 
@@ -114,12 +138,15 @@
     border-radius: 50%; 
     cursor: pointer; 
     transition: all 0.3s ease; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .scroll-btn:hover { 
-    background-color: var(--accent-color); 
     border-color: var(--accent-color); 
-    color: #fff; 
+    color: var(--accent-color); 
 }
 
 .sort-dropdown { 
@@ -141,9 +168,8 @@
 }
 
 .sort-dropdown button:hover, .sort-dropdown button.active { 
-    background-color: var(--accent-color); 
     border-color: var(--accent-color); 
-    color: #fff; 
+    color: var(--accent-color); 
 }
 
 .sort-dropdown ul { 
@@ -250,7 +276,6 @@
     transition: all 0.2s ease;
 }
 .tech-icon:hover {
-    transform: scale(1.1);
     border-color: var(--accent-color);
 }
 .tech-icon img {
@@ -266,7 +291,7 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-    .page-header h1 { font-size: 40px; }
+    .portfolio-header h1 { font-size: 40px; }
     .page-toolbar { 
         flex-direction: column; 
         align-items: stretch; 
@@ -284,7 +309,7 @@
     .skills-grid {
         grid-template-columns: 1fr;
     }
-    .page-header h1 { 
+    .portfolio-header h1 { 
         font-size: 32px; 
     }
     .page-toolbar {

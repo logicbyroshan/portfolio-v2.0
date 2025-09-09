@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
-    // PAGINATION LOGIC (FOR DEMO PURPOSES)
+    // Pagination Logic
     // =========================================================================
     const cardContainer = document.getElementById('experience-card-container');
     const pageNumbersContainer = document.getElementById('page-numbers');
@@ -131,21 +131,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const url = this.getAttribute('data-href') || this.getAttribute('data-url');
             if (url) {
                 // Add a small delay for visual feedback
-                this.style.transform = 'scale(0.98)';
                 setTimeout(() => {
                     window.location.href = url;
                 }, 100);
             }
         });
         
-        // Add hover effects
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px)';
-            this.style.transition = 'transform 0.3s ease';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
+        // Removed hover effects for simplified interaction
     });
 });

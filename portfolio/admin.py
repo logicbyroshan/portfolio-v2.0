@@ -1,7 +1,6 @@
 import csv
 from django.http import HttpResponse
 from django.contrib import admin
-from solo.admin import SingletonModelAdmin
 from .models import (
     SiteConfiguration, Technology, Category, Project, ProjectImage, Blog, Comment, 
     Experience, FAQ, Skill, SkillTechnologyDetail, Service, Achievement,
@@ -9,12 +8,12 @@ from .models import (
 )
 
 # =========================================================================
-# SINGLETON MODEL ADMINS
+# MODEL ADMINS
 # =========================================================================
 
 @admin.register(SiteConfiguration)
-class SiteConfigurationAdmin(SingletonModelAdmin):
-    """Admin for the single Site Configuration object."""
+class SiteConfigurationAdmin(admin.ModelAdmin):
+    """Admin for the Site Configuration object."""
     fieldsets = (
         ('Hero Section', {
             'fields': ('hero_greeting', 'hero_name', 'hero_tagline', 'hero_bio')
@@ -33,11 +32,11 @@ class SiteConfigurationAdmin(SingletonModelAdmin):
     )
 
 @admin.register(Resume)
-class ResumeAdmin(SingletonModelAdmin):
+class ResumeAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(VideoResume)
-class VideoResumeAdmin(SingletonModelAdmin):
+class VideoResumeAdmin(admin.ModelAdmin):
     pass
 
 
@@ -115,8 +114,10 @@ class FAQAdmin(admin.ModelAdmin):
 @admin.register(Skill)
 class SkillAdmin(admin.ModelAdmin):
     inlines = [SkillTechnologyDetailInline]
-    list_display = ('title', 'icon')
-    search_fields = ('title',)
+    list_display = ('title', 'category', 'icon')
+    list_filter = ('category',)
+    search_fields = ('title', 'summary')
+    list_editable = ('category',)
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):

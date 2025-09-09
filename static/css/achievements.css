@@ -20,30 +20,34 @@
 .categories-list { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
 .categories-list::-webkit-scrollbar { display: none; }
 .category-badge { background-color: transparent; border: 1px solid var(--card-border); color: var(--paragraph-color); padding: 6px 16px; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; white-space: nowrap; text-decoration: none; }
-.category-badge:hover, .category-badge.active { background-color: var(--accent-color); border-color: var(--accent-color); color: #fff; }
+.category-badge:hover, .category-badge.active { border-color: var(--accent-color); color: var(--accent-color); }
 .sort-dropdown { position: relative; }
-#sort-button { background: transparent; border: 1px solid var(--card-border); color: var(--title-color); padding: 8px 16px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
+#sort-button { padding: 10px 16px; background-color: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border); color: var(--paragraph-color); border-radius: 8px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
 #sort-button:hover { border-color: var(--accent-color); color: var(--accent-color); }
 #sort-items { position: absolute; top: 110%; right: 0; background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; width: 180px; z-index: 10; list-style: none; padding: 8px; display: none; }
 #sort-items.show { display: block; }
 #sort-items a { display: block; padding: 8px 12px; color: var(--paragraph-color); text-decoration: none; border-radius: 6px; transition: all 0.2s ease; }
 #sort-items a:hover { background-color: rgba(0, 169, 255, 0.1); color: var(--accent-color); }
 
-/* Achievement Grid */
+/* Achievement Grid - Masonry Style Layout */
 .achievements-grid {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-auto-rows: 10px; /* Small row height for flexible positioning */
+    gap: 20px;
+    align-items: start;
 }
 
-/* Unique Achievement Card Style */
+/* Unique Achievement Card Style - Masonry Layout */
 .achievement-card {
     display: flex;
     flex-direction: column;
     padding: 0; /* Override default card padding */
     overflow: hidden;
     position: relative;
+    height: fit-content;
+    /* Grid positioning will be handled by JavaScript */
 }
 .card-banner {
     position: absolute;
@@ -60,40 +64,48 @@
 }
 .ach-image {
     width: 100%;
-    height: 400px;
+    height: 200px;
     overflow: hidden;
+    border-radius: 8px 8px 0 0;
 }
 .ach-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center top;
     transition: transform 0.3s ease;
 }
 .achievement-card:hover .ach-image img {
     transform: scale(1.05);
 }
 .ach-content {
-    padding: 25px;
+    padding: 20px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
 .ach-content h3 {
     color: var(--title-color);
-    font-size: 20px;
-    margin-bottom: 8px;
+    font-size: 18px;
+    margin-bottom: 6px;
+    line-height: 1.3;
 }
 .ach-content .issuer {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--paragraph-color);
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 .ach-content .issuer strong {
     color: var(--title-color);
     font-weight: 500;
 }
+.ach-content p:last-of-type {
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--paragraph-color);
+}
 .ach-footer {
-    padding: 0 25px 25px;
+    padding: 0 20px 20px;
     margin-top: auto;
 }
 .credential-link {
@@ -127,4 +139,34 @@
     .page-toolbar { flex-direction: column; align-items: stretch; }
     .sort-dropdown { width: 100%; }
     #sort-button { width: 100%; justify-content: space-between; }
+    
+    .achievements-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-auto-rows: 8px;
+        gap: 15px;
+    }
+    
+    .ach-image {
+        height: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .achievements-grid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 6px;
+        gap: 15px;
+    }
+    
+    .ach-image {
+        height: 160px;
+    }
+    
+    .ach-content {
+        padding: 15px;
+    }
+    
+    .ach-footer {
+        padding: 0 15px 15px;
+    }
 }

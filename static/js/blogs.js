@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // =========================================================================
-    // PAGINATION LOGIC (FOR DEMO PURPOSES)
+    // Pagination Logic
     // =========================================================================
     const cardContainer = document.getElementById('blog-card-container');
     const pageNumbersContainer = document.getElementById('page-numbers');

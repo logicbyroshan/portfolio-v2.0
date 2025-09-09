@@ -116,12 +116,13 @@
     position: relative;
 }
 #sort-button {
-    background: transparent;
+    padding: 10px 16px;
+    background-color: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--card-border);
-    color: var(--title-color);
-    padding: 8px 16px;
+    color: var(--paragraph-color);
     border-radius: 8px;
     cursor: pointer;
+    font-size: 14px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -190,9 +191,7 @@
     object-fit: cover;
     transition: transform 0.4s ease;
 }
-.project-card:hover .project-image img {
-    transform: scale(1.05);
-}
+/* Removed hover effect for simplified styling */
 .project-content {
     display: flex;
     flex-direction: column;
@@ -248,7 +247,6 @@
     text-decoration: none;
 }
 .outline-btn:hover {
-    background-color: rgba(0, 169, 255, 0.1);
     border-color: var(--accent-color);
     color: var(--accent-color);
 }

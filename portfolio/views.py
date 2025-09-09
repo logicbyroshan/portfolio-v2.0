@@ -26,21 +26,8 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        # Handle singleton models separately for better error handling
-        try:
-            context['config'] = SiteConfiguration.objects.get()
-        except SiteConfiguration.DoesNotExist:
-            context['config'] = None
-            
-        try:
-            context['resume'] = Resume.objects.get()
-        except Resume.DoesNotExist:
-            context['resume'] = None
-            
-        try:
-            context['video_resume'] = VideoResume.objects.get()
-        except VideoResume.DoesNotExist:
-            context['video_resume'] = None
+        # Note: config, resume, and video_resume are now available globally 
+        # via the site_context context processor
 
         # =================================================================
         # NEW & UPDATED: Services with Dynamic Animation Delay
@@ -167,12 +154,9 @@ class BlogDetailView(DetailView):
         response = HttpResponseRedirect(redirect_url)
 
         if author_name and email and body:
-            if NewsletterSubscriber.objects.filter(email=email).exists():
-                Comment.objects.create(post=post, author_name=author_name, body=body)
-                messages.success(request, "Your comment has been posted and is awaiting approval.")
-                response.set_cookie('is_subscriber', 'true', max_age=31536000)
-            else:
-                messages.error(request, "You must be subscribed to comment. Please subscribe first.")
+            # Create comment directly without newsletter subscription requirement
+            Comment.objects.create(post=post, author_name=author_name, body=body)
+            messages.success(request, "Your comment has been posted and is awaiting approval.")
         else:
             messages.error(request, "Please fill in all the required fields to comment.")
             
@@ -371,10 +355,10 @@ class SkillListView(ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         
-        # Filtering by technology (if specified)
-        tech = self.request.GET.get('tech')
-        if tech and tech != 'all':
-            queryset = queryset.filter(technologies__slug=tech)
+        # Filtering by category (if specified)
+        category = self.request.GET.get('category')
+        if category and category != 'all':
+            queryset = queryset.filter(category=category)
             
         # Search functionality
         search = self.request.GET.get('search')
@@ -395,6 +379,6 @@ class SkillListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Add available technologies for filtering
-        context['technologies'] = Technology.objects.all()
+        # Add available skill categories for filtering
+        context['skill_categories'] = Skill.SkillCategory.choices
         return context

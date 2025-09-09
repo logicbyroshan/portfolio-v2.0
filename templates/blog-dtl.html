@@ -5,6 +5,43 @@
 
 {% block title %}Blog: {{ blog.title }} - Roshan Damor{% endblock %}
 
+{% block extra_meta %}
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="{{ blog.title }}">
+    <meta property="og:description" content="{{ blog.summary }}">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    {% if blog.cover_image %}
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ blog.cover_image.url }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="{{ blog.title }}">
+    {% endif %}
+    <meta property="og:site_name" content="Roshan Damor - Portfolio">
+    <meta property="article:author" content="{{ blog.author_name }}">
+    <meta property="article:published_time" content="{{ blog.created_date|date:'c' }}">
+    {% for category in blog.categories.all %}
+    <meta property="article:tag" content="{{ category.name }}">
+    {% endfor %}
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ blog.title }}">
+    <meta name="twitter:description" content="{{ blog.summary }}">
+    {% if blog.cover_image %}
+    <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ blog.cover_image.url }}">
+    <meta name="twitter:image:alt" content="{{ blog.title }}">
+    {% endif %}
+    <meta name="twitter:site" content="@logicbyroshan">
+    <meta name="twitter:creator" content="@logicbyroshan">
+    
+    <!-- Additional SEO Meta Tags -->
+    <meta name="description" content="{{ blog.summary }}">
+    <meta name="keywords" content="{% for category in blog.categories.all %}{{ category.name }}{% if not forloop.last %}, {% endif %}{% endfor %}, {{ blog.author_name }}, blog, article">
+    <meta name="author" content="{{ blog.author_name }}">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+{% endblock %}
+
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/blog-detail.css' %}">
 {% endblock %}
@@ -30,11 +67,25 @@
             <!-- ======================= Main Content Column ======================= -->
             <article class="detail-main-content">
                 <header class="detail-page-header" data-animation="fade-in-up" data-animation-delay="100">
-                    <!-- DYNAMIC: Loop through post categories -->
-                    {% for category in blog.categories.all %}
-                        <span class="teg">{{ category.name }}</span>
-                    {% endfor %}
-                    <span class="teg"><i class="fa-regular fa-calendar-check"></i>{{ blog.created_date|date:"M d, Y" }}</span>
+                    <!-- ENHANCED: Categories and date with better organization -->
+                    <div class="blog-meta-info">
+                        <div class="blog-categories">
+                            {% for category in blog.categories.all %}
+                                <span class="teg category-tag">
+                                    <i class="fa-solid fa-tag"></i>{{ category.name }}
+                                </span>
+                            {% empty %}
+                                <span class="teg category-tag">
+                                    <i class="fa-solid fa-tag"></i>Uncategorized
+                                </span>
+                            {% endfor %}
+                        </div>
+                        <div class="blog-date">
+                            <span class="teg date-tag">
+                                <i class="fa-regular fa-calendar-check"></i>{{ blog.created_date|date:"M d, Y" }}
+                            </span>
+                        </div>
+                    </div>
                 </header>
 
                 <h1 class="blog-title" data-animation="fade-in-up" data-animation-delay="200">{{ blog.title }}</h1>
@@ -55,7 +106,7 @@
                     <h2 data-animation="fade-in-up">Comments ({{ comments.count }})</h2>
                     
                     <!-- UPDATED: Comment Form with name/email fields and CSRF token -->
-                    <form class="comment-form card" id="comment-form" method="post" action="" data-animation="fade-in-up">
+                    <form class="comment-form card" id="comment-form" method="post" action="{% url 'portfolio:blog_detail' slug=blog.slug %}" data-animation="fade-in-up">
                         {% csrf_token %}
                         <img src="{% static 'images/default_avatar.png' %}" alt="Your Avatar" class="comment-avatar">
                         <div class="form-content">
@@ -118,11 +169,56 @@
                 </div>
                 <div class="sidebar-card card">
                     <h3>Share this Post</h3>
-                    <!-- DYNAMIC: Share links with current page URL and title -->
+                    <!-- Enhanced social sharing with proper formatting -->
                     <div class="share-buttons">
-                        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ blog.title|urlencode }}" target="_blank" class="share-btn twitter" aria-label="Share on Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ blog.title|urlencode }}&summary={{ blog.summary|urlencode }}" target="_blank" class="share-btn linkedin" aria-label="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="mailto:?subject={{ blog.title|urlencode }}&body=Check out this article: {{ request.build_absolute_uri }}" class="share-btn email" aria-label="Share via Email"><i class="fas fa-envelope"></i></a>
+                        <button class="share-btn twitter" data-platform="twitter" aria-label="Share on Twitter">
+                            <i class="fab fa-twitter"></i>
+                            <span>Twitter</span>
+                        </button>
+                        <button class="share-btn linkedin" data-platform="linkedin" aria-label="Share on LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                            <span>LinkedIn</span>
+                        </button>
+                        <button class="share-btn facebook" data-platform="facebook" aria-label="Share on Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                            <span>Facebook</span>
+                        </button>
+                        <button class="share-btn whatsapp" data-platform="whatsapp" aria-label="Share on WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </button>
+                        <button class="share-btn reddit" data-platform="reddit" aria-label="Share on Reddit">
+                            <i class="fab fa-reddit-alien"></i>
+                            <span>Reddit</span>
+                        </button>
+                        <button class="share-btn telegram" data-platform="telegram" aria-label="Share on Telegram">
+                            <i class="fab fa-telegram-plane"></i>
+                            <span>Telegram</span>
+                        </button>
+                        <button class="share-btn email" data-platform="email" aria-label="Share via Email">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email</span>
+                        </button>
+                        <button class="share-btn copy-link" data-platform="copy" aria-label="Copy Link">
+                            <i class="fas fa-link"></i>
+                            <span>Copy Link</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Share Analytics/Feedback -->
+                    <div class="share-feedback" id="share-feedback" style="display: none;">
+                        <p class="feedback-message"></p>
+                    </div>
+                    
+                    <!-- Hidden data for JavaScript -->
+                    <div class="share-data" style="display: none;">
+                        <span data-title="{{ blog.title|escapejs }}"></span>
+                        <span data-summary="{{ blog.summary|escapejs }}"></span>
+                        <span data-url="{{ request.build_absolute_uri }}"></span>
+                        <span data-image="{% if blog.cover_image %}{{ request.scheme }}://{{ request.get_host }}{{ blog.cover_image.url }}{% endif %}"></span>
+                        <span data-author="{{ blog.author_name|escapejs }}"></span>
+                        <span data-date="{{ blog.created_date|date:'M d, Y' }}"></span>
+                        <span data-categories="{% for category in blog.categories.all %}{{ category.name }}{% if not forloop.last %}, {% endif %}{% endfor %}"></span>
                     </div>
                 </div>
                 <div class="sidebar-card card">
@@ -145,23 +241,4 @@
             </aside>
         </div>
     </main>
-    <!-- ======================= NEW: Subscribe Modal ======================= -->
-    <div class="subscribe-modal" id="subscribe-modal">
-        <div class="modal-content card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-            <div class="modal-header">
-                <h3 id="modal-title">Subscribe to Comment</h3>
-                <button id="close-subscribe-modal" class="close-btn" aria-label="Close modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>To keep the discussion valuable, please subscribe to my newsletter to post a comment. No spam, I promise!</p>
-                <form class="subscribe-form-modal" id="subscribe-form-modal">
-                    <!-- This CSRF token is read by JavaScript for the AJAX request -->
-                    {% csrf_token %}
-                    <input type="email" id="modal-email-input" placeholder="Enter your email..." required>
-                    <button type="submit" class="filled-btn">Subscribe</button>
-                </form>
-                <p class="modal-message" id="modal-message"></p>
-            </div>
-        </div>
-    </div>
 {% endblock %}

@@ -44,15 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (scrollLeftBtn && scrollRightBtn && categoriesList) {
         scrollLeftBtn.addEventListener('click', () => categoriesList.scrollBy({ left: -200, behavior: 'smooth' }));
         scrollRightBtn.addEventListener('click', () => categoriesList.scrollBy({ left: 200, behavior: 'smooth' }));
-        
-        const categoryBadges = document.querySelectorAll('.category-badge');
-        categoryBadges.forEach(badge => {
-            badge.addEventListener('click', (e) => {
-                e.preventDefault();
-                document.querySelector('.category-badge.active')?.classList.remove('active');
-                badge.classList.add('active');
-            });
-        });
     }
 
     // =========================================================================
@@ -73,21 +64,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const url = this.getAttribute('data-url');
             if (url) {
                 // Add a small delay for visual feedback
-                this.style.transform = 'scale(0.98)';
                 setTimeout(() => {
                     window.location.href = url;
                 }, 100);
             }
         });
         
-        // Add hover effects
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px)';
-            this.style.transition = 'transform 0.3s ease';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
+        // Removed hover effects for simplified interaction
     });
 });

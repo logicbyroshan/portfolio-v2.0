@@ -44,65 +44,25 @@
 
         <!-- ======================= Experience Cards List ======================= -->
         <div class="card-container" id="experience-card-container">
-            <!-- UPDATED: Added if/else logic for demo data -->
-            {% if experiences %}
-                <!-- DYNAMIC: Loop through paginated experience entries -->
-                {% for exp in experiences %}
-                <a href="{% url 'portfolio:experience_detail' pk=exp.pk %}" class="exp-card card" data-animation="fade-in-up">
-                    <div class="exp-img">
-                        <img src="https://placehold.co/80x80/010409/eaeaea?text={{ exp.company_name|slice:':2'|upper }}" alt="{{ exp.company_name }} Logo">
+            {% for exp in experiences %}
+            <a href="{% url 'portfolio:experience_detail' pk=exp.pk %}" class="exp-card card" data-animation="fade-in-up">
+                <div class="exp-img">
+                    <img src="https://placehold.co/80x80/010409/eaeaea?text={{ exp.company_name|slice:':2'|upper }}" alt="{{ exp.company_name }} Logo">
+                </div>
+                <div class="exp-details">
+                    <div class="exp-header">
+                        <h3>{{ exp.role }} @ {{ exp.company_name }}</h3>
+                        <span>{{ exp.start_date|date:"M Y" }} - {% if exp.end_date %}{{ exp.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
                     </div>
-                    <div class="exp-details">
-                        <div class="exp-header">
-                            <h3>{{ exp.role }} @ {{ exp.company_name }}</h3>
-                            <span>{{ exp.start_date|date:"M Y" }} - {% if exp.end_date %}{{ exp.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
-                        </div>
-                        <p>{{ exp.summary }}</p>
-                        <div class="skills">
-                            {% for tech in exp.technologies.all %}
-                            <span class="teg">{{ tech.name }}</span>
-                            {% endfor %}
-                        </div>
+                    <p>{{ exp.summary }}</p>
+                    <div class="skills">
+                        {% for tech in exp.technologies.all %}
+                        <span class="teg">{{ tech.name }}</span>
+                        {% endfor %}
                     </div>
-                </a>
-                {% endfor %}
-            {% else %}
-                <!-- FALLBACK: Display demo cards if no experience entries are found -->
-                <a href="#" class="exp-card card" data-animation="fade-in-up">
-                    <div class="exp-img">
-                        <img src="https://placehold.co/80x80/010409/eaeaea?text=TC" alt="Tech Corp Logo">
-                    </div>
-                    <div class="exp-details">
-                        <div class="exp-header">
-                            <h3>Software Engineer @ Tech Corp</h3>
-                            <span>Jan 2023 - Present</span>
-                        </div>
-                        <p>This is a placeholder for a professional experience. This content is for demonstration when no data is available from the database.</p>
-                        <div class="skills">
-                            <span class="teg">Python</span>
-                            <span class="teg">Django</span>
-                            <span class="teg">JavaScript</span>
-                        </div>
-                    </div>
-                </a>
-                <a href="#" class="exp-card card" data-animation="fade-in-up">
-                    <div class="exp-img">
-                        <img src="https://placehold.co/80x80/010409/eaeaea?text=AI" alt="AI Solutions Logo">
-                    </div>
-                    <div class="exp-details">
-                        <div class="exp-header">
-                            <h3>AI Intern @ AI Solutions</h3>
-                            <span>Jun 2022 - Dec 2022</span>
-                        </div>
-                        <p>A sample entry to show how multiple experiences look. This ensures the page always appears complete, even without live backend data.</p>
-                        <div class="skills">
-                            <span class="teg">PyTorch</span>
-                            <span class="teg">Scikit-learn</span>
-                            <span class="teg">FastAPI</span>
-                        </div>
-                    </div>
-                </a>
-            {% endif %}
+                </div>
+            </a>
+            {% endfor %}
         </div>
 
         <!-- ======================= Pagination ======================= -->

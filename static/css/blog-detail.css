@@ -50,6 +50,41 @@
    3. Header & Content
    ========================================================================== */
 .detail-page-header { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* Enhanced blog meta info styling */
+.blog-meta-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.blog-categories {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.blog-date {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* Push date to the right */
+}
+.category-tag {
+    background: rgba(0, 169, 255, 0.1);
+    border: 1px solid rgba(0, 169, 255, 0.3);
+    color: var(--accent-color);
+}
+.category-tag:hover {
+    background: rgba(0, 169, 255, 0.15);
+    transform: translateY(-1px);
+}
+.date-tag {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
+    color: var(--paragraph-color);
+}
+
 .blog-title { font-family: var(--heading-font); font-size: 48px; color: var(--title-color); line-height: 1.2; }
 .blog-summary { font-size: 18px; color: var(--paragraph-color); }
 .blog-hero-image { width: 100%; height: auto; border-radius: 15px; border: 1px solid var(--card-border); }
@@ -75,12 +110,59 @@
 .author-info img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--card-border); }
 .author-info h4 { font-size: 18px; color: var(--title-color); margin: 0; }
 .author-info p { font-size: 14px; margin: 0; color: var(--paragraph-color); }
-.share-buttons { display: flex; gap: 10px; }
-.share-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid var(--card-border); color: var(--paragraph-color); transition: all 0.3s ease; }
+.share-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.share-btn { 
+    height: 40px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 8px;
+    border-radius: 8px; 
+    border: 1px solid var(--card-border); 
+    background: var(--bg-gradient-mid);
+    color: var(--paragraph-color); 
+    transition: all 0.3s ease; 
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0 12px;
+}
+.share-btn:hover { transform: translateY(-2px); }
+.share-btn i { font-size: 16px; flex-shrink: 0; }
+.share-btn span { white-space: nowrap; }
+
+/* Platform-specific colors */
 .share-btn.twitter:hover { background-color: #1da1f2; color: white; border-color: #1da1f2; }
 .share-btn.linkedin:hover { background-color: #0077b5; color: white; border-color: #0077b5; }
+.share-btn.facebook:hover { background-color: #1877f2; color: white; border-color: #1877f2; }
+.share-btn.whatsapp:hover { background-color: #25d366; color: white; border-color: #25d366; }
 .share-btn.reddit:hover { background-color: #ff4500; color: white; border-color: #ff4500; }
+.share-btn.telegram:hover { background-color: #0088cc; color: white; border-color: #0088cc; }
 .share-btn.email:hover { background-color: var(--accent-color); color: white; border-color: var(--accent-color); }
+.share-btn.copy-link:hover { background-color: #6c757d; color: white; border-color: #6c757d; }
+
+/* Share feedback */
+.share-feedback {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+}
+.share-feedback.success {
+    background-color: rgba(40, 167, 69, 0.1);
+    border: 1px solid rgba(40, 167, 69, 0.3);
+    color: #28a745;
+}
+.share-feedback.error {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    color: #dc3545;
+}
+.feedback-message {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+}
 .suggested-posts-list { display: flex; flex-direction: column; gap: 15px; }
 .suggested-post { display: flex; align-items: center; gap: 15px; text-decoration: none; }
 .suggested-post img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
@@ -200,7 +282,22 @@
         width: 100% !important;
     }
 
-
+    /* --- Blog Meta Info Responsive --- */
+    .blog-meta-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .blog-date {
+        margin-left: 0; /* Reset margin on mobile */
+    }
+    .blog-categories {
+        gap: 6px;
+    }
+    .category-tag, .date-tag {
+        font-size: 13px;
+        padding: 4px 10px;
+    }
 
     /* --- Typography & Content Readability --- */
 
@@ -283,6 +380,20 @@
         width: 50px; /* Make images slightly smaller */
         height: 50px;
     }
+    
+    /* --- Share Buttons Responsive --- */
+    .share-buttons {
+        grid-template-columns: 1fr; /* Single column on mobile */
+        gap: 10px;
+    }
+    .share-btn {
+        padding: 0 16px;
+        height: 44px; /* Larger tap target */
+        font-size: 15px;
+    }
+    .share-btn span {
+        display: block; /* Ensure text is visible */
+    }
 }
 
 /* ... (Keep all existing styles) ... */
@@ -310,74 +421,9 @@
     border-color: var(--accent-color);
 }
 
-/* Subscribe Modal */
-.subscribe-modal {
-    position: fixed;
-    z-index: 1001;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(1, 4, 9, 0.7);
-    backdrop-filter: blur(8px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-.subscribe-modal.active {
-    opacity: 1;
-    visibility: visible;
-}
-.subscribe-modal .modal-content {
-    width: 90%;
-    max-width: 500px;
-    transform: scale(0.95);
-    transition: transform 0.3s ease;
-}
-.subscribe-modal.active .modal-content {
-    transform: scale(1);
-}
-.subscribe-modal .modal-body p {
-    margin-bottom: 20px;
-}
-.subscribe-form-modal {
-    display: flex;
-    gap: 10px;
-}
-.subscribe-form-modal input {
-    width: 100%;
-    background: var(--bg-gradient-mid);
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    padding: 10px 15px;
-    font-size: 16px;
-    color: var(--title-color);
-}
-.subscribe-form-modal input:focus {
-    outline: none;
-    border-color: var(--accent-color);
-}
-.modal-message {
-    margin-top: 15px;
-    font-weight: 500;
-    text-align: center;
-}
-.modal-message.success {
-    color: var(--accent-color);
-}
-.modal-message.error {
-    color: #ff5252;
-}
-
 /* Responsive */
 @media (max-width: 576px) {
     .comment-form-fields {
-        flex-direction: column;
-    }
-    .subscribe-form-modal {
         flex-direction: column;
     }
 }

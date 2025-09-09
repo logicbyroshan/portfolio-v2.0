@@ -8,7 +8,10 @@
     
     <title>{% block title %}Roshan Damor - Portfolio{% endblock %}</title>
 
+    {% block extra_meta %}{% endblock %}
+
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ai_query.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
     {% block extra_css %}{% endblock %}
     {% block extra_js %}{% endblock %}
@@ -16,6 +19,7 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     
     <script src="{% static 'js/base.js' %}" defer></script>
+    <script src="{% static 'js/ai_modal.js' %}" defer></script>
 </head>
 <body class="{% block body_class %}{% endblock %}">
     <div id="particles-js"></div>
@@ -23,13 +27,21 @@
     <!-- ======================= HEADER / NAVBAR ======================= -->
     <header class="site-header">
         <div class="header-container">
+            <!-- Mobile Navigation Toggle (Left side in mobile) -->
+            <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-controls="primary-navigation" aria-expanded="false">
+                <span class="sr-only">Menu</span>
+                <span class="line top"></span>
+                <span class="line middle"></span>
+                <span class="line bottom"></span>
+            </button>
+
             <!-- Left Navigation -->
             <nav class="nav-left">
                 <ul>
                     <!-- DYNAMIC: URL tags for navigation -->
-                    <li><a href="{% url 'portfolio:skill_list' %}">Skills</a></li>
-                    <li><a href="{% url 'portfolio:achievements_list' %}">Achievements</a></li>
-                    <li><a href="{% url 'portfolio:experience_list' %}">Experiences</a></li>
+                    <li><a href="{% url 'portfolio:skill_list' %}"><span class="nav-dot"></span>Skills</a></li>
+                    <li><a href="{% url 'portfolio:achievements_list' %}"><span class="nav-dot"></span>Achievements</a></li>
+                    <li><a href="{% url 'portfolio:experience_list' %}"><span class="nav-dot"></span>Experiences</a></li>
                 </ul>
             </nav>
 
@@ -43,17 +55,25 @@
 
             <!-- Right Navigation -->
             <div class="nav-right">
-                <a href="#" id="resume-nav-btn" class="outline-btn">Resume</a>
-                <!-- UPDATED: "Contact Me" button changed to "Video Resume" -->
-                <a href="#" id="video-resume-nav-btn" class="filled-btn">Video Resume</a>
+                <!-- Theme Toggle Button -->
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                    <i class="fas fa-sun" id="theme-icon"></i>
+                </button>
+                
+                <!-- Resume Button -->
+                <button class="outline-btn" id="open-resume-modal">
+                    <i class="fas fa-file-alt"></i> Resume
+                </button>
+                
+                <!-- Video Resume Button -->
+                <button class="filled-btn" id="open-video-modal">
+                    <i class="fas fa-video"></i> Video Resume
+                </button>
             </div>
 
-            <!-- Mobile Navigation Toggle -->
-            <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-controls="primary-navigation" aria-expanded="false">
-                <span class="sr-only">Menu</span>
-                <span class="line top"></span>
-                <span class="line middle"></span>
-                <span class="line bottom"></span>
+            <!-- Mobile Theme Toggle (Right side in mobile) -->
+            <button class="theme-toggle mobile-header-theme-toggle" id="mobile-header-theme-toggle" aria-label="Toggle theme">
+                <i class="fas fa-sun" id="mobile-header-theme-icon"></i>
             </button>
         </div>
         
@@ -61,13 +81,19 @@
         <div class="mobile-nav-menu" id="mobile-nav-menu">
             <div class="mobile-menu-content">
                 <nav class="mobile-nav-links">
-                    <a href="{% url 'portfolio:skill_list' %}">Skills</a>
-                    <a href="{% url 'portfolio:achievements_list' %}">Achievements</a>
-                    <a href="{% url 'portfolio:experience_list' %}">Experiences</a>
+                    <a href="{% url 'portfolio:skill_list' %}"><span class="nav-dot"></span>Skills</a>
+                    <a href="{% url 'portfolio:achievements_list' %}"><span class="nav-dot"></span>Achievements</a>
+                    <a href="{% url 'portfolio:experience_list' %}"><span class="nav-dot"></span>Experiences</a>
                 </nav>
                 <div class="mobile-nav-buttons">
-                    <a href="#" id="mobile-resume-btn" class="outline-btn">Resume</a>
-                    <a href="#" id="mobile-video-resume-btn" class="filled-btn">Video Resume</a>
+                    <!-- Resume Button -->
+                    <button class="outline-btn" id="mobile-open-resume-modal">
+                        <i class="fas fa-file-alt"></i> Resume
+                    </button>
+                    <!-- Video Resume Button -->
+                    <button class="filled-btn" id="mobile-open-video-modal">
+                        <i class="fas fa-video"></i> Video Resume
+                    </button>
                 </div>
             </div>
         </div>
@@ -141,6 +167,17 @@
                         <li><a href="{% url 'portfolio:blog_list' %}">All Blogs</a></li>
                         <li><a href="{% url 'portfolio:achievements_list' %}">All Achievements</a></li>
                         <li><a href="{% url 'portfolio:experience_list' %}">All Experiences</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 5: Connect -->
+                <div class="footer-col-links">
+                    <h4>Connect</h4>
+                    <ul>
+                        <li><a href="#" target="_blank">Join Community</a></li>
+                        <li><a href="#" target="_blank">My Resources</a></li>
+                        <li><a href="#" target="_blank">Music Playlist</a></li>
+                        <li><a href="#" target="_blank">Code Together</a></li>
                     </ul>
                 </div>
             </div>

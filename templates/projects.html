@@ -47,88 +47,30 @@
         
         <!-- ======================= Project Grid ======================= -->
         <div class="project-grid" id="project-card-container">
-            <!-- UPDATED: Added if/else logic for demo data -->
-            {% if projects %}
-                <!-- DYNAMIC: Loop through paginated project objects -->
-                {% for project in projects %}
-                <div class="project-card card clickable-card" data-animation="zoom-in" data-url="{% url 'portfolio:project_detail' slug=project.slug %}">
-                    <a href="{% url 'portfolio:project_detail' slug=project.slug %}" class="project-image">
-                        <img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ project.title|urlencode }}{% endif %}" alt="{{ project.title }}">
-                    </a>
-                    <div class="project-content">
-                        <h3><a href="{% url 'portfolio:project_detail' slug=project.slug %}">{{ project.title }}</a></h3>
-                        <p>{{ project.summary|truncatewords:20 }}</p>
-                        <div class="skills">
-                            {% for tech in project.technologies.all %}
-                            <span class="teg">{{ tech.name }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="project-links">
-                        {% if project.github_url %}
-                            <a href="{{ project.github_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-brands fa-github"></i>Github</a>
-                        {% endif %}
-                        {% if project.live_url %}
-                            <a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live Preview</a>
-                        {% endif %}
+            {% for project in projects %}
+            <div class="project-card card clickable-card" data-animation="zoom-in" data-url="{% url 'portfolio:project_detail' slug=project.slug %}">
+                <a href="{% url 'portfolio:project_detail' slug=project.slug %}" class="project-image">
+                    <img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ project.title|urlencode }}{% endif %}" alt="{{ project.title }}">
+                </a>
+                <div class="project-content">
+                    <h3><a href="{% url 'portfolio:project_detail' slug=project.slug %}">{{ project.title }}</a></h3>
+                    <p>{{ project.summary|truncatewords:20 }}</p>
+                    <div class="skills">
+                        {% for tech in project.technologies.all %}
+                        <span class="teg">{{ tech.name }}</span>
+                        {% endfor %}
                     </div>
                 </div>
-                {% endfor %}
-            {% else %}
-                <!-- FALLBACK: Display 3 demo cards if no projects are found -->
-                <div class="project-card card" data-animation="zoom-in">
-                    <a href="#" class="project-image">
-                        <img src="https://placehold.co/600x400/010409/eaeaea?text=Project+Alpha" alt="Demo Project Alpha">
-                    </a>
-                    <div class="project-content">
-                        <h3><a href="#">Demo Project Alpha</a></h3>
-                        <p>This is a placeholder for a full-stack web application. The content is for demonstration purposes when no projects are in the database.</p>
-                        <div class="skills">
-                            <span class="teg">Django</span>
-                            <span class="teg">React</span>
-                        </div>
-                    </div>
-                    <div class="project-links">
-                        <a href="#" class="outline-btn"><i class="fa-brands fa-github"></i>Github</a>
-                        <a href="#" class="outline-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live Preview</a>
-                    </div>
+                <div class="project-links">
+                    {% if project.github_url %}
+                        <a href="{{ project.github_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-brands fa-github"></i>Github</a>
+                    {% endif %}
+                    {% if project.live_url %}
+                        <a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live Preview</a>
+                    {% endif %}
                 </div>
-
-                <div class="project-card card" data-animation="zoom-in">
-                    <a href="#" class="project-image">
-                        <img src="https://placehold.co/600x400/010409/eaeaea?text=AI+Experiment" alt="Mock AI Experiment">
-                    </a>
-                    <div class="project-content">
-                        <h3><a href="#">Mock AI Experiment</a></h3>
-                        <p>A sample project card showcasing an AI or Machine Learning project. This ensures the page always looks complete and professional.</p>
-                        <div class="skills">
-                            <span class="teg">Python</span>
-                            <span class="teg">PyTorch</span>
-                            <span class="teg">FastAPI</span>
-                        </div>
-                    </div>
-                    <div class="project-links">
-                        <a href="#" class="outline-btn"><i class="fa-brands fa-github"></i>Github</a>
-                    </div>
-                </div>
-
-                <div class="project-card card" data-animation="zoom-in">
-                    <a href="#" class="project-image">
-                        <img src="https://placehold.co/600x400/010409/eaeaea?text=Mobile+App" alt="Placeholder Mobile App">
-                    </a>
-                    <div class="project-content">
-                        <h3><a href="#">Placeholder Mobile App</a></h3>
-                        <p>This demo card represents a mobile application, illustrating the variety of projects that can be displayed on this portfolio page.</p>
-                        <div class="skills">
-                            <span class="teg">Flutter</span>
-                            <span class="teg">Firebase</span>
-                        </div>
-                    </div>
-                    <div class="project-links">
-                        <a href="#" class="outline-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live Preview</a>
-                    </div>
-                </div>
-            {% endif %}
+            </div>
+            {% endfor %}
         </div>
 
         <!-- ======================= Pagination ======================= -->

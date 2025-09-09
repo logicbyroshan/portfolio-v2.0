@@ -1,15 +1,13 @@
 from django.db import models
 from django.utils.text import slugify
-from tinymce.models import HTMLField
-from solo.models import SingletonModel
 
 # =========================================================================
-# SITE-WIDE CONFIGURATION (SINGLETON MODEL)
+# SITE-WIDE CONFIGURATION MODEL
 # =========================================================================
 
-class SiteConfiguration(SingletonModel):
+class SiteConfiguration(models.Model):
     """
-    Singleton model to hold site-wide settings and content for static sections.
+    Model to hold site-wide settings and content for static sections.
     There will only ever be one instance of this model.
     """
     # --- Hero Section ---
@@ -99,7 +97,7 @@ class Project(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True, editable=False)
     summary = models.TextField(help_text="A short summary displayed on the project list page.")
-    content = HTMLField(help_text="The main detailed content for the project detail page.")
+    content = models.TextField(help_text="The main detailed content for the project detail page.")
     cover_image = models.ImageField(upload_to='project_covers/')
     technologies = models.ManyToManyField(Technology, related_name="projects")
     categories = models.ManyToManyField(Category, limit_choices_to={'category_type': Category.CategoryType.PROJECT})
@@ -125,7 +123,7 @@ class Blog(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True, editable=False)
     summary = models.TextField(help_text="A short excerpt for the blog list page.")
-    content = HTMLField()
+    content = models.TextField()
     cover_image = models.ImageField(upload_to='blog_covers/')
     categories = models.ManyToManyField(Category, limit_choices_to={'category_type': Category.CategoryType.BLOG})
     created_date = models.DateTimeField(auto_now_add=True)
@@ -162,8 +160,8 @@ class Experience(models.Model):
     start_date = models.DateField()
     end_date = models.DateField(blank=True, null=True)
     summary = models.TextField()
-    responsibilities = HTMLField()
-    achievements = HTMLField()
+    responsibilities = models.TextField()
+    achievements = models.TextField()
     technologies = models.ManyToManyField(Technology, related_name="experiences")
     experience_type = models.CharField(max_length=2, choices=ExperienceType.choices, default=ExperienceType.FULL_TIME)
     
@@ -190,7 +188,7 @@ class Service(models.Model):
         return self.title
 
 
-class Resume(SingletonModel):
+class Resume(models.Model):
     """Enhanced Resume modal with dynamic content."""
     # Main resume file and preview
     preview_image = models.ImageField(
@@ -218,8 +216,8 @@ class Resume(SingletonModel):
     def __str__(self):
         return self.title
 
-class VideoResume(SingletonModel):
-    """NEW: Singleton model for the Video Resume modal."""
+class VideoResume(models.Model):
+    """Model for the Video Resume modal."""
     youtube_embed_url = models.URLField(help_text="The full YouTube embed URL (e.g., https://www.youtube.com/embed/VIDEO_ID)")
     def __str__(self):
         return "Video Resume"
@@ -245,18 +243,40 @@ class ContactSubmission(models.Model):
     def __str__(self):
         return f"Message from {self.name}"
 
-# --- SKILL MODELS (largely unchanged) ---
+# --- SKILL MODELS (enhanced with categories) ---
 class Skill(models.Model):
+    # Skill Category Choices
+    class SkillCategory(models.TextChoices):
+        FRONTEND = 'FRONTEND', 'Frontend Development'
+        BACKEND = 'BACKEND', 'Backend Development'
+        DATABASE = 'DATABASE', 'Database & Storage'
+        DEVOPS = 'DEVOPS', 'DevOps & Deployment'
+        MOBILE = 'MOBILE', 'Mobile Development'
+        AI_ML = 'AI_ML', 'AI & Machine Learning'
+        DESIGN = 'DESIGN', 'Design & UI/UX'
+        TOOLS = 'TOOLS', 'Development Tools'
+        TESTING = 'TESTING', 'Testing & QA'
+        OTHER = 'OTHER', 'Other Skills'
+
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True, editable=False)
+    category = models.CharField(
+        max_length=20, 
+        choices=SkillCategory.choices, 
+        default=SkillCategory.OTHER,
+        help_text="The category this skill belongs to"
+    )
     icon = models.CharField(max_length=50)
     summary = models.TextField()
     technologies = models.ManyToManyField(Technology, through='SkillTechnologyDetail')
+    
     class Meta:
-        ordering = ['title']
+        ordering = ['category', 'title']
+    
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+    
     def __str__(self):
         return self.title
 

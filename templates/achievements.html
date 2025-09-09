@@ -46,7 +46,7 @@
     <div class="achievements-grid" id="achievements-card-container">
         {% if achievements %}
             {% for ach in achievements %}
-            <div class="achievement-card card" data-animation="zoom-in">
+            <div class="achievement-card card {% if ach.image %}has-image{% endif %}" data-animation="zoom-in">
                 <div class="card-banner">{{ ach.get_category_display }}</div>
                 {% if ach.image %}
                 <div class="ach-image">
@@ -67,27 +67,6 @@
                 {% endif %}
             </div>
             {% endfor %}
-        {% else %}
-            <!-- FALLBACK DEMO CONTENT -->
-            <div class="achievement-card card" data-animation="zoom-in">
-                <div class="card-banner">Certification</div>
-                <div class="ach-content">
-                    <h3>Demo: Certified AI Professional</h3>
-                    <p class="issuer">Issued by <strong>Global Tech Institute</strong> on Jan 15, 2023</p>
-                    <p>A sample certification to demonstrate the card layout when no data is available from the database.</p>
-                </div>
-                <div class="ach-footer">
-                    <a href="#" class="credential-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> View Credential</a>
-                </div>
-            </div>
-            <div class="achievement-card card" data-animation="zoom-in">
-                <div class="card-banner">Award</div>
-                <div class="ach-content">
-                    <h3>Placeholder: Innovator of the Year Award</h3>
-                    <p class="issuer">Issued by <strong>Annual Tech Awards</strong> on Sep 05, 2022</p>
-                    <p>This is a placeholder for an award, ensuring the page always looks complete and professionally designed.</p>
-                </div>
-            </div>
         {% endif %}
     </div>
 

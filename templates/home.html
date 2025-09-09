@@ -10,7 +10,6 @@
 
 {% block extra_js %}
     <script src="{% static 'js/home.js' %}" defer></script>
-    <script src="{% static 'js/ai_query.js' %}" defer></script>
     <script src="{% static 'js/contact_form.js' %}" defer></script>
     <script src="{% static 'js/newsletter_form.js' %}" defer></script>
 {% endblock %}
@@ -25,7 +24,14 @@
                 <h1>Roshan Damor</h1>
                 <h4>I am a <span id="skill-text">Web Developer</span></h4>
                 <p>GREETINGS, ALL DIGITAL EXPLORERS! I AM ROSHAN, A PASSIONATE AND INNOVATIVE DEVELOPER <b><i>"BUILDING AI-POWERED SOLUTIONS & SCALABLE WEB APPS — SDE & AI ENGINEER"</i></b> </p>
-                {% include 'ai/query_form.html' %}
+                
+                <!-- Simple Ask AI Button -->
+                <div class="hero-actions">
+                    <button type="button" class="filled-btn ai-chat-btn" id="open-ai-modal">
+                        <i class="fas fa-robot"></i>
+                        Ask AI
+                    </button>
+                </div>
             </div>
             <div class="home-hero-image" data-animation="zoom-in">
                 <img src="{% static 'images/hero.png' %}" alt="Roshan Damor - Hero Image">
@@ -82,29 +88,24 @@
         <div class="portfolio-header">
             <div class="head">
                 <h1>Where I've <span>Worked</span></h1>
-                <a href="{% url 'portfolio:experience_list' %}" class="view-all-link">View All</a>
+                <a href="{% url 'portfolio:experience_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a>
             </div>
             <p>"A glimpse into my professional journey, contributing to impactful projects and collaborating with talented teams."</p>
         </div>
-        <div class="experience-wrapper card">
-            {% if experiences %}
-                {% for exp in experiences %}
-                <a href="{% url 'portfolio:experience_detail' pk=exp.pk %}" class="exp-card" data-animation="fade-in-up">
-                    <div class="exp-img"><img src="https://placehold.co/80x80/010409/eaeaea?text={{ exp.company_name|slice:':2' }}" alt="{{ exp.company_name }} Logo"></div>
-                    <div class="exp-details">
-                        <div class="exp-header">
-                            <h3>{{ exp.role }} @ {{ exp.company_name }}</h3>
-                            <span>{{ exp.start_date|date:"M Y" }} - {% if exp.end_date %}{{ exp.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
-                        </div>
-                        <p>{{ exp.summary }}</p>
-                        <div class="skills">{% for tech in exp.technologies.all %}<span class="teg">{{ tech.name }}</span>{% endfor %}</div>
+        <div class="experience-grid">
+            {% for exp in experiences %}
+            <a href="{% url 'portfolio:experience_detail' pk=exp.pk %}" class="exp-card card" data-animation="fade-in-up">
+                <div class="exp-img"><img src="https://placehold.co/80x80/010409/eaeaea?text={{ exp.company_name|slice:':2' }}" alt="{{ exp.company_name }} Logo"></div>
+                <div class="exp-details">
+                    <div class="exp-header">
+                        <h3>{{ exp.role }} @ {{ exp.company_name }}</h3>
+                        <span>{{ exp.start_date|date:"M Y" }} - {% if exp.end_date %}{{ exp.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
                     </div>
-                </a>
-                {% endfor %}
-            {% else %}
-                <div class="exp-card" data-animation="fade-in-up"><div class="exp-img"><img src="https://placehold.co/80x80/010409/eaeaea?text=SC" alt="Sample Logo"></div><div class="exp-details"><div class="exp-header"><h3>SDE Intern @ Sample Company</h3><span>Jan 2023 - Present</span></div><p>This is a placeholder for a professional experience. It demonstrates the layout when no data is available from the database.</p><div class="skills"><span class="teg">Python</span><span class="teg">Django</span></div></div></div>
-                <div class="exp-card" data-animation="fade-in-up"><div class="exp-img"><img src="https://placehold.co/80x80/010409/eaeaea?text=TC" alt="Tech Corp Logo"></div><div class="exp-details"><div class="exp-header"><h3>AI Engineer @ Tech Corp</h3><span>Jun 2022 - Dec 2022</span></div><p>Another mock entry to show how multiple experiences would look. I worked on exciting AI-powered solutions here.</p><div class="skills"><span class="teg">PyTorch</span><span class="teg">FastAPI</span></div></div></div>
-            {% endif %}
+                    <p>{{ exp.summary }}</p>
+                    <div class="skills">{% for tech in exp.technologies.all %}<span class="teg">{{ tech.name }}</span>{% endfor %}</div>
+                </div>
+            </a>
+            {% endfor %}
         </div>
     </section>
 
@@ -115,15 +116,9 @@
             <p>"I love turning ideas into reality through code. Each project is a reflection of my skills, problem-solving approach, and creativity."</p>
         </header>
         <div class="cards-container">
-            {% if projects %}
-                {% for project in projects %}
-                <div class="project-card card clickable-card" data-animation="fade-in-up" data-url="{% url 'portfolio:project_detail' slug=project.slug %}"><a href="{% url 'portfolio:project_detail' slug=project.slug %}" class="project-image"><img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ project.title|urlencode }}{% endif %}" alt="{{ project.title }}"></a><div class="project-content"><h3><a href="{% url 'portfolio:project_detail' slug=project.slug %}">{{ project.title }}</a></h3><p>{{ project.summary }}</p><div class="skills">{% for tech in project.technologies.all %}<span class="teg">{{ tech.name }}</span>{% endfor %}</div></div><div class="project-links">{% if project.github_url %}<a href="{{ project.github_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-brands fa-github"></i>Github</a>{% endif %}{% if project.live_url %}<a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live</a>{% endif %}</div></div>
-                {% endfor %}
-            {% else %}
-                <div class="project-card card" data-animation="fade-in-up"><a href="#" class="project-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Project+One" alt="Mock Project"></a><div class="project-content"><h3><a href="#">Mock Project One</a></h3><p>This is a summary for a placeholder project to demonstrate the layout when no projects are in the database.</p><div class="skills"><span class="teg">Django</span><span class="teg">JS</span></div></div><div class="project-links"><a href="#" class="outline-btn"><i class="fa-brands fa-github"></i>Github</a><a href="#" class="outline-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live</a></div></div>
-                <div class="project-card card" data-animation="fade-in-up"><a href="#" class="project-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Project+Two" alt="Mock Project"></a><div class="project-content"><h3><a href="#">Mock Project Two</a></h3><p>A second placeholder project showing an AI-powered application, showcasing a different set of skills and technologies.</p><div class="skills"><span class="teg">React</span><span class="teg">AI</span></div></div><div class="project-links"><a href="#" class="outline-btn"><i class="fa-brands fa-github"></i>Github</a></div></div>
-                <div class="project-card card" data-animation="fade-in-up"><a href="#" class="project-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Project+Three" alt="Mock Project"></a><div class="project-content"><h3><a href="#">Mock Project Three</a></h3><p>A third demo project card to ensure the grid looks complete and visually balanced when populated with fallback data.</p><div class="skills"><span class="teg">Flutter</span><span class="teg">Firebase</span></div></div><div class="project-links"><a href="#" class="outline-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live</a></div></div>
-            {% endif %}
+            {% for project in projects %}
+            <div class="project-card card clickable-card" data-animation="fade-in-up" data-url="{% url 'portfolio:project_detail' slug=project.slug %}"><a href="{% url 'portfolio:project_detail' slug=project.slug %}" class="project-image"><img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ project.title|urlencode }}{% endif %}" alt="{{ project.title }}"></a><div class="project-content"><h3><a href="{% url 'portfolio:project_detail' slug=project.slug %}">{{ project.title }}</a></h3><p>{{ project.summary }}</p><div class="skills">{% for tech in project.technologies.all %}<span class="teg">{{ tech.name }}</span>{% endfor %}</div></div><div class="project-links">{% if project.github_url %}<a href="{{ project.github_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-brands fa-github"></i>Github</a>{% endif %}{% if project.live_url %}<a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live</a>{% endif %}</div></div>
+            {% endfor %}
         </div>
     </section>
 
@@ -134,15 +129,9 @@
             <p>"I enjoy sharing insights and experiences through writing. Check out some of my latest posts:"</p>
         </header>
         <div class="cards-container">
-            {% if blogs %}
-                {% for blog in blogs %}
-                <a href="{% url 'portfolio:blog_detail' slug=blog.slug %}" class="blog-card card clickable-card" data-animation="fade-in-up" data-url="{% url 'portfolio:blog_detail' slug=blog.slug %}"><div class="blog-image"><img src="{% if blog.cover_image %}{{ blog.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ blog.title|urlencode }}{% endif %}" alt="{{ blog.title }}"></div><div class="blog-content"><h4>{{ blog.title }}</h4><p>{{ blog.summary }}</p></div><div class="blog-footer"><div class="publisher">{% if blog.author_avatar %}<img src="{{ blog.author_avatar.url }}" alt="{{ blog.author_name }}">{% endif %}<span>{{ blog.author_name }}</span></div><span class="blog-date">{{ blog.created_date|date:"M d, Y" }}</span></div></a>
-                {% endfor %}
-            {% else %}
-                <a href="#" class="blog-card card" data-animation="fade-in-up"><div class="blog-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Blog+One" alt="Blog One"></div><div class="blog-content"><h4>My First Mock Blog Post</h4><p>This is a placeholder for a blog post, showing how the card looks when no real blog data is available.</p></div><div class="blog-footer"><div class="publisher"><img src="https://placehold.co/40x40/010409/eaeaea?text=RD" alt="RD"><span>Roshan Damor</span></div><span class="blog-date">Oct 26, 2023</span></div></a>
-                <a href="#" class="blog-card card" data-animation="fade-in-up"><div class="blog-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Blog+Two" alt="Blog Two"></div><div class="blog-content"><h4>Exploring AI in Web Development</h4><p>A sample article discussing AI integration. This is mock content to fill the space and maintain design consistency.</p></div><div class="blog-footer"><div class="publisher"><img src="https://placehold.co/40x40/010409/eaeaea?text=RD" alt="RD"><span>Roshan Damor</span></div><span class="blog-date">Oct 20, 2023</span></div></a>
-                <a href="#" class="blog-card card" data-animation="fade-in-up"><div class="blog-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Blog+Three" alt="Blog Three"></div><div class="blog-content"><h4>A Guide to Modern CSS</h4><p>A third demo article to ensure the grid is fully populated with fallback content, providing a better visual experience.</p></div><div class="blog-footer"><div class="publisher"><img src="https://placehold.co/40x40/010409/eaeaea?text=RD" alt="RD"><span>Roshan Damor</span></div><span class="blog-date">Oct 15, 2023</span></div></a>
-            {% endif %}
+            {% for blog in blogs %}
+            <a href="{% url 'portfolio:blog_detail' slug=blog.slug %}" class="blog-card card clickable-card" data-animation="fade-in-up" data-url="{% url 'portfolio:blog_detail' slug=blog.slug %}"><div class="blog-image"><img src="{% if blog.cover_image %}{{ blog.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ blog.title|urlencode }}{% endif %}" alt="{{ blog.title }}"></div><div class="blog-content"><h4>{{ blog.title }}</h4><p>{{ blog.summary }}</p></div><div class="blog-footer"><div class="publisher">{% if blog.author_avatar %}<img src="{{ blog.author_avatar.url }}" alt="{{ blog.author_name }}">{% endif %}<span>{{ blog.author_name }}</span></div><span class="blog-date">{{ blog.created_date|date:"M d, Y" }}</span></div></a>
+            {% endfor %}
         </div>
     </section>
 
@@ -180,15 +169,9 @@
             <p>"Here are some common questions I get asked. If you have more queries, feel free to reach out!"</p>
         </header>
         <div class="card-container">
-            {% if faqs %}
-                {% for faq in faqs %}
-                <div class="faq-card card" data-animation="fade-in-up"><div class="faq-question"><span>{{ faq.question }}</span><i class="fa-solid fa-plus faq-icon"></i></div><div class="faq-answer"><p>{{ faq.answer }}</p></div></div>
-                {% endfor %}
-            {% else %}
-                <div class="faq-card card" data-animation="fade-in-up"><div class="faq-question"><span>What are your primary technical skills?</span><i class="fa-solid fa-plus faq-icon"></i></div><div class="faq-answer"><p>This is a mock answer. My key skills include Python, Django, JavaScript, and AI/ML frameworks like PyTorch.</p></div></div>
-                <div class="faq-card card active" data-animation="fade-in-up"><div class="faq-question"><span>Are you available for freelance projects?</span><i class="fa-solid fa-plus faq-icon"></i></div><div class="faq-answer"><p>Yes, this is a sample answer showing the accordion. I am open to discussing new opportunities. Feel free to contact me.</p></div></div>
-                <div class="faq-card card" data-animation="fade-in-up"><div class="faq-question"><span>Where did you study?</span><i class="fa-solid fa-plus faq-icon"></i></div><div class="faq-answer"><p>This is placeholder text. Information about my education would be populated from the CMS or database.</p></div></div>
-            {% endif %}
+            {% for faq in faqs %}
+            <div class="faq-card card" data-animation="fade-in-up"><div class="faq-question"><span>{{ faq.question }}</span><i class="fa-solid fa-plus faq-icon"></i></div><div class="faq-answer"><p>{{ faq.answer }}</p></div></div>
+            {% endfor %}
         </div>
     </section>
 
@@ -217,5 +200,59 @@
             </div>
         </div>
     </section>
+
+    <!-- AI Chat Modal -->
+    <div class="ai-modal" id="ai-chat-modal">
+        <div class="ai-modal-overlay" id="ai-modal-overlay"></div>
+        <div class="ai-modal-container">
+            <div class="ai-modal-header">
+                <div class="ai-modal-title">
+                    <div class="ai-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Chat with AI Assistant</h3>
+                </div>
+                <button type="button" class="ai-modal-close" id="close-ai-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="ai-chat-interface">
+                <!-- Chat messages area -->
+                <div class="ai-chat-messages" id="ai-chat-messages">
+                    <div class="welcome-message">
+                        <div class="ai-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <p>👋 Hi! I'm your AI assistant. Ask me anything about Roshan's skills, experience, or projects!</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Input form -->
+                <form id="ai-form" class="ai-query-form" action="{% url 'ai:submit_ai_query' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="input-container">
+                        <button type="button" class="attach-btn" id="attach-file-btn" title="Attach Files">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <input type="file" name="attachment" id="ai-file-input" hidden multiple accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png">
+                        <div class="textarea-container">
+                            <textarea name="question" placeholder="Ask anything about me, e.g., 'What are your key skills?'" rows="1" maxlength="1000"></textarea>
+                            <div class="char-count">
+                                <span id="char-counter">0</span>/1000
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn" title="Send Message">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div id="file-display-container"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     {{ skills_for_js|json_script:"skills-data" }}
 {% endblock %}

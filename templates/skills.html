@@ -16,7 +16,7 @@
 {% block content %}
 <div class="skills-container">
     <!-- Page Header -->
-    <header class="page-header" data-animation="fade-in-up">
+    <header class="portfolio-header" data-animation="fade-in-up">
         <h1>My Technical <span>Skills</span></h1>
         <p>A breakdown of my core competencies and the technologies I use to build robust, scalable, and innovative solutions.</p>
     </header>
@@ -26,9 +26,9 @@
         <div class="categories-scroller">
             <button class="scroll-btn" id="scroll-left" aria-label="Scroll left"><i class="fa-solid fa-chevron-left"></i></button>
             <div class="categories-list" id="categories-list">
-                <a href="{% url 'portfolio:skill_list' %}" class="category-badge {% if not request.GET.tech or request.GET.tech == 'all' %}active{% endif %}">All</a>
-                {% for tech in technologies %}
-                    <a href="?tech={{ tech.slug }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="category-badge {% if request.GET.tech == tech.slug %}active{% endif %}">{{ tech.name }}</a>
+                <a href="{% url 'portfolio:skill_list' %}" class="category-badge {% if not request.GET.category or request.GET.category == 'all' %}active{% endif %}">All</a>
+                {% for category_value, category_label in skill_categories %}
+                    <a href="?category={{ category_value }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="category-badge {% if request.GET.category == category_value %}active{% endif %}">{{ category_label }}</a>
                 {% endfor %}
             </div>
             <button class="scroll-btn" id="scroll-right" aria-label="Scroll right"><i class="fa-solid fa-chevron-right"></i></button>
@@ -36,8 +36,8 @@
         <div class="sort-dropdown">
             <button id="sort-button">Sort By <i class="fa-solid fa-caret-down"></i></button>
             <ul id="sort-items">
-                <li><a href="?sort=name{% if request.GET.tech %}&tech={{ request.GET.tech }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Alphabetical</a></li>
-                <li><a href="?sort=newest{% if request.GET.tech %}&tech={{ request.GET.tech }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Newest First</a></li>
+                <li><a href="?sort=name{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Alphabetical</a></li>
+                <li><a href="?sort=newest{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Newest First</a></li>
             </ul>
         </div>
     </div>
@@ -64,52 +64,6 @@
                 </div>
             </div>
             {% endfor %}
-        {% else %}
-            <!-- FALLBACK DEMO CONTENT -->
-            <div class="skill-card card" data-animation="zoom-in">
-                <div class="skill-header">
-                    <div class="skill-icon-wrapper"><i class="fas fa-server"></i></div>
-                    <h3>Backend Development</h3>
-                </div>
-                <p class="skill-summary">This is a demo card for backend skills. I build robust server-side logic, APIs, and database structures for scalable applications.</p>
-                <div class="tech-stack">
-                    <h4>Core Technologies:</h4>
-                    <div class="tech-icons">
-                        <div class="tech-icon" title="Python"><img src="https://placehold.co/40x40/010409/eaeaea?text=Py" alt="Python icon"></div>
-                        <div class="tech-icon" title="Django"><img src="https://placehold.co/40x40/010409/eaeaea?text=Dj" alt="Django icon"></div>
-                        <div class="tech-icon" title="PostgreSQL"><img src="https://placehold.co/40x40/010409/eaeaea?text=PS" alt="PostgreSQL icon"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="skill-card card" data-animation="zoom-in">
-                <div class="skill-header">
-                    <div class="skill-icon-wrapper"><i class="fas fa-robot"></i></div>
-                    <h3>Artificial Intelligence</h3>
-                </div>
-                <p class="skill-summary">A sample card for AI. I leverage machine learning frameworks to build intelligent, data-driven features and applications.</p>
-                <div class="tech-stack">
-                    <h4>Core Technologies:</h4>
-                    <div class="tech-icons">
-                         <div class="tech-icon" title="PyTorch"><img src="https://placehold.co/40x40/010409/eaeaea?text=PT" alt="PyTorch icon"></div>
-                         <div class="tech-icon" title="Scikit-learn"><img src="https://placehold.co/40x40/010409/eaeaea?text=SK" alt="Scikit-learn icon"></div>
-                    </div>
-                </div>
-            </div>
-             <div class="skill-card card" data-animation="zoom-in">
-                <div class="skill-header">
-                    <div class="skill-icon-wrapper"><i class="fas fa-code"></i></div>
-                    <h3>Frontend Development</h3>
-                </div>
-                <p class="skill-summary">This placeholder shows frontend skills. I create responsive, user-friendly interfaces with modern web technologies.</p>
-                <div class="tech-stack">
-                    <h4>Core Technologies:</h4>
-                    <div class="tech-icons">
-                        <div class="tech-icon" title="JavaScript"><img src="https://placehold.co/40x40/010409/eaeaea?text=JS" alt="JavaScript icon"></div>
-                        <div class="tech-icon" title="CSS3"><img src="https://placehold.co/40x40/010409/eaeaea?text=C3" alt="CSS3 icon"></div>
-                        <div class="tech-icon" title="HTML5"><img src="https://placehold.co/40x40/010409/eaeaea?text=H5" alt="HTML5 icon"></div>
-                    </div>
-                </div>
-            </div>
         {% endif %}
     </div>
 

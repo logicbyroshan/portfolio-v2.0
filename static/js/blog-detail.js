@@ -45,80 +45,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
-    // SUBSCRIBE MODAL & COMMENT FORM LOGIC
+    // COMMENT FORM LOGIC (SIMPLIFIED)
     // =========================================================================
     const commentForm = document.getElementById('comment-form');
-    const subscribeModal = document.getElementById('subscribe-modal');
-    const closeModalBtn = document.getElementById('close-subscribe-modal');
-    const subscribeForm = document.getElementById('subscribe-form-modal');
-    const modalMessage = document.getElementById('modal-message');
-
-    if (subscribeModal && closeModalBtn && subscribeForm) {
-        // --- Modal Controls ---
-        const openSubscribeModal = () => subscribeModal.classList.add('active');
-        const closeSubscribeModal = () => subscribeModal.classList.remove('active');
-
-        closeModalBtn.addEventListener('click', closeSubscribeModal);
-        subscribeModal.addEventListener('click', (e) => {
-            if (e.target === subscribeModal) closeSubscribeModal();
-        });
-
-        // --- Comment Form Interception ---
-        if (commentForm) {
-            commentForm.addEventListener('submit', (e) => {
-                // Check for a subscriber cookie
-                if (document.cookie.indexOf('is_subscriber=true') === -1) {
-                    e.preventDefault(); // Stop normal form submission
-                    openSubscribeModal(); // Show the subscribe modal instead
-                }
-                // If cookie exists, let the form submit normally to the server
-            });
-        }
-
-        // --- AJAX Subscription Form in Modal ---
-        subscribeForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const emailInput = document.getElementById('modal-email-input');
-            const email = emailInput.value;
-
-            // Simple frontend validation
-            if (!email || !email.includes('@') || !email.includes('.')) {
-                modalMessage.className = 'modal-message error';
-                modalMessage.textContent = 'Please enter a valid email address.';
-                return;
-            }
-
-            fetch("/subscribe/", { // The URL for our NewsletterSubscribeView
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': csrftoken, // Use the CSRF token we retrieved
-                },
-                body: `email=${encodeURIComponent(email)}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                modalMessage.textContent = data.message;
-                if (data.success) {
-                    modalMessage.className = 'modal-message success';
-                    // Set a cookie (valid for 1 year) so they don't have to subscribe again
-                    document.cookie = "is_subscriber=true;max-age=31536000;path=/";
-                    
-                    // After a short delay, close the modal and prepare the main form
-                    setTimeout(() => {
-                        closeSubscribeModal();
-                        const mainEmailInput = commentForm.querySelector('input[name="email"]');
-                        if (mainEmailInput) mainEmailInput.value = email; // Autofill email
-                    }, 2000);
-                } else {
-                    modalMessage.className = 'modal-message error';
-                }
-            })
-            .catch(error => {
-                modalMessage.className = 'modal-message error';
-                modalMessage.textContent = 'An error occurred. Please try again.';
-                console.error('Subscription error:', error);
-            });
+    
+    if (commentForm) {
+        // Comment form will submit normally to the server
+        // No subscribe modal interception needed
+        commentForm.addEventListener('submit', (e) => {
+            // Just let the form submit normally
+            // The server will handle the comment creation
         });
     }
 
@@ -178,4 +114,122 @@ document.addEventListener('DOMContentLoaded', () => {
         // Initial load of the first page of comments
         loadMoreComments();
     }
+
+    // =========================================================================
+    // ENHANCED SOCIAL SHARING
+    // =========================================================================
+    function initializeSocialSharing() {
+        const shareButtons = document.querySelectorAll('.share-btn');
+        const shareData = document.querySelector('.share-data');
+        const feedbackElement = document.getElementById('share-feedback');
+        
+        if (!shareData) return;
+        
+        // Extract sharing data from hidden elements
+        const blogData = {
+            title: shareData.querySelector('[data-title]').getAttribute('data-title'),
+            summary: shareData.querySelector('[data-summary]').getAttribute('data-summary'),
+            url: shareData.querySelector('[data-url]').getAttribute('data-url'),
+            image: shareData.querySelector('[data-image]').getAttribute('data-image'),
+            author: shareData.querySelector('[data-author]').getAttribute('data-author'),
+            date: shareData.querySelector('[data-date]').getAttribute('data-date'),
+            categories: shareData.querySelector('[data-categories]').getAttribute('data-categories')
+        };
+
+        // Show feedback message
+        function showFeedback(message, type = 'success') {
+            const feedbackMessage = feedbackElement.querySelector('.feedback-message');
+            feedbackMessage.textContent = message;
+            feedbackElement.className = `share-feedback ${type}`;
+            feedbackElement.style.display = 'block';
+            
+            setTimeout(() => {
+                feedbackElement.style.display = 'none';
+            }, 3000);
+        }
+
+        // Generate platform-specific share URLs and content
+        function getShareUrl(platform) {
+            const encodedTitle = encodeURIComponent(blogData.title);
+            const encodedSummary = encodeURIComponent(blogData.summary);
+            const encodedUrl = encodeURIComponent(blogData.url);
+            const encodedImage = encodeURIComponent(blogData.image);
+            
+            const shareText = `${blogData.title} - A great read by ${blogData.author}`;
+            const encodedShareText = encodeURIComponent(shareText);
+            
+            const hashTags = blogData.categories.split(', ').map(cat => 
+                cat.replace(/\s+/g, '').toLowerCase()
+            ).join(',');
+
+            switch (platform) {
+                case 'twitter':
+                    return `https://twitter.com/intent/tweet?text=${encodedShareText}&url=${encodedUrl}&hashtags=${hashTags}`;
+                
+                case 'linkedin':
+                    return `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&title=${encodedTitle}&summary=${encodedSummary}`;
+                
+                case 'facebook':
+                    return `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedShareText}`;
+                
+                case 'whatsapp':
+                    const whatsappText = `${blogData.title}\n\n${blogData.summary}\n\nRead more: ${blogData.url}`;
+                    return `https://wa.me/?text=${encodeURIComponent(whatsappText)}`;
+                
+                case 'reddit':
+                    return `https://reddit.com/submit?url=${encodedUrl}&title=${encodedTitle}`;
+                
+                case 'telegram':
+                    const telegramText = `${blogData.title}\n\n${blogData.summary}\n\n${blogData.url}`;
+                    return `https://t.me/share/url?url=${encodedUrl}&text=${encodeURIComponent(telegramText)}`;
+                
+                case 'email':
+                    const emailSubject = `Check out: ${blogData.title}`;
+                    const emailBody = `Hi there!\n\nI thought you might be interested in this article:\n\n"${blogData.title}"\nBy ${blogData.author} • ${blogData.date}\n\n${blogData.summary}\n\nRead the full article: ${blogData.url}\n\nBest regards!`;
+                    return `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+                
+                default:
+                    return blogData.url;
+            }
+        }
+
+        // Handle share button clicks
+        shareButtons.forEach(button => {
+            button.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const platform = button.getAttribute('data-platform');
+                
+                if (platform === 'copy') {
+                    // Copy link to clipboard
+                    try {
+                        await navigator.clipboard.writeText(blogData.url);
+                        showFeedback('Link copied to clipboard!', 'success');
+                    } catch (err) {
+                        // Fallback for older browsers
+                        const textArea = document.createElement('textarea');
+                        textArea.value = blogData.url;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        showFeedback('Link copied to clipboard!', 'success');
+                    }
+                } else {
+                    // Open share URL in new window
+                    const shareUrl = getShareUrl(platform);
+                    const windowFeatures = 'width=600,height=400,scrollbars=yes,resizable=yes';
+                    
+                    try {
+                        window.open(shareUrl, '_blank', windowFeatures);
+                        showFeedback(`Opened ${platform.charAt(0).toUpperCase() + platform.slice(1)} share dialog`, 'success');
+                    } catch (err) {
+                        showFeedback('Could not open share dialog', 'error');
+                    }
+                }
+            });
+        });
+    }
+
+    // Initialize social sharing
+    initializeSocialSharing();
 });

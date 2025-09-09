@@ -47,76 +47,26 @@
         
         <!-- ======================= Blog Grid ======================= -->
         <div class="blog-grid" id="blog-card-container">
-            <!-- UPDATED: Added if/else logic for demo data -->
-            {% if blogs %}
-                <!-- DYNAMIC: Loop through paginated blog posts -->
-                {% for blog in blogs %}
-                <a href="{% url 'portfolio:blog_detail' slug=blog.slug %}" class="blog-card card" data-animation="zoom-in">
-                    <div class="blog-image"><img src="{% if blog.cover_image %}{{ blog.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ blog.title|urlencode }}{% endif %}" alt="{{ blog.title }}"></div>
-                    <div class="blog-content">
-                        <h4>{{ blog.title }}</h4>
-                        <p>{{ blog.summary|truncatewords:25 }}</p> {# Truncate for consistency #}
+            {% for blog in blogs %}
+            <a href="{% url 'portfolio:blog_detail' slug=blog.slug %}" class="blog-card card" data-animation="zoom-in">
+                <div class="blog-image"><img src="{% if blog.cover_image %}{{ blog.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ blog.title|urlencode }}{% endif %}" alt="{{ blog.title }}"></div>
+                <div class="blog-content">
+                    <h4>{{ blog.title }}</h4>
+                    <p>{{ blog.summary|truncatewords:25 }}</p>
+                </div>
+                <div class="blog-footer">
+                    <div class="publisher">
+                        {% if blog.author_avatar %}
+                            <img src="{{ blog.author_avatar.url }}" alt="{{ blog.author_name }}">
+                        {% else %}
+                            <img src="{% static 'images/default_avatar.png' %}" alt="Default Avatar">
+                        {% endif %}
+                        <span>{{ blog.author_name }}</span>
                     </div>
-                    <div class="blog-footer">
-                        <div class="publisher">
-                            {% if blog.author_avatar %}
-                                <img src="{{ blog.author_avatar.url }}" alt="{{ blog.author_name }}">
-                            {% else %}
-                                <img src="{% static 'images/default_avatar.png' %}" alt="Default Avatar">
-                            {% endif %}
-                            <span>{{ blog.author_name }}</span>
-                        </div>
-                        <span class="blog-date">{{ blog.created_date|date:"M d, Y" }}</span>
-                    </div>
-                </a>
-                {% endfor %}
-            {% else %}
-                <!-- FALLBACK: Display 3 demo cards if no blogs are found -->
-                <a href="#" class="blog-card card" data-animation="zoom-in">
-                    <div class="blog-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Tech+Insights" alt="Demo Blog Post"></div>
-                    <div class="blog-content">
-                        <h4>Demo Post: My Journey into AI</h4>
-                        <p>This is a placeholder for a blog post. This content is displayed for demonstration purposes when no actual blog posts exist in the database.</p>
-                    </div>
-                    <div class="blog-footer">
-                        <div class="publisher">
-                            <img src="https://placehold.co/40x40/010409/eaeaea?text=RD" alt="Roshan Damor">
-                            <span>Roshan Damor</span>
-                        </div>
-                        <span class="blog-date">Oct 28, 2023</span>
-                    </div>
-                </a>
-
-                <a href="#" class="blog-card card" data-animation="zoom-in">
-                    <div class="blog-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Web+Dev" alt="Demo Blog Post"></div>
-                    <div class="blog-content">
-                        <h4>Placeholder: Mastering Django</h4>
-                        <p>A sample article to showcase the blog layout. It ensures that the page looks populated and professional even without real data from the backend.</p>
-                    </div>
-                    <div class="blog-footer">
-                        <div class="publisher">
-                            <img src="https://placehold.co/40x40/010409/eaeaea?text=RD" alt="Roshan Damor">
-                            <span>Roshan Damor</span>
-                        </div>
-                        <span class="blog-date">Oct 22, 2023</span>
-                    </div>
-                </a>
-
-                <a href="#" class="blog-card card" data-animation="zoom-in">
-                    <div class="blog-image"><img src="https://placehold.co/600x400/010409/eaeaea?text=Tutorial" alt="Demo Blog Post"></div>
-                    <div class="blog-content">
-                        <h4>Example Tutorial: Building a Portfolio</h4>
-                        <p>This demo card represents a tutorial-style blog post, illustrating the kind of content that will be featured here in the future.</p>
-                    </div>
-                    <div class="blog-footer">
-                        <div class="publisher">
-                            <img src="https://placehold.co/40x40/010409/eaeaea?text=RD" alt="Roshan Damor">
-                            <span>Roshan Damor</span>
-                        </div>
-                        <span class="blog-date">Oct 15, 2023</span>
-                    </div>
-                </a>
-            {% endif %}
+                    <span class="blog-date">{{ blog.created_date|date:"M d, Y" }}</span>
+                </div>
+            </a>
+            {% endfor %}
         </div>
 
         <!-- ======================= Pagination ======================= -->
