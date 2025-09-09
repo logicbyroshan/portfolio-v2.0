@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load custom_filters %}
 
 {% block body_class %}blog-detail-page{% endblock %}
 
@@ -105,21 +106,35 @@
                     <!-- DYNAMIC: Comment count -->
                     <h2 data-animation="fade-in-up">Comments ({{ comments.count }})</h2>
                     
-                    <!-- UPDATED: Comment Form with name/email fields and CSRF token -->
-                    <form class="comment-form card" id="comment-form" method="post" action="{% url 'portfolio:blog_detail' slug=blog.slug %}" data-animation="fade-in-up">
-                        {% csrf_token %}
-                        <div class="form-content">
-                            <textarea name="body" placeholder="Join the discussion..." rows="3" required></textarea>
-                            <button type="submit" class="filled-btn">Post Comment</button>
+                    <!-- Comment Form -->
+                    {% if user.is_authenticated %}
+                        <form class="comment-form card" id="comment-form" method="post" action="{% url 'portfolio:blog_detail' slug=blog.slug %}" data-animation="fade-in-up">
+                            {% csrf_token %}
+                            <div class="form-content">
+                                <textarea name="body" placeholder="Join the discussion..." rows="3" required></textarea>
+                                <button type="submit" class="filled-btn">Post Comment</button>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="comment-auth-prompt card" data-animation="fade-in-up">
+                            <div class="auth-prompt-content">
+                                <p>Sign in to join the discussion and share your thoughts about this post.</p>
+                                <div class="auth-buttons">
+                                    <a href="{% url 'auth_app:login' %}?next={% url 'portfolio:blog_detail' slug=blog.slug %}%23comments" class="filled-btn">Sign In</a>
+                                    <a href="{% url 'auth_app:signup' %}?next={% url 'portfolio:blog_detail' slug=blog.slug %}%23comments" class="outline-btn">Create Account</a>
+                                </div>
+                            </div>
                         </div>
-                    </form>
+                    {% endif %}
 
                     <!-- List of Comments -->
                     <div class="comment-list" id="comment-list">
                         <!-- DYNAMIC: Loop through comments from the view -->
                         {% for comment in comments %}
                         <div class="comment-item card hidden">
-                            <div class="comment-avatar"><img src="https://i.pravatar.cc/40?u={{ comment.id }}" alt=""></div>
+                            <div class="comment-avatar" data-avatar-color="{{ comment.author_name|avatar_color }}">
+                                {{ comment.author_name|initials }}
+                            </div>
                             <div class="comment-body">
                                 <div class="comment-header">
                                     <h5>{{ comment.author_name }}</h5>

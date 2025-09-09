@@ -190,6 +190,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Set avatar colors from data attributes
+    function setAvatarColors() {
+        const avatars = document.querySelectorAll('.comment-avatar[data-avatar-color]');
+        avatars.forEach(avatar => {
+            const color = avatar.getAttribute('data-avatar-color');
+            if (color) {
+                avatar.style.backgroundColor = color;
+            }
+        });
+    }
+    
+    // Initialize avatar colors on page load
+    setAvatarColors();
+
     // =========================================================================
     // DYNAMIC COMMENTS SECTION LOGIC (LIKE & LOAD MORE)
     // =========================================================================
@@ -266,10 +280,15 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Create HTML for a comment
         function createCommentHTML(comment) {
+            const initials = getInitials(comment.author_name);
+            const avatarColor = getAvatarColor(comment.author_name);
+            
             return `
                 <div class="comment-item">
                     <div class="comment-header">
-                        <img src="/static/images/author-avatar.png" alt="Author Avatar" class="comment-avatar">
+                        <div class="comment-avatar" data-avatar-color="${avatarColor}" style="background-color: ${avatarColor}">
+                            ${initials}
+                        </div>
                         <div class="comment-meta">
                             <h4 class="comment-author">${comment.author_name}</h4>
                             <span class="comment-date">${comment.created_at}</span>
@@ -286,6 +305,43 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             `;
+        }
+        
+        // Utility function to generate initials from name
+        function getInitials(name) {
+            if (!name) return "?";
+            
+            const words = name.trim().split(/\s+/).filter(word => word.length > 0);
+            if (words.length === 0) return "?";
+            
+            const initials = words.slice(0, 3).map(word => {
+                const firstChar = word[0].toUpperCase();
+                return /[A-Z]/.test(firstChar) ? firstChar : "";
+            }).filter(char => char !== "").join("");
+            
+            return initials || (name[0] && /[A-Z]/i.test(name[0]) ? name[0].toUpperCase() : "?");
+        }
+        
+        // Utility function to generate consistent avatar color
+        function getAvatarColor(name) {
+            if (!name) return "#6366f1";
+            
+            // Simple hash function
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) {
+                const char = name.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32-bit integer
+            }
+            
+            // Color palette
+            const colors = [
+                "#ef4444", "#f97316", "#eab308", "#22c55e", 
+                "#06b6d4", "#3b82f6", "#6366f1", "#8b5cf6", 
+                "#ec4899", "#f59e0b", "#10b981", "#6366f1"
+            ];
+            
+            return colors[Math.abs(hash) % colors.length];
         }
 
         if (loadMoreBtn) {

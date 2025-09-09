@@ -22,6 +22,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const csrftoken = getCookie('csrftoken');
 
+    // Set avatar colors from data attributes
+    function setAvatarColors() {
+        const avatars = document.querySelectorAll('.comment-avatar[data-avatar-color]');
+        avatars.forEach(avatar => {
+            const color = avatar.getAttribute('data-avatar-color');
+            if (color) {
+                avatar.style.backgroundColor = color;
+            }
+        });
+    }
+    
+    // Initialize avatar colors on page load
+    setAvatarColors();
+
 
     // =========================================================================
     // ON-SCROLL ANIMATION

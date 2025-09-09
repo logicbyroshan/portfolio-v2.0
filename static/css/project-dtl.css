@@ -473,11 +473,36 @@
 .comment-form textarea { width: 100%; background: var(--bg-gradient-mid); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 16px; font-size: 16px; color: var(--title-color); resize: vertical; min-height: 40px; }
 .comment-form textarea:focus { outline: none; border-color: var(--accent-color); }
 .comment-form .filled-btn { align-self: flex-end; }
+
+/* Auth prompt styles */
+.comment-auth-prompt { background: var(--bg-gradient-mid); border: 1px solid var(--card-border); border-radius: 12px; padding: 24px; text-align: center; margin-bottom: 30px; }
+.auth-prompt-content p { color: var(--paragraph-color); font-size: 16px; margin-bottom: 20px; }
+.auth-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.auth-buttons .filled-btn, .auth-buttons .outline-btn { padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: 500; transition: all 0.3s ease; }
+
+@media (max-width: 768px) {
+    .auth-buttons { flex-direction: column; align-items: center; }
+    .auth-buttons .filled-btn, .auth-buttons .outline-btn { width: 100%; max-width: 200px; text-align: center; }
+}
 .comment-list { display: flex; flex-direction: column; gap: 20px; }
 .comment-item { background: var(--bg-gradient-mid); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; transition: all 0.3s ease; }
 .comment-item:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); }
 .comment-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
-.comment-avatar { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+.comment-avatar { 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    flex-shrink: 0; 
+    overflow: hidden; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--accent-color), #ff6b6b);
+}
 .comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .comment-meta { flex-grow: 1; }
 .comment-author { font-size: 16px; color: var(--title-color); font-weight: 600; margin: 0 0 2px 0; }

@@ -112,6 +112,12 @@ class ProjectDetailView(DetailView):
         return context
 
     def post(self, request, *args, **kwargs):
+        # Check if user is authenticated
+        if not request.user.is_authenticated:
+            project = self.get_object()
+            login_url = reverse('auth_app:login') + f'?next={reverse("portfolio:project_detail", kwargs={"slug": project.slug})}%23comments'
+            return HttpResponseRedirect(login_url)
+        
         project = self.get_object()
         body = request.POST.get('body')
 
@@ -119,8 +125,9 @@ class ProjectDetailView(DetailView):
         response = HttpResponseRedirect(redirect_url)
 
         if body:
-            # Create comment with anonymous user
-            ProjectComment.objects.create(project=project, author_name="Anonymous", body=body)
+            # Create comment with authenticated user's name
+            author_name = request.user.first_name or request.user.username
+            ProjectComment.objects.create(project=project, author_name=author_name, body=body)
             messages.success(request, "Your comment has been posted and is awaiting approval.")
         else:
             messages.error(request, "Please enter your comment.")
@@ -205,6 +212,12 @@ class BlogDetailView(DetailView):
         return context
 
     def post(self, request, *args, **kwargs):
+        # Check if user is authenticated
+        if not request.user.is_authenticated:
+            post = self.get_object()
+            login_url = reverse('auth_app:login') + f'?next={reverse("portfolio:blog_detail", kwargs={"slug": post.slug})}%23comments'
+            return HttpResponseRedirect(login_url)
+            
         post = self.get_object()
         body = request.POST.get('body')
 
@@ -212,8 +225,9 @@ class BlogDetailView(DetailView):
         response = HttpResponseRedirect(redirect_url)
 
         if body:
-            # Create comment with anonymous user
-            Comment.objects.create(post=post, author_name="Anonymous", body=body)
+            # Create comment with authenticated user's name
+            author_name = request.user.first_name or request.user.username
+            Comment.objects.create(post=post, author_name=author_name, body=body)
             messages.success(request, "Your comment has been posted and is awaiting approval.")
         else:
             messages.error(request, "Please enter your comment.")
