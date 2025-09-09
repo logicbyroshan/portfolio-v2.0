@@ -8,7 +8,7 @@ from django.db import models
 
 # Import all models from your models.py
 from .models import (
-    Skill, Experience, Project, Blog, FAQ, Category, Technology, 
+    Skill, Experience, Project, Blog, FAQ, Category,
     NewsletterSubscriber, Comment, ProjectComment, Service, Achievement, 
     SiteConfiguration, Resume, VideoResume
 )

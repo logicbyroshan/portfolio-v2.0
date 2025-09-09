@@ -1,13 +1,18 @@
 import os, sys
-import pymysql
-pymysql.install_as_MySQLdb()
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-6d0sc!g!$b+ecm0!uttm8)zco12u72)*gmtc61j3n_t0(lgf7v"
-DEBUG = True
-ALLOWED_HOSTS = []
+SECRET_KEY = os.getenv('SECRET_KEY', "django-insecure-6d0sc!g!$b+ecm0!uttm8)zco12u72)*gmtc61j3n_t0(lgf7v")
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else []
+
+# Gemini AI Configuration
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
 INSTALLED_APPS = [
     'django.contrib.admin',

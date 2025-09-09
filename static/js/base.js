@@ -8,12 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (mobileNavToggle && siteHeader) {
         mobileNavToggle.addEventListener('click', () => {
-            console.log('Mobile toggle clicked'); // Debug log
             siteHeader.classList.toggle('mobile-menu-active');
-            console.log('Header classes:', siteHeader.className); // Debug log
         });
-    } else {
-        console.log('Mobile nav elements not found:', { mobileNavToggle, siteHeader }); // Debug log
     }
 
     // =========================================================================

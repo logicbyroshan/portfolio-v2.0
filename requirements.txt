@@ -7,6 +7,7 @@ django-extensions==4.1
 django-solo==2.4.0
 django-tinymce==4.1.0
 executing==2.2.2
+google-generativeai==0.8.3
 gunicorn==23.0.0
 jedi==0.19.2
 packaging==25.0
@@ -15,7 +16,6 @@ pillow==11.3.0
 prompt_toolkit==3.0.51
 pure_eval==0.2.3
 Pygments==2.19.2
-PyMySQL==1.1.1
 pyparsing==3.2.3
 python-dateutil==2.9.0.post0
 python-dotenv==1.1.1

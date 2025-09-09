@@ -135,6 +135,8 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             const submitBtn = this.querySelector('.submit-btn');
+            const textarea = this.querySelector('textarea[name="question"]');
+            const charCounter = modal.querySelector('#char-counter');
             const originalContent = submitBtn.innerHTML;
             
             // Show loading state
@@ -146,7 +148,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (question) {
                 addMessageToChat('user', question);
                 textarea.value = '';
-                charCounter.textContent = '0';
+                if (charCounter) {
+                    charCounter.textContent = '0';
+                }
                 textarea.style.height = 'auto';
             }
             
