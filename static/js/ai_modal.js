@@ -67,6 +67,20 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
+
+        // Add Ctrl+Enter functionality (Ctrl+Enter on Windows/Linux, Cmd+Enter on Mac)
+        textarea.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault(); // Prevent default Enter behavior
+                
+                // Find the form and trigger submit
+                const form = this.closest('form');
+                if (form) {
+                    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+                    form.dispatchEvent(submitEvent);
+                }
+            }
+        });
     }
 
     // File attachment functionality
@@ -139,27 +153,36 @@ document.addEventListener('DOMContentLoaded', function() {
             const charCounter = modal.querySelector('#char-counter');
             const originalContent = submitBtn.innerHTML;
             
+            // Get the question before clearing
+            const question = textarea.value.trim();
+            
+            // Validate question
+            if (!question) {
+                alert('Please enter a question before submitting.');
+                return;
+            }
+            
             // Show loading state
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
             submitBtn.disabled = true;
             
             // Add user message to chat
-            const question = textarea.value.trim();
-            if (question) {
-                addMessageToChat('user', question);
-                textarea.value = '';
-                if (charCounter) {
-                    charCounter.textContent = '0';
-                }
-                textarea.style.height = 'auto';
-            }
+            addMessageToChat('user', question);
             
             // Add typing indicator
             addTypingIndicator();
             
-            // Submit form data (you can modify this based on your backend implementation)
+            // Create FormData BEFORE clearing the textarea
             const formData = new FormData(this);
             
+            // Now clear the textarea after FormData is created
+            textarea.value = '';
+            if (charCounter) {
+                charCounter.textContent = '0';
+            }
+            textarea.style.height = 'auto';
+            
+            // Submit form data
             fetch(this.action, {
                 method: 'POST',
                 body: formData,

@@ -239,12 +239,15 @@
                         </button>
                         <input type="file" name="attachment" id="ai-file-input" hidden multiple accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png">
                         <div class="textarea-container">
-                            <textarea name="question" placeholder="Ask anything about me, e.g., 'What are your key skills?'" rows="1" maxlength="1000"></textarea>
+                            <textarea name="question" placeholder="Ask anything about me, e.g., 'What are your key skills?' (Ctrl+Enter to send)" rows="1" maxlength="1000"></textarea>
                             <div class="char-count">
                                 <span id="char-counter">0</span>/1000
                             </div>
+                            <div class="keyboard-hint">
+                                <small>💡 Press <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to send</small>
+                            </div>
                         </div>
-                        <button type="submit" class="submit-btn" title="Send Message">
+                        <button type="submit" class="submit-btn" title="Send Message (Ctrl+Enter)">
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
