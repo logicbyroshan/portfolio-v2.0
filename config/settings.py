@@ -21,9 +21,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',  # For HTTPS development server
     'portfolio',
     'ai',
     'auth_app',
+    'music',
 ]
 
 MIDDLEWARE = [
@@ -163,3 +165,7 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
 }
+
+SPOTIFY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID', "your_client_id")
+SPOTIFY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET', "your_client_secret")
+SPOTIFY_REDIRECT_URI = os.getenv('SPOTIFY_REDIRECT_URI', "https://localhost:8000/callback/")

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Music - Roshan Damor{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/music.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/music.js' %}" defer></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="music-container">
+    <!-- Page Header -->
+    <header class="page-header" data-animation="fade-in-up">
+        <h1>My Musical <span>Vibes</span></h1>
+        <p>A collection of my favorite Spotify playlists for coding, focusing, or just relaxing. Feel free to have a listen!</p>
+        
+        {% if is_demo %}
+        <div class="spotify-connect-banner">
+            {% if error_message %}
+                <p>⚠️ {{ error_message }}</p>
+            {% else %}
+                <p>🎵 These are demo playlists. Connect to Spotify to see my real playlists!</p>
+            {% endif %}
+            <a href="{{ spotify_login_url }}" class="primary-btn">
+                <i class="fa-brands fa-spotify"></i> Connect to Spotify
+            </a>
+        </div>
+        {% else %}
+        <div class="spotify-connected-banner">
+            <p>✅ Connected to Spotify - Showing your real playlists!</p>
+            <a href="{% url 'spotify_logout' %}" class="logout-btn">
+                <i class="fa-solid fa-sign-out-alt"></i> Disconnect
+            </a>
+        </div>
+        {% endif %}
+    </header>
+
+    <!-- Playlist Grid -->
+    <div class="playlist-grid">
+        {% if playlists.items %}
+            {% for playlist in playlists.items %}
+            <div class="playlist-card card" data-animation="zoom-in">
+                <a href="{{ playlist.external_urls.spotify }}" target="_blank" rel="noopener noreferrer" class="playlist-image">
+                    <img src="{{ playlist.images.0.url }}" alt="{{ playlist.name }} playlist cover">
+                    <div class="play-overlay"><i class="fa-brands fa-spotify"></i></div>
+                </a>
+                <div class="playlist-content">
+                    <h3>{{ playlist.name }}</h3>
+                    <p>By {{ playlist.owner.display_name }}</p>
+                </div>
+                <div class="playlist-footer">
+                    <a href="{{ playlist.external_urls.spotify }}" class="outline-btn" target="_blank" rel="noopener noreferrer">
+                        Open in Spotify
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- FALLBACK CONTENT -->
+            <div class="playlist-card card" data-animation="zoom-in">
+                <a href="#" class="playlist-image">
+                    <img src="https://placehold.co/300x300/010409/00A9FF?text=Lofi+Beats" alt="Demo playlist cover">
+                    <div class="play-overlay"><i class="fa-brands fa-spotify"></i></div>
+                </a>
+                <div class="playlist-content">
+                    <h3>Demo: Coding Session</h3>
+                    <p>By Roshan Damor</p>
+                </div>
+                <div class="playlist-footer">
+                    <a href="#" class="outline-btn">Open in Spotify</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
