@@ -6,6 +6,7 @@ from music.views import spotify_callback
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('tinymce/', include('tinymce.urls')),
     path('', include('portfolio.urls')),
     path('ai/', include('ai.urls')),
     path('auth/', include('auth_app.urls')),
