@@ -1,0 +1,44 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches:
+      - main   # 👈 Change if you want to deploy from another branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.CPANEL_SSH_PRIVATE_KEY }}
+
+      - name: Deploy to cPanel via SSH
+        run: |
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.CPANEL_SSH_PORT }} \
+            ${{ secrets.CPANEL_SSH_USER }}@${{ secrets.CPANEL_SSH_HOST }} << 'EOF'
+              cd ${{ secrets.CPANEL_APP_DIR }}
+
+              echo "🔄 Pulling latest code..."
+              git pull origin main
+
+              echo "📦 Activating venv..."
+              source ${{ secrets.CPANEL_VENV_ACTIVATE }}
+
+              echo "📦 Installing dependencies..."
+              pip install -r requirements.txt
+
+              echo "🗂 Running migrations..."
+              python manage.py migrate --noinput
+
+              echo "🎨 Collecting static files..."
+              python manage.py collectstatic --noinput
+
+              echo "🚀 Restarting app..."
+              touch tmp/restart.txt || true
+          EOF
