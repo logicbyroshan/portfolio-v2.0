@@ -9,5 +9,8 @@ urlpatterns = [
     path('ai/', include('ai.urls')),
     path('auth/', include('auth_app.urls')),
 ]
+
+# Serve static and media files during development
 if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.BASE_DIR / 'static')
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
