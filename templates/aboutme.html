@@ -43,7 +43,7 @@
                 <i class="fa-solid fa-music action-icon"></i>
                 <h3>{{ config.action1_title|default:"My Song Playlists" }}</h3>
                 <p>{{ config.action1_description|default:"Discover the music that fuels my coding sessions and creative work." }}</p>
-                <a href="{% url 'portfolio:music_list' %}" class="outline-btn">{{ config.action1_button_text|default:"Listen Now" }}</a>
+                <a href="{% url 'my_playlist' %}" class="outline-btn">{{ config.action1_button_text|default:"Listen Now" }}</a>
             </div>
 
             <!-- Card 2: Community -->
@@ -59,7 +59,7 @@
                 <i class="fa-solid fa-book-open action-icon"></i>
                 <h3>{{ config.action3_title|default:"View My Resources" }}</h3>
                 <p>{{ config.action3_description|default:"A curated list of tools, articles, and learning materials that I find valuable." }}</p>
-                <a href="#" class="outline-btn">{{ config.action3_button_text|default:"Explore Resources" }}</a>
+                <a href="{% url 'portfolio:resource_list' %}" class="outline-btn">{{ config.action3_button_text|default:"Explore Resources" }}</a>
             </div>
         </div>
     </section>

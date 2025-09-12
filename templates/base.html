@@ -10,6 +10,11 @@
 
     {% block extra_meta %}{% endblock %}
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@400;500;600;700&family=Rozha+One&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/ai_query.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
@@ -39,9 +44,6 @@
             <nav class="nav-left">
                 <ul>
                     <!-- DYNAMIC: URL tags for navigation -->
-                    <li><a href="{% url 'portfolio:about_me' %}"><span class="nav-dot"></span>About</a></li>
-                    <li><a href="{% url 'portfolio:code_together' %}"><span class="nav-dot"></span>Code With Me</a></li>
-                    <li><a href="{% url 'portfolio:resource_list' %}"><span class="nav-dot"></span>Resources</a></li>
                     <li><a href="{% url 'portfolio:skill_list' %}"><span class="nav-dot"></span>Skills</a></li>
                     <li><a href="{% url 'portfolio:achievements_list' %}"><span class="nav-dot"></span>Achievements</a></li>
                     <li><a href="{% url 'portfolio:experience_list' %}"><span class="nav-dot"></span>Experiences</a></li>
@@ -86,9 +88,6 @@
         <div class="mobile-nav-menu" id="mobile-nav-menu">
             <div class="mobile-menu-content">
                 <nav class="mobile-nav-links">
-                    <a href="{% url 'portfolio:about_me' %}"><span class="nav-dot"></span>About</a>
-                    <a href="{% url 'portfolio:code_together' %}"><span class="nav-dot"></span>Code With Me</a>
-                    <a href="{% url 'portfolio:resource_list' %}"><span class="nav-dot"></span>Resources</a>
                     <a href="{% url 'portfolio:skill_list' %}"><span class="nav-dot"></span>Skills</a>
                     <a href="{% url 'portfolio:achievements_list' %}"><span class="nav-dot"></span>Achievements</a>
                     <a href="{% url 'portfolio:experience_list' %}"><span class="nav-dot"></span>Experiences</a>
@@ -121,7 +120,7 @@
                 <!-- Column 1: About & Socials -->
                 <div class="footer-col-about">
                     <h3 class="footer-logo">{{ config.hero_name|default:"Roshan Damor" }}</h3>
-                    <p>{{ config.hero_bio|default:"A passionate developer building AI-powered solutions and scalable web applications for a digital-first world."|safe }}</p>
+                    <p>A passionate developer building AI-powered solutions and scalable web applications for a digital-first world.</p>
                     <ul class="social-icons">
                         {% if config.twitter_url %}
                             <li><a href="{{ config.twitter_url }}" aria-label="Twitter" target="_blank"><i class="fab fa-twitter"></i></a></li>
@@ -149,9 +148,10 @@
                     <h4>Quick Links</h4>
                     <ul>
                         <!-- DYNAMIC: URL tags with anchors -->
-                        <li><a href="{% url 'portfolio:home' %}#about">About Me</a></li>
+                        <li><a href="{% url 'portfolio:home' %}">Home</a></li>
+                        <li><a href="{% url 'portfolio:about_me' %}">About Me</a></li>
                         <li><a href="{% url 'portfolio:skill_list' %}">Skills</a></li>
-                        <li><a href="{% url 'portfolio:home' %}#experience">Experience</a></li>
+                        <li><a href="{% url 'portfolio:experience_list' %}">Experience</a></li>
                         <li><a href="{% url 'portfolio:home' %}#contact">Contact</a></li>
                     </ul>
                 </div>
@@ -182,10 +182,10 @@
                 <div class="footer-col-links">
                     <h4>Connect</h4>
                     <ul>
-                        <li><a href="#" target="_blank">Join Community</a></li>
-                        <li><a href="#" target="_blank">My Resources</a></li>
+                        <li><a href="https://risetogethr.tech" target="_blank">Join Community</a></li>
+                        <li><a href="{% url 'portfolio:resource_list' %}">My Resources</a></li>
                         <li><a href="{% url 'my_playlist' %}">Music Playlist</a></li>
-                        <li><a href="#" target="_blank">Code Together</a></li>
+                        <li><a href="{% url 'portfolio:code_together' %}">Code Together</a></li>
                     </ul>
                 </div>
             </div>

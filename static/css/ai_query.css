@@ -21,6 +21,9 @@
     transition: all 0.3s ease !important;
     text-decoration: none !important;
     transform: none !important;
+    box-sizing: border-box !important;
+    min-width: fit-content;
+    white-space: nowrap;
 }
 
 .hero-actions .ai-chat-btn:hover {
@@ -33,6 +36,41 @@
 }
 
 .hero-actions .ai-chat-btn i {
+    font-size: 18px;
+}
+
+/* Code Together Button - Matching AI Button Style */
+.hero-actions .code-together-btn {
+    background: transparent !important;
+    color: var(--accent-color) !important;
+    border: 2px solid var(--accent-color) !important;
+    border-radius: 12px;
+    padding: 16px 28px !important;
+    font-size: 16px !important;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    transform: none !important;
+    box-sizing: border-box !important;
+    min-width: fit-content;
+    white-space: nowrap;
+}
+
+.hero-actions .code-together-btn:hover {
+    background: var(--accent-color) !important;
+    color: white !important;
+    border-color: var(--accent-color-hover) !important;
+}
+
+.hero-actions .code-together-btn:active {
+    border-color: var(--accent-color-hover) !important;
+}
+
+.hero-actions .code-together-btn i {
     font-size: 18px;
 }
 

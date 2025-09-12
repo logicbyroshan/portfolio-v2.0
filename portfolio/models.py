@@ -15,23 +15,12 @@ class SiteConfiguration(models.Model):
     hero_greeting = models.CharField(max_length=100, default="HIII, IT'S ME")
     hero_name = models.CharField(max_length=100, default="Roshan Damor")
     hero_tagline = models.CharField(max_length=200, default="I am a Web Developer")
-    hero_bio = HTMLField(default='GREETINGS, ALL DIGITAL EXPLORERS! ...')
     
     # --- Hero Stats ---
     hero_projects_stat = models.CharField(max_length=10, default="25+")
     hero_internships_stat = models.CharField(max_length=10, default="3+")
     hero_articles_stat = models.CharField(max_length=10, default="15+")
 
-    # --- Section Titles & Descriptions ---
-    about_title = models.CharField(max_length=200, default="About Me")
-    about_description = HTMLField(blank=True)
-    now_title = models.CharField(max_length=200, default="What I'm Doing Now")
-    now_description = HTMLField(blank=True)
-    skills_title = models.CharField(max_length=200, default="My Tech Stack")
-    skills_description = HTMLField(blank=True)
-    experience_title = models.CharField(max_length=200, default="Where I've Worked")
-    experience_description = HTMLField(blank=True)
-    
     # --- Social Media Links ---
     twitter_url = models.URLField(blank=True, default="https://x.com/logicbyroshan")
     github_url = models.URLField(blank=True, default="https://github.com/logicbyroshan")

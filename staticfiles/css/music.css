@@ -1,0 +1,194 @@
+/* css/music.css */
+
+/* Page Layout */
+.music-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px; /* Increased back to 40px */
+}
+.page-header { width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+.page-header h1 { font-family: var(--heading-font); font-size: 50px; color: var(--title-color); line-height: 1.1; letter-spacing: 2px; }
+.page-header h1 span { color: var(--accent-color); }
+.page-header p { font-size: 18px; color: var(--paragraph-color); max-width: 800px; margin: 0 auto; }
+
+/* Spotify Connect Banner */
+.spotify-connect-banner {
+    background: linear-gradient(135deg, #1db954, #1ed760);
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+    color: white;
+    text-align: center;
+}
+.spotify-connect-banner p {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    color: white;
+}
+.spotify-connect-banner .primary-btn {
+    background-color: white;
+    color: #1db954;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s ease;
+}
+.spotify-connect-banner .primary-btn:hover {
+    transform: translateY(-2px);
+    color: #1db954;
+}
+
+.spotify-connected-banner {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 20px;
+    color: white;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.spotify-connected-banner p {
+    margin: 0;
+    font-size: 16px;
+    color: white;
+}
+.logout-btn {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+.logout-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Playlist Grid */
+.playlist-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+/* Playlist Card Styling */
+.playlist-card {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    height: 100%;
+}
+.playlist-image {
+    position: relative;
+    display: block;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+.playlist-image img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+.playlist-card:hover .playlist-image img {
+    transform: scale(1.05);
+}
+
+.play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.playlist-card:hover .play-overlay {
+    opacity: 1;
+}
+
+.playlist-content {
+    flex-grow: 1;
+    text-align: center;
+}
+.playlist-content h3 {
+    font-size: 20px;
+    color: var(--title-color);
+    margin-bottom: 5px;
+}
+.playlist-content p {
+    font-size: 14px;
+    color: var(--paragraph-color);
+}
+.playlist-footer {
+    margin-top: auto;
+    padding-top: 20px;
+}
+.playlist-footer .outline-btn {
+    width: 100%;
+}
+
+/* Animations */
+[data-animation] { opacity: 0; transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+[data-animation].is-visible { opacity: 1; transform: none; }
+[data-animation="fade-in-up"] { transform: translateY(40px); }
+[data-animation="zoom-in"] { transform: scale(0.95); }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-header h1 { font-size: 40px; }
+    .playlist-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    .music-container {
+        gap: 35px; /* Increased from 25px */
+    }
+    .spotify-connected-banner {
+        flex-direction: column;
+        text-align: center;
+    }
+    .spotify-connect-banner .primary-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header h1 { font-size: 32px; }
+    .playlist-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .music-container {
+        gap: 30px; /* Increased from 20px */
+    }
+}

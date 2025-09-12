@@ -159,6 +159,41 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
 .home-content h1 { font-family: var(--heading-font); font-size: 72px; color: var(--title-color); line-height: 1; letter-spacing: 3px; }
 .home-content h4 { font-size: 24px; font-weight: 400; color: var(--paragraph-color); }
 .home-content h4 span { color: var(--accent-color); font-weight: 600; }
+
+/* Hero Bio Styling */
+.hero-bio {
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.hero-bio p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--paragraph-color);
+    opacity: 0.9;
+    max-width: 500px;
+}
+
+/* Hero Bio Text Styling */
+.hero-bio p em {
+    font-style: italic;
+}
+
+.hero-bio p b {
+    font-weight: 600;
+    color: var(--title-color);
+}
+
+.hero-bio p b span {
+    color: var(--accent-color);
+    font-weight: 700;
+}
+
+/* Hero Actions */
+.hero-actions {
+    margin-top: 20px;
+}
+
 #skill-text::after { content: '|'; margin-left: 5px; color: var(--accent-color); animation: blink 0.7s infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 .home-hero-image { max-width: 45%; position: relative; display: flex; align-items: center; justify-content: center; }
@@ -367,6 +402,14 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
     .section-title { margin-bottom: 20px; } /* Increased back to 20px */
     .section-title h2, .portfolio-header .head h1 { font-size: 36px; }
     .home-content h1 { font-size: 48px; }
+    
+    /* Hero Bio Responsive */
+    .hero-bio p {
+        font-size: 15px;
+        max-width: 100%;
+        text-align: center;
+    }
+    
     .home-hero-image { max-width: 90%; }
     .hero-stat-card { padding: 8px; gap: 6px; }
     .home-hero-image .card {padding: 10px;}

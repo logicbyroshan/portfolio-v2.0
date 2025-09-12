@@ -1,0 +1,122 @@
+/* css/about.css */
+
+.about-page-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 80px; /* More space between main sections */
+}
+
+/* Profile Section */
+.profile-section {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    width: 100%;
+}
+.profile-image-wrapper {
+    flex-shrink: 0;
+    max-width: 350px;
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 3px solid var(--card-border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+.profile-image-wrapper img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+.profile-content .page-header {
+    text-align: left;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+.details-from-cms {
+    font-size: 16px;
+    line-height: 1.8;
+}
+/* Style the content coming from TinyMCE */
+.details-from-cms ul {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.details-from-cms li {
+    padding-left: 25px;
+    position: relative;
+}
+.details-from-cms li::before {
+    content: '\f058'; /* Font Awesome checkmark icon */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    top: 4px;
+    color: var(--accent-color);
+}
+.details-from-cms strong {
+    color: var(--title-color);
+    font-weight: 600;
+}
+
+/* Action Links Section */
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    width: 100%;
+}
+.action-card {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 30px;
+}
+.action-icon {
+    font-size: 36px;
+    color: var(--accent-color);
+    margin-bottom: 10px;
+}
+.action-card h3 {
+    font-family: var(--heading-font);
+    font-size: 24px;
+    color: var(--title-color);
+}
+.action-card p {
+    flex-grow: 1; /* Pushes button to the bottom */
+}
+.action-card .outline-btn {
+    margin-top: auto;
+    width: 80%;
+}
+
+/* Animations */
+[data-animation] { opacity: 0; transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+[data-animation].is-visible { opacity: 1; transform: none; }
+[data-animation="fade-in-up"] { transform: translateY(40px); }
+[data-animation="zoom-in"] { transform: scale(0.95); }
+
+/* Responsive */
+@media (max-width: 992px) {
+    .profile-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    .profile-content .page-header {
+        align-items: center;
+    }
+    .details-from-cms li {
+        text-align: left; /* Keep list items aligned left */
+    }
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 768px) {
+    .page-header h1 { font-size: 40px; }
+}

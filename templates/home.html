@@ -23,14 +23,16 @@
                 <p>{{ config.hero_greeting|default:"HIII, IT'S ME" }}</p>
                 <h1>{{ config.hero_name|default:"Roshan Damor" }}</h1>
                 <h4>I am a <span id="skill-text">{{ config.hero_tagline|default:"Web Developer" }}</span></h4>
-                <p>{{ config.hero_bio|default:"GREETINGS, ALL DIGITAL EXPLORERS! I AM ROSHAN, A PASSIONATE AND INNOVATIVE DEVELOPER <b><i>\"BUILDING AI-POWERED SOLUTIONS & SCALABLE WEB APPS — SDE & AI ENGINEER\"</i></b>"|safe }}</p>
-                
-                <!-- Simple Ask AI Button -->
+                <!-- Hero Action Buttons -->
                 <div class="hero-actions">
-                    <button type="button" class="filled-btn ai-chat-btn" id="open-ai-modal">
+                    <a type="button" class="filled-btn" id="open-ai-modal">
                         <i class="fas fa-robot"></i>
                         Ask AI
-                    </button>
+                    </a>
+                    <a href="{% url 'portfolio:code_together' %}" class="outline-btn">
+                        <i class="fa-solid fa-code"></i>
+                        Code Together
+                    </a>
                 </div>
             </div>
             <div class="home-hero-image" data-animation="zoom-in">
@@ -55,9 +57,9 @@
     <!-- ========================= 2. ABOUT ME SECTION ========================= -->
     <section id="about" class="about-section portfolio-container" data-animation="fade-in">
         <div class="section-title">
-            <h2>{{ config.about_title|safe|default:"About <span>Me</span>" }}</h2>
-            <p>{{ config.about_description|default:"A passionate developer dedicated to building beautiful, functional, and user-centric digital experiences."|safe }}</p>
-            <a href="#" class="awesome">Know More <i class="fa-solid fa-arrow-right"></i></a>
+            <h2>About <span>Me</span></h2>
+            <p>A passionate developer dedicated to building beautiful, functional, and user-centric digital experiences.</p>
+            <a href="{% url 'portfolio:about_me' %}" class="awesome">Know More <i class="fa-solid fa-arrow-right"></i></a>
         </div>
         <div class="about-content card">
             <div class="services-column">

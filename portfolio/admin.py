@@ -18,18 +18,16 @@ class SiteConfigurationAdmin(admin.ModelAdmin):
     """Admin for the Site Configuration object."""
     fieldsets = (
         ('Hero Section', {
-            'fields': ('hero_greeting', 'hero_name', 'hero_tagline', 'hero_bio')
+            'fields': ('hero_greeting', 'hero_name', 'hero_tagline')
         }),
         ('Hero Stats', {
             'fields': ('hero_projects_stat', 'hero_internships_stat', 'hero_articles_stat')
         }),
-        ('Section Titles & Descriptions', {
-            'classes': ('collapse',), # Collapsible section
-            'fields': (
-                'about_title', 'about_description', 'now_title', 'now_description',
-                'skills_title', 'skills_description', 'experience_title', 'experience_description'
-                # ... add other section titles here
-            )
+        ('Social Media Links', {
+            'fields': ('twitter_url', 'github_url', 'linkedin_url', 'youtube_url', 'instagram_url', 'facebook_url')
+        }),
+        ('Contact Information', {
+            'fields': ('email', 'phone', 'location')
         }),
     )
 
