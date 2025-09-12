@@ -5,16 +5,20 @@ from django.shortcuts import get_object_or_404
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
 from django.db import models
+from django.db.models import Q
+from django.core.paginator import Paginator
 
 # Import all models from your models.py
 from .models import (
     Skill, Experience, Project, Blog, FAQ, Category,
     NewsletterSubscriber, Comment, ProjectComment, Service, Achievement, 
-    SiteConfiguration, Resume, VideoResume
+    SiteConfiguration, Resume, VideoResume, AboutMeConfiguration,
+    CodeTogetherConfiguration, CollaborationProposal, Testimonial,
+    ResourcesConfiguration, Resource, ResourceCategory, ResourceView
 )
 
 # Import all forms from your forms.py
-from .forms import ContactForm, NewsletterForm
+from .forms import ContactForm, NewsletterForm, CollaborationProposalForm, ResourceFilterForm
 
 
 # =========================================================================
@@ -454,3 +458,224 @@ class SkillListView(ListView):
         # Add available skill categories for filtering
         context['skill_categories'] = Skill.SkillCategory.choices
         return context
+
+
+# =========================================================================
+# ABOUT ME PAGE VIEW
+# =========================================================================
+class AboutMeView(TemplateView):
+    """View for the About Me page with configuration content."""
+    template_name = 'aboutme.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Get or create AboutMe configuration
+        config, created = AboutMeConfiguration.objects.get_or_create(
+            defaults={
+                'page_title': "A Bit More <span>About Me</span>",
+                'intro_paragraph': "This is my story, my journey, and what drives me.",
+                'action2_link': "https://risetogethr.tech"
+            }
+        )
+        
+        context['config'] = config
+        return context
+
+
+# =========================================================================
+# CODE TOGETHER PAGE VIEW
+# =========================================================================
+class CodeTogetherView(TemplateView):
+    """View for the Code Together page with form handling."""
+    template_name = 'codeme.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Get or create CodeTogether configuration
+        config, created = CodeTogetherConfiguration.objects.get_or_create(
+            defaults={
+                'page_title': "Let's Build <span>Together</span>",
+                'intro_paragraph': "I'm always excited to collaborate on innovative projects. Here's a look at what I'm passionate about building."
+            }
+        )
+        
+        # Get featured testimonials
+        testimonials = Testimonial.objects.filter(is_featured=True).order_by('order', '-created_date')
+        
+        # Create form instance
+        form = CollaborationProposalForm()
+        
+        context.update({
+            'config': config,
+            'testimonials': testimonials,
+            'form': form,
+        })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """Handle form submission."""
+        form = CollaborationProposalForm(request.POST)
+        
+        if form.is_valid():
+            # Save the proposal
+            form.save()
+            
+            # Add success message
+            messages.success(
+                request, 
+                "Thank you for your proposal! I'll review it and get back to you soon."
+            )
+            
+            # Redirect to avoid double submission
+            return HttpResponseRedirect(reverse('portfolio:code_together'))
+        else:
+            # Form is invalid, re-render with errors
+            context = self.get_context_data(**kwargs)
+            context['form'] = form
+            return self.render_to_response(context)
+
+
+# =========================================================================
+# RESOURCES PAGE VIEW
+# =========================================================================
+class ResourcesListView(ListView):
+    """View for the Resources page with filtering and pagination."""
+    model = Resource
+    template_name = 'resources.html'
+    context_object_name = 'resources'
+    paginate_by = 12
+
+    def get_queryset(self):
+        """Filter resources based on query parameters."""
+        queryset = Resource.objects.filter(is_active=True).select_related().prefetch_related(
+            'categories', 'technologies'
+        )
+        
+        # Filter by category
+        category = self.request.GET.get('category')
+        if category and category != 'all':
+            # Check if it's a category slug or ResourceType value
+            if hasattr(Resource.ResourceType, category.upper()):
+                queryset = queryset.filter(resource_type=category.upper())
+            else:
+                queryset = queryset.filter(categories__slug=category)
+        
+        # Filter by resource type
+        resource_type = self.request.GET.get('type')
+        if resource_type:
+            queryset = queryset.filter(resource_type=resource_type)
+        
+        # Search functionality
+        search = self.request.GET.get('search')
+        if search:
+            queryset = queryset.filter(
+                Q(title__icontains=search) |
+                Q(description__icontains=search) |
+                Q(author__icontains=search) |
+                Q(technologies__name__icontains=search)
+            ).distinct()
+        
+        return queryset.order_by('order', '-created_date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Get or create Resources configuration
+        config, created = ResourcesConfiguration.objects.get_or_create(
+            defaults={
+                'page_title': "My Curated <span>Resources</span>",
+                'intro_paragraph': "A collection of valuable articles, tools, videos, and courses that have helped me in my development journey."
+            }
+        )
+        
+        # Get all resource types for filtering
+        resource_types = Resource.ResourceType.choices
+        
+        # Get all resource categories for filtering
+        categories = ResourceCategory.objects.all().order_by('order', 'name')
+        
+        # Create filter form
+        filter_form = ResourceFilterForm(self.request.GET)
+        
+        # Track resource views (for analytics)
+        self._track_page_view()
+        
+        context.update({
+            'config': config,
+            'resource_types': resource_types,
+            'categories': categories,
+            'filter_form': filter_form,
+            'current_category': self.request.GET.get('category', 'all'),
+            'current_type': self.request.GET.get('type', ''),
+            'search_query': self.request.GET.get('search', ''),
+        })
+        return context
+
+    def _track_page_view(self):
+        """Track page views for analytics (optional)."""
+        try:
+            # You can implement page view tracking here if needed
+            pass
+        except Exception:
+            # Silent fail for analytics
+            pass
+
+
+class ResourceDetailView(DetailView):
+    """Detail view for individual resources with embed support."""
+    model = Resource
+    template_name = 'resource-detail.html'
+    context_object_name = 'resource'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+    def get_queryset(self):
+        """Only show active resources."""
+        return Resource.objects.filter(is_active=True).select_related().prefetch_related(
+            'categories', 'technologies'
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Track resource view
+        self._track_resource_view()
+        
+        # Get related resources (same categories or technologies)
+        related_resources = self._get_related_resources()
+        
+        context.update({
+            'related_resources': related_resources,
+        })
+        return context
+
+    def _track_resource_view(self):
+        """Track individual resource views."""
+        try:
+            ResourceView.objects.create(
+                resource=self.object,
+                ip_address=self.request.META.get('REMOTE_ADDR'),
+                user_agent=self.request.META.get('HTTP_USER_AGENT', '')[:255]
+            )
+        except Exception:
+            # Silent fail for analytics
+            pass
+
+    def _get_related_resources(self):
+        """Get resources related to the current one."""
+        try:
+            # Get resources with same categories or technologies
+            related = Resource.objects.filter(
+                is_active=True
+            ).filter(
+                Q(categories__in=self.object.categories.all()) |
+                Q(technologies__in=self.object.technologies.all())
+            ).exclude(
+                id=self.object.id
+            ).distinct()[:4]
+            
+            return related
+        except Exception:
+            return Resource.objects.none()

@@ -4,7 +4,9 @@ from django.contrib import admin
 from .models import (
     SiteConfiguration, Technology, Category, Project, ProjectImage, Blog, Comment, 
     Experience, FAQ, Skill, SkillTechnologyDetail, Service, Achievement,
-    Resume, VideoResume, NewsletterSubscriber, ContactSubmission
+    Resume, VideoResume, NewsletterSubscriber, ContactSubmission, AboutMeConfiguration,
+    CodeTogetherConfiguration, CollaborationProposal, Testimonial,
+    ResourcesConfiguration, Resource, ResourceCategory, ResourceView
 )
 
 # =========================================================================
@@ -160,3 +162,229 @@ class AchievementAdmin(admin.ModelAdmin):
     list_display = ('title', 'issuing_organization', 'category', 'date_issued')
     list_filter = ('category', 'date_issued')
     search_fields = ('title', 'issuing_organization', 'summary')
+
+
+@admin.register(AboutMeConfiguration)
+class AboutMeConfigurationAdmin(admin.ModelAdmin):
+    """Admin for the About Me Configuration object."""
+    fieldsets = (
+        ('Page Header', {
+            'fields': ('page_title', 'intro_paragraph')
+        }),
+        ('Profile Section', {
+            'fields': ('profile_image', 'detailed_description')
+        }),
+        ('Action Card 1: Music', {
+            'fields': ('action1_title', 'action1_description', 'action1_button_text')
+        }),
+        ('Action Card 2: Community', {
+            'fields': ('action2_title', 'action2_description', 'action2_button_text', 'action2_link')
+        }),
+        ('Action Card 3: Resources', {
+            'fields': ('action3_title', 'action3_description', 'action3_button_text')
+        }),
+    )
+    
+    def has_add_permission(self, request):
+        """Only allow adding if no instance exists."""
+        return not AboutMeConfiguration.objects.exists()
+    
+    def has_delete_permission(self, request, obj=None):
+        """Prevent deletion to maintain singleton pattern."""
+        return False
+
+
+@admin.register(CodeTogetherConfiguration)
+class CodeTogetherConfigurationAdmin(admin.ModelAdmin):
+    """Admin for the Code Together Configuration object."""
+    fieldsets = (
+        ('Page Header', {
+            'fields': ('page_title', 'intro_paragraph')
+        }),
+        ('Interests Section', {
+            'fields': ('interests_content',)
+        }),
+    )
+    
+    def has_add_permission(self, request):
+        """Only allow adding if no instance exists."""
+        return not CodeTogetherConfiguration.objects.exists()
+    
+    def has_delete_permission(self, request, obj=None):
+        """Prevent deletion to maintain singleton pattern."""
+        return False
+
+
+@admin.register(CollaborationProposal)
+class CollaborationProposalAdmin(admin.ModelAdmin):
+    """Admin for collaboration proposals."""
+    list_display = ('full_name', 'email', 'status', 'submitted_date', 'reviewed_date')
+    list_filter = ('status', 'submitted_date')
+    search_fields = ('full_name', 'email', 'github_id', 'linkedin_id')
+    readonly_fields = ('submitted_date',)
+    
+    fieldsets = (
+        ('Proposal Information', {
+            'fields': ('full_name', 'email', 'github_id', 'linkedin_id', 'proposal')
+        }),
+        ('Status & Management', {
+            'fields': ('status', 'submitted_date', 'reviewed_date', 'admin_notes')
+        }),
+    )
+    
+    def mark_as_reviewing(self, request, queryset):
+        queryset.update(status='reviewing')
+    
+    def mark_as_accepted(self, request, queryset):
+        queryset.update(status='accepted')
+    
+    def mark_as_declined(self, request, queryset):
+        queryset.update(status='declined')
+    
+    actions = ['mark_as_reviewing', 'mark_as_accepted', 'mark_as_declined']
+
+
+@admin.register(Testimonial)
+class TestimonialAdmin(admin.ModelAdmin):
+    """Admin for testimonials."""
+    list_display = ('author_name', 'author_role', 'is_featured', 'order', 'created_date')
+    list_filter = ('is_featured', 'created_date')
+    search_fields = ('author_name', 'author_role', 'quote')
+    
+    fieldsets = (
+        ('Author Information', {
+            'fields': ('author_name', 'author_role', 'author_image')
+        }),
+        ('Testimonial Content', {
+            'fields': ('quote',)
+        }),
+        ('Display Settings', {
+            'fields': ('is_featured', 'order')
+        }),
+    )
+
+
+# =========================================================================
+# RESOURCES ADMIN INTERFACES
+# =========================================================================
+
+@admin.register(ResourcesConfiguration)
+class ResourcesConfigurationAdmin(admin.ModelAdmin):
+    """Admin for Resources page configuration."""
+    
+    def has_add_permission(self, request):
+        """Prevent creating multiple instances."""
+        return not ResourcesConfiguration.objects.exists()
+    
+    def has_delete_permission(self, request, obj=None):
+        """Prevent deletion of the configuration."""
+        return False
+    
+    fieldsets = (
+        ('Page Header', {
+            'fields': ('page_title', 'intro_paragraph')
+        }),
+        ('Content Settings', {
+            'fields': ('resources_description', 'resources_per_page')
+        }),
+    )
+
+
+@admin.register(ResourceCategory)
+class ResourceCategoryAdmin(admin.ModelAdmin):
+    """Admin for resource categories."""
+    list_display = ('name', 'slug', 'order', 'description')
+    list_editable = ('order',)
+    search_fields = ('name', 'description')
+    ordering = ('order', 'name')
+    
+    fieldsets = (
+        ('Category Information', {
+            'fields': ('name', 'description', 'icon')
+        }),
+        ('Display Settings', {
+            'fields': ('order',)
+        }),
+    )
+
+
+@admin.register(Resource)
+class ResourceAdmin(admin.ModelAdmin):
+    """Admin for resources with comprehensive management features."""
+    list_display = (
+        'title', 'resource_type', 'author', 'personal_rating', 
+        'is_featured', 'is_active', 'created_date'
+    )
+    list_filter = (
+        'resource_type', 'is_featured', 'is_active', 'personal_rating',
+        'categories', 'created_date'
+    )
+    search_fields = ('title', 'description', 'author')
+    filter_horizontal = ('categories', 'technologies')
+    list_editable = ('is_featured', 'is_active', 'personal_rating')
+    date_hierarchy = 'created_date'
+    ordering = ('order', '-created_date')
+    
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('title', 'description', 'resource_type')
+        }),
+        ('Resource Content', {
+            'fields': ('link', 'file_upload')
+        }),
+        ('Video Embedding', {
+            'fields': ('youtube_embed_id', 'vimeo_embed_id', 'custom_embed_code'),
+            'classes': ('collapse',),
+            'description': 'For video resources, provide embed information'
+        }),
+        ('Visual Content', {
+            'fields': ('thumbnail', 'preview_image'),
+            'classes': ('collapse',)
+        }),
+        ('Categorization', {
+            'fields': ('categories', 'technologies'),
+        }),
+        ('Metadata', {
+            'fields': ('author', 'publication_date'),
+            'classes': ('collapse',)
+        }),
+        ('Management', {
+            'fields': ('is_featured', 'is_active', 'order', 'personal_rating')
+        }),
+    )
+    
+    # Custom actions
+    def mark_as_featured(self, request, queryset):
+        queryset.update(is_featured=True)
+    mark_as_featured.short_description = "Mark selected resources as featured"
+    
+    def mark_as_unfeatured(self, request, queryset):
+        queryset.update(is_featured=False)
+    mark_as_unfeatured.short_description = "Remove featured status"
+    
+    def mark_as_active(self, request, queryset):
+        queryset.update(is_active=True)
+    mark_as_active.short_description = "Mark selected resources as active"
+    
+    def mark_as_inactive(self, request, queryset):
+        queryset.update(is_active=False)
+    mark_as_inactive.short_description = "Mark selected resources as inactive"
+    
+    actions = ['mark_as_featured', 'mark_as_unfeatured', 'mark_as_active', 'mark_as_inactive']
+
+
+@admin.register(ResourceView)
+class ResourceViewAdmin(admin.ModelAdmin):
+    """Admin for resource view analytics."""
+    list_display = ('resource', 'viewed_date', 'ip_address')
+    list_filter = ('viewed_date', 'resource__resource_type')
+    search_fields = ('resource__title', 'ip_address')
+    date_hierarchy = 'viewed_date'
+    ordering = ('-viewed_date',)
+    
+    # Make it read-only since this is analytics data
+    def has_add_permission(self, request):
+        return False
+    
+    def has_change_permission(self, request, obj=None):
+        return False

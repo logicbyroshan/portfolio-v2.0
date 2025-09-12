@@ -6,6 +6,8 @@ from .views import (
     BlogListView, BlogDetailView,
     ExperienceListView, ExperienceDetailView,
     SkillDetailView, AchievementListView,
+    AboutMeView, CodeTogetherView,
+    ResourcesListView, ResourceDetailView,
 
     # Form/API Views
     ContactSubmissionView,
@@ -19,6 +21,16 @@ app_name = 'portfolio'
 urlpatterns = [
     # Home Page
     path('', HomeView.as_view(), name='home'),
+    
+    # About Me Page
+    path('about/', AboutMeView.as_view(), name='about_me'),
+    
+    # Code Together Page
+    path('code-together/', CodeTogetherView.as_view(), name='code_together'),
+    
+    # Resources Pages
+    path('resources/', ResourcesListView.as_view(), name='resource_list'),
+    path('resources/<slug:slug>/', ResourceDetailView.as_view(), name='resource_detail'),
 
     # Project Pages
     path('projects/', ProjectListView.as_view(), name='project_list'),

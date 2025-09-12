@@ -39,6 +39,9 @@
             <nav class="nav-left">
                 <ul>
                     <!-- DYNAMIC: URL tags for navigation -->
+                    <li><a href="{% url 'portfolio:about_me' %}"><span class="nav-dot"></span>About</a></li>
+                    <li><a href="{% url 'portfolio:code_together' %}"><span class="nav-dot"></span>Code With Me</a></li>
+                    <li><a href="{% url 'portfolio:resource_list' %}"><span class="nav-dot"></span>Resources</a></li>
                     <li><a href="{% url 'portfolio:skill_list' %}"><span class="nav-dot"></span>Skills</a></li>
                     <li><a href="{% url 'portfolio:achievements_list' %}"><span class="nav-dot"></span>Achievements</a></li>
                     <li><a href="{% url 'portfolio:experience_list' %}"><span class="nav-dot"></span>Experiences</a></li>
@@ -48,8 +51,10 @@
             <!-- Center Logo -->
             <div class="nav-center-logo">
                 <a href="{% url 'portfolio:home' %}">
-                    <!-- DYNAMIC: Image path -->
-                    <img src="{% static 'images/logo.png' %}" alt="Roshan Damor Logo">
+                    <!-- Light logo (visible in dark theme) -->
+                    <img src="{% static 'images/logo.png' %}" alt="Roshan Damor Logo" class="logo-light">
+                    <!-- Dark logo (visible in light theme) -->
+                    <img src="{% static 'images/logo-dark.png' %}" alt="Roshan Damor Logo" class="logo-dark">
                 </a>
             </div>
 
@@ -81,6 +86,9 @@
         <div class="mobile-nav-menu" id="mobile-nav-menu">
             <div class="mobile-menu-content">
                 <nav class="mobile-nav-links">
+                    <a href="{% url 'portfolio:about_me' %}"><span class="nav-dot"></span>About</a>
+                    <a href="{% url 'portfolio:code_together' %}"><span class="nav-dot"></span>Code With Me</a>
+                    <a href="{% url 'portfolio:resource_list' %}"><span class="nav-dot"></span>Resources</a>
                     <a href="{% url 'portfolio:skill_list' %}"><span class="nav-dot"></span>Skills</a>
                     <a href="{% url 'portfolio:achievements_list' %}"><span class="nav-dot"></span>Achievements</a>
                     <a href="{% url 'portfolio:experience_list' %}"><span class="nav-dot"></span>Experiences</a>

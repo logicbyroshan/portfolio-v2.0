@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About Me - Roshan Damor{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/about.js' %}" defer></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="about-page-container">
+    <!-- ======================= Profile Section ======================= -->
+    <section class="profile-section">
+        <div class="profile-image-wrapper" data-animation="zoom-in">
+            {% if config.profile_image %}
+                <img src="{{ config.profile_image.url }}" alt="Photo of Roshan Damor">
+            {% else %}
+                <img src="https://placehold.co/400x400/010409/eaeaea?text=Roshan" alt="Placeholder photo">
+            {% endif %}
+        </div>
+        <div class="profile-content" data-animation="fade-in-up">
+            <header class="page-header">
+                <h1>{{ config.page_title|safe|default:"A Bit More <span>About Me</span>" }}</h1>
+                <p>{{ config.intro_paragraph|default:"This is my story, my journey, and what drives me." }}</p>
+            </header>
+            <div class="details-from-cms">
+                <!-- IMPORTANT: The |safe filter renders the HTML from your TinyMCE editor -->
+                {{ config.detailed_description|safe|default:"<ul><li><strong>Mission:</strong> To build software that is not only functional but also intuitive and impactful.</li><li><strong>Interests:</strong> Beyond coding, I'm passionate about AI ethics, open-source contribution, and exploring the intersection of technology and art.</li></ul>" }}
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================= Action Links Section ======================= -->
+    <section class="action-links-section">
+        <div class="action-grid">
+            <!-- Card 1: Music -->
+            <div class="action-card card" data-animation="fade-in-up" data-animation-delay="200">
+                <i class="fa-solid fa-music action-icon"></i>
+                <h3>{{ config.action1_title|default:"My Song Playlists" }}</h3>
+                <p>{{ config.action1_description|default:"Discover the music that fuels my coding sessions and creative work." }}</p>
+                <a href="{% url 'portfolio:music_list' %}" class="outline-btn">{{ config.action1_button_text|default:"Listen Now" }}</a>
+            </div>
+
+            <!-- Card 2: Community -->
+            <div class="action-card card" data-animation="fade-in-up" data-animation-delay="400">
+                <i class="fa-solid fa-users action-icon"></i>
+                <h3>{{ config.action2_title|default:"Join My Community" }}</h3>
+                <p>{{ config.action2_description|default:"Let's connect, share ideas, and build amazing things together on Discord or Slack." }}</p>
+                <a href="{{ config.action2_link|default:'https://risetogethr.tech' }}" target="_blank" rel="noopener noreferrer" class="outline-btn">{{ config.action2_button_text|default:"Join Community" }}</a>
+            </div>
+
+            <!-- Card 3: Resources -->
+            <div class="action-card card" data-animation="fade-in-up" data-animation-delay="600">
+                <i class="fa-solid fa-book-open action-icon"></i>
+                <h3>{{ config.action3_title|default:"View My Resources" }}</h3>
+                <p>{{ config.action3_description|default:"A curated list of tools, articles, and learning materials that I find valuable." }}</p>
+                <a href="#" class="outline-btn">{{ config.action3_button_text|default:"Explore Resources" }}</a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

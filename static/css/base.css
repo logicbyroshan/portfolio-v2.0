@@ -11,7 +11,29 @@
    ========================================================================== */
 
 
-/* ==========================================================================
+/* =============.resume-modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(1, 4, 9, 0.7);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Light theme modal background */
+[data-theme="light"] .resume-modal {
+    background-color: rgba(71, 85, 105, 0.8);
+}
+
+/* =============================================
    1. Google Fonts & Root Variables
    ========================================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@400;500;600;700&family=Rozha+One&display=swap');
@@ -105,7 +127,7 @@ body {
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 185px 20px 0 20px; /* Added 120px top padding to account for navbar */
+  padding: 185px 10px 0 10px; /* Added 120px top padding to account for navbar */
   gap: 150px; /* Increased back to 150px */
   display: flex;
   flex-direction: column;
@@ -202,12 +224,24 @@ img { max-width: 100%; height: auto; display: block; }
     font-weight: 500; 
 }
 
+/* Light theme tags */
+[data-theme="light"] .teg {
+    background-color: rgba(0, 169, 255, 0.15);
+}
+
 .teg.more-tech {
     background-color: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.3);
     color: rgba(255, 255, 255, 0.8);
     font-style: italic;
     font-weight: 400;
+}
+
+/* Light theme more-tech tags */
+[data-theme="light"] .teg.more-tech {
+    background-color: rgba(71, 85, 105, 0.1);
+    border: 1px solid rgba(71, 85, 105, 0.3);
+    color: rgba(71, 85, 105, 0.8);
 }
 
 
@@ -228,11 +262,16 @@ img { max-width: 100%; height: auto; display: block; }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(22, 27, 34, 0.7); /* Semi-transparent background */
+    background: rgba(22, 27, 34, 0.7); /* Dark theme background */
     backdrop-filter: blur(10px);
     border: 1px solid var(--card-border);
     border-radius: 12px;
     padding: 10px 10px;
+}
+
+/* Light theme navbar background */
+[data-theme="light"] .header-container {
+    background: rgba(255, 255, 255, 0.8); /* Light semi-transparent background */
 }
 .nav-left ul {
     list-style: none;
@@ -263,6 +302,24 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .nav-center-logo img {
     height: 50px;
+}
+
+/* Theme-aware logo visibility */
+.logo-light {
+    display: block;
+}
+
+.logo-dark {
+    display: none;
+}
+
+/* Light theme logo switching */
+[data-theme="light"] .logo-light {
+    display: none;
+}
+
+[data-theme="light"] .logo-dark {
+    display: block;
 }
 .nav-right {
     display: flex;
@@ -565,6 +622,11 @@ img { max-width: 100%; height: auto; display: block; }
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Light theme video modal background */
+[data-theme="light"] .video-modal {
+    background-color: rgba(71, 85, 105, 0.8);
 }
 .video-modal.active {
     opacity: 1;

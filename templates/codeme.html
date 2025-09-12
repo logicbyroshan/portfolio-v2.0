@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Code Together - Roshan Damor{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/code_together.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/code_together.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="code-together-container">
+    <!-- ======================= Intro Section ======================= -->
+    <section class="intro-section" data-animation="fade-in-up">
+        <header class="page-header">
+            <h1>{{ config.page_title|safe|default:"Let's Build <span>Together</span>" }}</h1>
+            <p>{{ config.intro_paragraph|default:"I'm always excited to collaborate on innovative projects. Here’s a look at what I'm passionate about building." }}</p>
+        </header>
+        <div class="interests-content card">
+            {{ config.interests_content|safe|default:"<ul><li><strong>AI-Powered Web Apps:</strong> Integrating ML models into practical, user-facing applications.</li><li><strong>Open-Source Tools:</strong> Creating libraries or utilities that can help other developers.</li></ul>" }}
+        </div>
+    </section>
+
+    <!-- ======================= Collaboration Form Section ======================= -->
+    <section class="collaboration-form-section" data-animation="fade-in-up">
+        <div class="section-title">
+            <h2>Have an Idea? Let's Connect.</h2>
+            <p>Fill out the form below with your project proposal, and I'll get back to you as soon as possible.</p>
+        </div>
+        <div class="form-wrapper card">
+            <form method="post" action="{% url 'portfolio:code_together' %}">
+                {% csrf_token %}
+                {{ form.media }} <!-- Important for TinyMCE JavaScript -->
+
+                <div class="form-grid">
+                    <div class="form-group">{{ form.full_name.label_tag }} {{ form.full_name }} {{ form.full_name.errors }}</div>
+                    <div class="form-group">{{ form.email.label_tag }} {{ form.email }} {{ form.email.errors }}</div>
+                    <div class="form-group">{{ form.github_id.label_tag }} {{ form.github_id }} {{ form.github_id.errors }}</div>
+                    <div class="form-group">{{ form.linkedin_id.label_tag }} {{ form.linkedin_id }} {{ form.linkedin_id.errors }}</div>
+                </div>
+                <div class="form-group proposal-group">{{ form.proposal.label_tag }} {{ form.proposal }} {{ form.proposal.errors }}</div>
+                
+                <button type="submit" class="filled-btn">Submit Proposal</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ======================= Testimonials Section ======================= -->
+    <section class="testimonials-section" data-animation="fade-in-up">
+        <div class="section-title">
+            <h2>Past Collaborations</h2>
+            <p>Here's what others have said about working with me.</p>
+        </div>
+        <div class="testimonials-grid">
+            {% if testimonials %}
+                {% for testimonial in testimonials %}
+                <div class="testimonial-card card">
+                    <p class="quote">"{{ testimonial.quote }}"</p>
+                    <div class="author-info">
+                        {% if testimonial.author_image %}
+                        <img src="{{ testimonial.author_image.url }}" alt="{{ testimonial.author_name }}">
+                        {% else %}
+                        <img src="https://placehold.co/60x60/010409/eaeaea?text={{ testimonial.author_name|slice:':1' }}" alt="Author initial">
+                        {% endif %}
+                        <div class="author-details">
+                            <span class="author-name">{{ testimonial.author_name }}</span>
+                            <span class="author-role">{{ testimonial.author_role }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Fallback Demo Content -->
+                <div class="testimonial-card card">
+                    <p class="quote">"Working with Roshan was a fantastic experience. His expertise in backend development and AI was instrumental to our project's success. Highly recommended!"</p>
+                    <div class="author-info">
+                        <img src="https://placehold.co/60x60/010409/eaeaea?text=J" alt="Author initial">
+                        <div class="author-details"><span class="author-name">Jane Doe</span><span class="author-role">Project Manager @ DemoCorp</span></div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+</div>
+{% endblock %}

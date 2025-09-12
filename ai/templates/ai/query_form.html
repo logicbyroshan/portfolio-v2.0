@@ -23,17 +23,9 @@
 <div class="ai-modal" id="ai-chat-modal">
     <div class="ai-modal-overlay" id="ai-modal-overlay"></div>
     <div class="ai-modal-container">
-        <div class="ai-modal-header">
-            <div class="ai-modal-title">
-                <div class="ai-avatar">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <h3>Chat with AI Assistant</h3>
-            </div>
-            <button type="button" class="ai-modal-close" id="close-ai-modal">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
+        <button type="button" class="ai-modal-close" id="close-ai-modal">
+            <i class="fas fa-times"></i>
+        </button>
         
         <div class="ai-chat-interface">
             <!-- Chat messages area -->
@@ -49,27 +41,22 @@
             </div>
             
             <!-- Input form -->
-            <form id="ai-form" class="ai-query-form" action="{% url 'ai:submit_ai_query' %}" method="POST" enctype="multipart/form-data">
+            <form id="ai-form" class="ai-query-form" action="{% url 'ai:submit_ai_query' %}" method="POST">
                 {% csrf_token %}
                 <div class="input-container">
-                    <button type="button" class="attach-btn" id="attach-file-btn" title="Attach Files">
-                        <i class="fas fa-paperclip"></i>
+                    <button type="button" class="action-btn left-btn" title="AI Options">
+                        <i class="fas fa-cog"></i>
                     </button>
-                    <input type="file" name="attachment" id="ai-file-input" hidden multiple accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png">
                     <div class="textarea-container">
-                        <textarea name="question" placeholder="Ask anything about me, e.g., 'What are your key skills?' (Ctrl+Enter to send)" rows="1" maxlength="1000"></textarea>
+                        <textarea name="question" placeholder="Ask anything about Roshan's skills, experience, or projects! (Ctrl+Enter to send)" rows="1" maxlength="1000"></textarea>
                         <div class="char-count">
                             <span id="char-counter">0</span>/1000
-                        </div>
-                        <div class="keyboard-hint">
-                            <small>💡 Press <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to send</small>
                         </div>
                     </div>
                     <button type="submit" class="submit-btn" title="Send Message (Ctrl+Enter)">
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
-                <div id="file-display-container"></div>
             </form>
         </div>
     </div>

@@ -24,7 +24,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 50px;
+    gap: 40px;
 }
 
 .cards-container {
@@ -153,7 +153,7 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
 /* Hero Section */
 .hero-section { margin-top: 0px; }
 .home-container { display: flex; align-items: center; justify-content: space-between; gap: 40px; width: 100%; }
-.home-content { display: flex; flex-direction: column; gap: 20px; max-width: 55%; z-index: 2; }
+.home-content { display: flex; flex-direction: column; gap: 15px; max-width: 55%; z-index: 2; }
 .home-content p:first-of-type { font-weight: 500; color: var(--title-color); }
 .home-content p b { color: var(--accent-color); }
 .home-content h1 { font-family: var(--heading-font); font-size: 72px; color: var(--title-color); line-height: 1; letter-spacing: 3px; }
@@ -169,9 +169,20 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
 .hero-stat-card .stat-icon { font-size: 20px; color: var(--accent-color); background-color: rgba(0, 169, 255, 0.1); padding: 10px; border-radius: 10px; }
 .hero-stat-card .stat-text .stat-number { font-size: 20px; color: var(--title-color); font-family: var(--heading-font); line-height: 1; }
 .hero-stat-card .stat-text .stat-label { font-size: 13px; color: var(--paragraph-color); }
-.stat-1 { top: 25%; right: -5%; }
-.stat-2 { bottom: 0%; right: 20%; }
-.stat-3 { top: 35%; left: -5%; }
+
+/* Light theme stat cards */
+[data-theme="light"] .hero-stat-card {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+/* Light theme stat icons */
+[data-theme="light"] .hero-stat-card .stat-icon {
+    background-color: rgba(0, 169, 255, 0.15);
+}
+.stat-1 { top: 30%; right: 0%; }
+.stat-2 { bottom: 0%; right: 25%; }
+.stat-3 { top: 45%; left: 0%; }
 
 /* About Me Section */
 .about-content { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
@@ -179,6 +190,11 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
 .about-section .service-box { display: flex; align-items: flex-start; gap: 20px; }
 .about-section .box-reverse { flex-direction: row-reverse; }
 .about-section .icon-wrapper { flex-shrink: 0; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 169, 255, 0.1); border-radius: 10px; font-size: 20px; color: var(--accent-color); }
+
+/* Light theme icon wrapper */
+[data-theme="light"] .about-section .icon-wrapper {
+    background-color: rgba(0, 169, 255, 0.15);
+}
 .about-section .service-text h4 { font-size: 18px; font-weight: 600; color: var(--title-color); margin-bottom: 8px; }
 .about-section .text-reverse { text-align: right; }
 .about-image-wrapper { position: relative; max-width: 300px; width: 100%; height: 380px; border-radius: 10px; overflow: hidden; border: 3px solid var(--card-border); flex-shrink: 0; }
@@ -339,9 +355,10 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
 @media (max-width: 768px) {
     .main-container { gap: 100px; } /* Increased back to 100px */
     .cards-container { grid-template-columns: 1fr; }
-    .stat-1 { top: 30%; right: -20%; }
+    .home-hero-image { max-width: 80%; }
+    .stat-1 { top: 30%; right: -5%; }
     .stat-2 { bottom: -5%; right: 15%; }
-    .stat-3 { top: 40%; left: -20%; }
+    .stat-3 { top: 40%; left: 5%; }
 }
 
 @media (max-width: 600px) {
@@ -350,15 +367,15 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
     .section-title { margin-bottom: 20px; } /* Increased back to 20px */
     .section-title h2, .portfolio-header .head h1 { font-size: 36px; }
     .home-content h1 { font-size: 48px; }
-    .home-hero-image { max-width: 80%; }
+    .home-hero-image { max-width: 90%; }
     .hero-stat-card { padding: 8px; gap: 6px; }
     .home-hero-image .card {padding: 10px;}
     .hero-stat-card .stat-icon { font-size: 16px; padding: 5px; border-radius: 5px; }
     .hero-stat-card .stat-text .stat-number { font-size: 14px; }
     .hero-stat-card .stat-text .stat-label { font-size: 10px; }
-    .stat-1 { top: 30%; right: -15%; }
-    .stat-2 { bottom: 0%; right: 15%; }
-    .stat-3 { top: 40%; left: -15%; }
+    .stat-1 { top: 30%; right: -5%; }
+    .stat-2 { bottom: 0%; right: 20%; }
+    .stat-3 { top: 40%; left: -5%; }
     .about-section .service-box, .about-section .box-reverse { flex-direction: column; text-align: center; align-items: center; }
     .about-section .text-reverse { text-align: center; }
     .exp-card { flex-direction: column; text-align: center; gap: 15px; }
