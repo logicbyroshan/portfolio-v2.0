@@ -105,8 +105,8 @@ body {
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 20px;
-  gap: 150px;
+  padding: 185px 20px 0 20px; /* Added 120px top padding to account for navbar */
+  gap: 150px; /* Increased back to 150px */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -200,6 +200,14 @@ img { max-width: 100%; height: auto; display: block; }
     color: var(--accent-color); 
     font-size: 13px; 
     font-weight: 500; 
+}
+
+.teg.more-tech {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.8);
+    font-style: italic;
+    font-weight: 400;
 }
 
 
@@ -787,7 +795,7 @@ img { max-width: 100%; height: auto; display: block; }
 
 @media (max-width: 768px) {
     body { padding: 20px 0; }
-    .main-container { gap: 100px; padding: 0 15px; }
+    .main-container { gap: 100px; padding: 0 15px; padding-top: 160px; } /* Increased back to 100px */
     .section-title h2, .portfolio-header .head h1 { font-size: 40px; }
     .section-title p, .portfolio-header p { font-size: 16px; }
     
@@ -815,7 +823,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 @media (max-width: 576px) {
-    .main-container { gap: 80px; }
+    .main-container { gap: 75px; padding-top: 140px !important; } /* Increased back to 75px */
     .section-title h2, .portfolio-header .head h1 { font-size: 32px; line-height: 1.2; }
     .card { padding: 20px; }
     .filled-btn, .outline-btn { padding: 10px 14px; font-size: 14px; }
@@ -953,5 +961,10 @@ img { max-width: 100%; height: auto; display: block; }
         width: 36px;
         height: 36px;
         font-size: 13px;
+    }
+    
+    /* Adjust main container padding for mobile */
+    .main-container {
+        padding-top: 90px; /* Further reduced padding on mobile from 100px */
     }
 }

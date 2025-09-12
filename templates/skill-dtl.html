@@ -31,7 +31,7 @@
             <article class="detail-main-content">
                 <header>
                     <h1 class="skill-title" data-animation="fade-in-up" data-animation-delay="100">{{ skill.title }}</h1>
-                    <p class="skill-summary" data-animation="fade-in-up" data-animation-delay="200">{{ skill.summary }}</p>
+                    <p class="skill-summary" data-animation="fade-in-up" data-animation-delay="200">{{ skill.summary|safe }}</p>
                 </header>
                 
                 <!-- Technology Stack Accordion -->
@@ -57,7 +57,7 @@
                             </div> -->
                             
                             <h5>Learning Journey:</h5>
-                            <p>{{ detail.learning_journey|linebreaks }}</p>
+                            <p>{{ detail.learning_journey|safe }}</p>
                         </div>
                     </div>
                     {% endfor %}

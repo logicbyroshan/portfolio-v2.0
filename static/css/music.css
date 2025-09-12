@@ -6,7 +6,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
+    gap: 40px; /* Increased back to 40px */
 }
 .page-header { width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 15px; }
 .page-header h1 { font-family: var(--heading-font); font-size: 50px; color: var(--title-color); line-height: 1.1; letter-spacing: 2px; }
@@ -86,7 +86,7 @@
 .playlist-grid {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 30px;
 }
 
@@ -166,8 +166,11 @@
 @media (max-width: 768px) {
     .page-header h1 { font-size: 40px; }
     .playlist-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
         gap: 20px;
+    }
+    .music-container {
+        gap: 35px; /* Increased from 25px */
     }
     .spotify-connected-banner {
         flex-direction: column;
@@ -186,13 +189,6 @@
         gap: 15px;
     }
     .music-container {
-        gap: 30px;
-    }
-}
-
-@media (max-width: 600px) {
-    .playlist-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 20px;
+        gap: 30px; /* Increased from 20px */
     }
 }

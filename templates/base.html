@@ -113,7 +113,7 @@
                 <!-- Column 1: About & Socials -->
                 <div class="footer-col-about">
                     <h3 class="footer-logo">{{ config.hero_name|default:"Roshan Damor" }}</h3>
-                    <p>{{ config.hero_bio|default:"A passionate developer building AI-powered solutions and scalable web applications for a digital-first world." }}</p>
+                    <p>{{ config.hero_bio|default:"A passionate developer building AI-powered solutions and scalable web applications for a digital-first world."|safe }}</p>
                     <ul class="social-icons">
                         {% if config.twitter_url %}
                             <li><a href="{{ config.twitter_url }}" aria-label="Twitter" target="_blank"><i class="fab fa-twitter"></i></a></li>
@@ -208,7 +208,7 @@
                 
                 {% if resume and resume.description %}
                     <div class="resume-description">
-                        <p>{{ resume.description }}</p>
+                        <p>{{ resume.description|safe }}</p>
                         {% if resume.years_experience or resume.total_projects or resume.technologies_used %}
                             <div class="resume-stats">
                                 {% if resume.years_experience %}

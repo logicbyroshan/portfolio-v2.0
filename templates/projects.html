@@ -54,11 +54,14 @@
                 </a>
                 <div class="project-content">
                     <h3><a href="{% url 'portfolio:project_detail' slug=project.slug %}">{{ project.title }}</a></h3>
-                    <p>{{ project.summary|truncatewords:20 }}</p>
+                    <p>{{ project.summary|truncatewords:20|safe }}</p>
                     <div class="skills">
-                        {% for tech in project.technologies.all %}
+                        {% for tech in project.technologies.all|slice:":5" %}
                         <span class="teg">{{ tech.name }}</span>
                         {% endfor %}
+                        {% if project.technologies.count > 5 %}
+                        <span class="teg more-tech">+{{ project.technologies.count|add:"-5" }} more</span>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="project-links">

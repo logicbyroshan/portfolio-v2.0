@@ -1,26 +1,156 @@
-import requests, base64
+import requests
+import base64
+import logging
 from django.conf import settings
 from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from django.contrib import messages
-import logging
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.utils import timezone
+from datetime import timedelta
+from .models import SpotifyPlaylist, SpotifyTrack, SpotifyToken
 
 logger = logging.getLogger(__name__)
 
-# Step 1: Redirect user to Spotify login
-def spotify_login(request):
+def is_admin(user):
+    """Check if user is admin/staff"""
+    return user.is_staff or user.is_superuser
+
+# PUBLIC VIEW - Anyone can see stored playlists
+def my_playlist(request):
+    """Public view showing stored Spotify playlists"""
+    # Get all public playlists from database
+    playlists = SpotifyPlaylist.objects.filter(is_public=True)
+    
+    # Convert to Spotify API format for template compatibility
+    playlist_data = {
+        'items': [
+            {
+                'id': playlist.spotify_id,
+                'name': playlist.name,
+                'description': playlist.description or "",
+                'owner': {'display_name': playlist.owner_name},
+                'images': [{'url': playlist.image_url}] if playlist.image_url else [],
+                'external_urls': {'spotify': playlist.external_url},
+                'tracks': {'total': playlist.track_count},
+                'last_synced': playlist.last_synced
+            }
+            for playlist in playlists
+        ]
+    }
+    
+    # Check if we have any playlists
+    if not playlists.exists():
+        # Show demo playlists if no real data
+        demo_playlists = {
+            'items': [
+                {
+                    'name': 'Coding Focus 🎯',
+                    'owner': {'display_name': 'Roshan Damor'},
+                    'images': [{'url': 'https://placehold.co/300x300/1a1a2e/16213e?text=Coding+Focus'}],
+                    'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo1'},
+                    'description': 'Perfect beats for deep focus coding sessions'
+                },
+                {
+                    'name': 'Late Night Coding 🌙',
+                    'owner': {'display_name': 'Roshan Damor'},
+                    'images': [{'url': 'https://placehold.co/300x300/0f0f0f/ffd700?text=Late+Night'}],
+                    'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo2'},
+                    'description': 'Chill vibes for those midnight coding marathons'
+                },
+                {
+                    'name': 'Debugging Chill 🐛',
+                    'owner': {'display_name': 'Roshan Damor'},
+                    'images': [{'url': 'https://placehold.co/300x300/2c3e50/e74c3c?text=Debug+Chill'}],
+                    'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo3'},
+                    'description': 'Relaxing tunes to keep you calm while hunting bugs'
+                },
+                {
+                    'name': 'Coffee & Code ☕',
+                    'owner': {'display_name': 'Roshan Damor'},
+                    'images': [{'url': 'https://placehold.co/300x300/8b4513/deb887?text=Coffee+Code'}],
+                    'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo4'},
+                    'description': 'Morning energy with your favorite brew'
+                },
+                {
+                    'name': 'Productivity Beats 🚀',
+                    'owner': {'display_name': 'Roshan Damor'},
+                    'images': [{'url': 'https://placehold.co/300x300/4a90e2/ffffff?text=Productivity'}],
+                    'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo5'},
+                    'description': 'High-energy tracks to boost your coding productivity'
+                },
+                {
+                    'name': 'Algorithm Vibes 🧮',
+                    'owner': {'display_name': 'Roshan Damor'},
+                    'images': [{'url': 'https://placehold.co/300x300/27ae60/ffffff?text=Algorithm'}],
+                    'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo6'},
+                    'description': 'Complex rhythms for complex algorithms'
+                }
+            ]
+        }
+        return render(request, "music/playlist.html", {
+            "playlists": demo_playlists, 
+            "is_demo": True,
+            "show_admin_sync": request.user.is_staff if request.user.is_authenticated else False,
+            "admin_note": "Admin: Connect Spotify to sync real playlists" if request.user.is_staff else None
+        })
+    
+    return render(request, "music/playlist.html", {
+        "playlists": playlist_data, 
+        "is_demo": False,
+        "show_admin_sync": request.user.is_staff if request.user.is_authenticated else False,
+        "last_sync": playlists.first().last_synced if playlists.exists() else None
+    })
+
+# ADMIN ONLY - Sync playlists from Spotify
+@login_required
+@user_passes_test(is_admin)
+def admin_spotify_sync(request):
+    """Admin view to sync playlists from Spotify"""
+    # Check if we have valid tokens
+    try:
+        token_obj = SpotifyToken.objects.latest('created_at')
+        if token_obj.is_expired():
+            # Try to refresh token
+            if not refresh_spotify_token(token_obj):
+                messages.error(request, "Spotify token expired and refresh failed. Please re-authenticate.")
+                return redirect("admin_spotify_login")
+            token_obj.refresh_from_db()
+        
+        access_token = token_obj.access_token
+    except SpotifyToken.DoesNotExist:
+        messages.error(request, "No Spotify authentication found. Please connect your Spotify account first.")
+        return redirect("admin_spotify_login")
+    
+    # Fetch and sync playlists
+    try:
+        playlists_synced = sync_spotify_playlists(access_token)
+        messages.success(request, f"Successfully synced {playlists_synced} playlists from Spotify!")
+    except Exception as e:
+        logger.error(f"Playlist sync failed: {str(e)}")
+        messages.error(request, f"Playlist sync failed: {str(e)}")
+    
+    return redirect("my_playlist")
+
+# ADMIN ONLY - Spotify authentication
+@login_required
+@user_passes_test(is_admin)
+def admin_spotify_login(request):
+    """Admin Spotify authentication"""
     scopes = "user-read-private user-read-email playlist-read-private playlist-read-collaborative"
     auth_url = (
         "https://accounts.spotify.com/authorize"
         f"?response_type=code&client_id={settings.SPOTIFY_CLIENT_ID}"
         f"&scope={scopes}&redirect_uri={settings.SPOTIFY_REDIRECT_URI}"
+        "&show_dialog=true"  # Force re-auth for admin
     )
-    logger.info(f"Redirecting to Spotify auth URL: {auth_url}")
     return redirect(auth_url)
 
-
-# Step 2: Spotify redirects back with code → exchange for token
-def spotify_callback(request):
+# ADMIN ONLY - Spotify callback handler
+@login_required
+@user_passes_test(is_admin)
+def admin_spotify_callback(request):
+    """Handle Spotify OAuth callback for admin"""
     code = request.GET.get("code")
     error = request.GET.get("error")
     
@@ -35,7 +165,6 @@ def spotify_callback(request):
         return redirect("my_playlist")
     
     token_url = "https://accounts.spotify.com/api/token"
-
     auth_header = base64.b64encode(
         f"{settings.SPOTIFY_CLIENT_ID}:{settings.SPOTIFY_CLIENT_SECRET}".encode()
     ).decode("utf-8")
@@ -50,173 +179,167 @@ def spotify_callback(request):
             },
             headers={"Authorization": f"Basic {auth_header}"},
         )
+        response.raise_for_status()
+
+        token_data = response.json()
+        logger.info(f"Successfully obtained Spotify token for admin {request.user.username}")
+
+        # Store tokens in database for admin use
+        SpotifyToken.objects.create(
+            access_token=token_data["access_token"],
+            refresh_token=token_data.get("refresh_token"),
+            expires_in=token_data.get("expires_in", 3600),
+            scope=token_data.get("scope", ""),
+            token_type=token_data.get("token_type", "Bearer")
+        )
         
-        logger.info(f"Token exchange response status: {response.status_code}")
-        
-        if response.status_code == 200:
-            tokens = response.json()
-            request.session["spotify_access_token"] = tokens.get("access_token")
-            request.session["spotify_refresh_token"] = tokens.get("refresh_token")
-            
-            logger.info("Successfully stored Spotify tokens in session")
-            messages.success(request, "Successfully connected to Spotify!")
-            return redirect("my_playlist")
-        else:
-            logger.error(f"Token exchange failed: {response.text}")
-            messages.error(request, "Failed to exchange authorization code for access token")
-            return redirect("my_playlist")
-            
-    except Exception as e:
-        logger.error(f"Exception during token exchange: {str(e)}")
-        messages.error(request, "An error occurred during Spotify authentication")
+        messages.success(request, "Successfully connected to Spotify! You can now sync your playlists.")
+
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to exchange code for token: {str(e)}")
+        messages.error(request, "Failed to authenticate with Spotify. Please try again.")
         return redirect("my_playlist")
 
+    return redirect("admin_spotify_sync")
 
-# Step 3: Fetch playlists
-def my_playlist(request):
-    access_token = request.session.get("spotify_access_token")
+# Helper function to refresh Spotify token
+def refresh_spotify_token(token_obj):
+    """Refresh an expired Spotify token"""
+    if not token_obj.refresh_token:
+        return False
     
-    # If no access token, show demo content with option to connect Spotify
-    if not access_token:
-        logger.info("No Spotify access token found, showing demo content")
-        demo_playlists = {
-            'items': [
-                {
-                    'name': 'Coding Focus 🎯',
-                    'owner': {'display_name': 'Roshan Damor'},
-                    'images': [{'url': 'https://placehold.co/300x300/1a1a2e/16213e?text=Coding+Focus'}],
-                    'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo1'}
-                },
-                {
-                    'name': 'Late Night Coding 🌙',
-                    'owner': {'display_name': 'Roshan Damor'},
-                    'images': [{'url': 'https://placehold.co/300x300/0f0f0f/ffd700?text=Late+Night'}],
-                    'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo2'}
-                },
-                {
-                    'name': 'Debugging Chill 🐛',
-                    'owner': {'display_name': 'Roshan Damor'},
-                    'images': [{'url': 'https://placehold.co/300x300/2c3e50/e74c3c?text=Debug+Chill'}],
-                    'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo3'}
-                },
-                {
-                    'name': 'Coffee & Code ☕',
-                    'owner': {'display_name': 'Roshan Damor'},
-                    'images': [{'url': 'https://placehold.co/300x300/8b4513/deb887?text=Coffee+Code'}],
-                    'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo4'}
-                },
-                {
-                    'name': 'Productivity Beats 🚀',
-                    'owner': {'display_name': 'Roshan Damor'},
-                    'images': [{'url': 'https://placehold.co/300x300/4a90e2/ffffff?text=Productivity'}],
-                    'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo5'}
-                },
-                {
-                    'name': 'Algorithm Vibes 🧮',
-                    'owner': {'display_name': 'Roshan Damor'},
-                    'images': [{'url': 'https://placehold.co/300x300/27ae60/ffffff?text=Algorithm'}],
-                    'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo6'}
-                }
-            ]
-        }
-        return render(request, "music/playlist.html", {
-            "playlists": demo_playlists, 
-            "is_demo": True,
-            "spotify_login_url": "/music/spotify-login/"
-        })
+    token_url = "https://accounts.spotify.com/api/token"
+    auth_header = base64.b64encode(
+        f"{settings.SPOTIFY_CLIENT_ID}:{settings.SPOTIFY_CLIENT_SECRET}".encode()
+    ).decode("utf-8")
 
-    # If authenticated, fetch real playlists
-    logger.info("Access token found, attempting to fetch real Spotify playlists")
     try:
-        url = "https://api.spotify.com/v1/me/playlists"
-        headers = {"Authorization": f"Bearer {access_token}"}
-        
-        logger.info(f"Making request to: {url}")
-        response = requests.get(url, headers=headers)
-        
-        logger.info(f"Spotify API response status: {response.status_code}")
-        
-        if response.status_code == 200:
-            playlists = response.json()
-            logger.info(f"Successfully fetched {len(playlists.get('items', []))} playlists")
-            
-            # Add success message to show it's working
-            if playlists.get('items'):
-                messages.success(request, f"Successfully loaded {len(playlists['items'])} playlists from your Spotify account!")
-            
-            return render(request, "music/playlist.html", {"playlists": playlists, "is_demo": False})
-        elif response.status_code == 401:
-            # Token expired, clear session and redirect to login
-            logger.warning("Spotify access token expired")
-            request.session.pop("spotify_access_token", None)
-            request.session.pop("spotify_refresh_token", None)
-            messages.warning(request, "Your Spotify session has expired. Please reconnect.")
-            return redirect("spotify_login")
-        else:
-            # Other error, show demo with error message
-            logger.error(f"Spotify API error: {response.status_code} - {response.text}")
-            return render(request, "music/playlist.html", {
-                "playlists": {"items": []}, 
-                "is_demo": True,
-                "error_message": f"Unable to fetch playlists (Error {response.status_code}). Please try connecting again.",
-                "spotify_login_url": "/music/spotify-login/"
-            })
-    except Exception as e:
-        # Network error or other issues
-        logger.error(f"Exception while fetching playlists: {str(e)}")
-        return render(request, "music/playlist.html", {
-            "playlists": {"items": []}, 
-            "is_demo": True,
-            "error_message": "Network error. Please check your connection and try again.",
-            "spotify_login_url": "/music/spotify-login/"
-        })
+        response = requests.post(
+            token_url,
+            data={
+                "grant_type": "refresh_token",
+                "refresh_token": token_obj.refresh_token,
+            },
+            headers={"Authorization": f"Basic {auth_header}"},
+        )
+        response.raise_for_status()
 
+        token_data = response.json()
+        
+        # Update existing token
+        token_obj.access_token = token_data["access_token"]
+        token_obj.expires_at = timezone.now() + timedelta(seconds=token_data.get("expires_in", 3600))
+        if "refresh_token" in token_data:
+            token_obj.refresh_token = token_data["refresh_token"]
+        token_obj.save()
+        
+        logger.info("Successfully refreshed Spotify token")
+        return True
+
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to refresh Spotify token: {str(e)}")
+        return False
+
+# Helper function to sync playlists from Spotify API
+def sync_spotify_playlists(access_token):
+    """Sync playlists from Spotify API to database"""
+    try:
+        response = requests.get(
+            "https://api.spotify.com/v1/me/playlists",
+            headers={"Authorization": f"Bearer {access_token}"},
+            params={"limit": 50}
+        )
+        response.raise_for_status()
+        
+        playlists_data = response.json()
+        synced_count = 0
+        
+        for playlist in playlists_data.get('items', []):
+            # Get track count for this playlist
+            tracks_response = requests.get(
+                f"https://api.spotify.com/v1/playlists/{playlist['id']}/tracks",
+                headers={"Authorization": f"Bearer {access_token}"},
+                params={"limit": 1}  # Just to get total count
+            )
+            tracks_response.raise_for_status()
+            track_count = tracks_response.json().get('total', 0)
+            
+            # Update or create playlist
+            spotify_playlist, created = SpotifyPlaylist.objects.update_or_create(
+                spotify_id=playlist['id'],
+                defaults={
+                    'name': playlist['name'],
+                    'description': playlist.get('description', ''),
+                    'owner_name': playlist['owner']['display_name'],
+                    'image_url': playlist['images'][0]['url'] if playlist['images'] else None,
+                    'external_url': playlist['external_urls']['spotify'],
+                    'track_count': track_count,
+                    'last_synced': timezone.now(),
+                    'is_public': True  # Make all synced playlists public by default
+                }
+            )
+            
+            synced_count += 1
+            logger.info(f"{'Created' if created else 'Updated'} playlist: {playlist['name']}")
+        
+        return synced_count
+
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to sync playlists: {str(e)}")
+        raise Exception(f"Failed to sync playlists: {str(e)}")
+
+# API endpoint for playlist tracks (AJAX)
+def get_playlist_tracks(request, playlist_id):
+    """Get tracks for a specific playlist"""
+    try:
+        playlist = SpotifyPlaylist.objects.get(spotify_id=playlist_id)
+        tracks = SpotifyTrack.objects.filter(playlist=playlist)
+        
+        tracks_data = {
+            'tracks': [
+                {
+                    'name': track.name,
+                    'artist': track.artist,
+                    'album': track.album,
+                    'duration_ms': track.duration_ms,
+                    'preview_url': track.preview_url,
+                    'external_url': track.external_url,
+                    'image_url': track.image_url
+                }
+                for track in tracks
+            ],
+            'total': tracks.count()
+        }
+        
+        return JsonResponse(tracks_data)
+    
+    except SpotifyPlaylist.DoesNotExist:
+        return JsonResponse({'error': 'Playlist not found'}, status=404)
+    except Exception as e:
+        logger.error(f"Error fetching tracks for playlist {playlist_id}: {str(e)}")
+        return JsonResponse({'error': 'Failed to fetch tracks'}, status=500)
+
+# Legacy support - redirect old URLs to new system
+def spotify_login(request):
+    """Redirect to admin login if user is admin, otherwise show info"""
+    if request.user.is_authenticated and request.user.is_staff:
+        return redirect("admin_spotify_login")
+    else:
+        messages.info(request, "Playlists are publicly available. No login required!")
+        return redirect("my_playlist")
+
+def spotify_callback(request):
+    """Redirect old callback to admin callback"""
+    if request.user.is_authenticated and request.user.is_staff:
+        return admin_spotify_callback(request)
+    else:
+        return redirect("my_playlist")
 
 def playlist_tracks(request, playlist_id):
-    access_token = request.session.get("spotify_access_token")
-    url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
-    response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"})
-    tracks = response.json()
-    return JsonResponse(tracks)
-
+    """Alias for get_playlist_tracks for backward compatibility"""
+    return get_playlist_tracks(request, playlist_id)
 
 def spotify_logout(request):
-    """Logout from Spotify by clearing session data"""
-    request.session.pop("spotify_access_token", None)
-    request.session.pop("spotify_refresh_token", None)
-    messages.info(request, "Disconnected from Spotify")
+    """No longer needed - redirect to playlist page"""
+    messages.info(request, "No logout needed - playlists are public!")
     return redirect("my_playlist")
-
-
-def spotify_debug(request):
-    """Debug view to check Spotify configuration"""
-    debug_info = {
-        'client_id': settings.SPOTIFY_CLIENT_ID[:10] + "..." if settings.SPOTIFY_CLIENT_ID else "Not set",
-        'client_secret': "Set" if settings.SPOTIFY_CLIENT_SECRET else "Not set", 
-        'redirect_uri': settings.SPOTIFY_REDIRECT_URI,
-        'session_token': "Present" if request.session.get("spotify_access_token") else "Not present",
-        'full_client_id': settings.SPOTIFY_CLIENT_ID,  # For debugging - remove in production
-        'current_host': request.get_host(),
-        'is_secure': request.is_secure(),
-        'protocol': 'https' if request.is_secure() else 'http',
-    }
-    
-    # If we have a token, test it
-    access_token = request.session.get("spotify_access_token")
-    if access_token:
-        try:
-            url = "https://api.spotify.com/v1/me"
-            response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"})
-            debug_info['user_test'] = {
-                'status': response.status_code,
-                'response': response.json() if response.status_code == 200 else response.text
-            }
-        except Exception as e:
-            debug_info['user_test'] = f"Error: {str(e)}"
-    
-    return JsonResponse(debug_info)
-
-
-def spotify_test(request):
-    """Test page for Spotify integration"""
-    return render(request, "music/test.html")

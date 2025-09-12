@@ -39,7 +39,7 @@
                 </header>
 
                 <h1 class="project-title" data-animation="fade-in-up" data-animation-delay="200">{{ project.title }}</h1>
-                <p class="project-description" data-animation="fade-in-up" data-animation-delay="300">{{ project.summary }}</p>
+                <p class="project-description" data-animation="fade-in-up" data-animation-delay="300">{{ project.summary|safe }}</p>
                 
                 <!-- Image Slider -->
                 <div class="hero-image-slider" id="project-slider" data-animation="zoom-in" data-animation-delay="400">
@@ -107,7 +107,7 @@
                                 </div>
                             </div>
                             <div class="comment-body">
-                                <p>{{ comment.body|linebreaks }}</p>
+                                <p>{{ comment.body|safe }}</p>
                             </div>
                             <div class="comment-actions">
                                 <button class="like-btn" data-comment-id="{{ comment.id }}">

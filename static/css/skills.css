@@ -6,8 +6,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
-    margin-top: 200px;
+    gap: 40px; /* Increased back to 40px */
 }
 /* Portfolio Header - matches projects page styling */
 .portfolio-header {
@@ -292,6 +291,7 @@
 /* Responsive */
 @media (max-width: 768px) {
     .portfolio-header h1 { font-size: 40px; }
+    .skills-container { gap: 35px; } /* Increased from 25px */
     .page-toolbar { 
         flex-direction: column; 
         align-items: stretch; 
@@ -309,6 +309,7 @@
     .skills-grid {
         grid-template-columns: 1fr;
     }
+    .skills-container { gap: 30px; } /* Increased from 20px */
     .portfolio-header h1 { 
         font-size: 32px; 
     }

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from tinymce.models import HTMLField
 
 # =========================================================================
 # SITE-WIDE CONFIGURATION MODEL
@@ -14,7 +15,7 @@ class SiteConfiguration(models.Model):
     hero_greeting = models.CharField(max_length=100, default="HIII, IT'S ME")
     hero_name = models.CharField(max_length=100, default="Roshan Damor")
     hero_tagline = models.CharField(max_length=200, default="I am a Web Developer")
-    hero_bio = models.TextField(default='GREETINGS, ALL DIGITAL EXPLORERS! ...')
+    hero_bio = HTMLField(default='GREETINGS, ALL DIGITAL EXPLORERS! ...')
     
     # --- Hero Stats ---
     hero_projects_stat = models.CharField(max_length=10, default="25+")
@@ -23,13 +24,13 @@ class SiteConfiguration(models.Model):
 
     # --- Section Titles & Descriptions ---
     about_title = models.CharField(max_length=200, default="About Me")
-    about_description = models.TextField(blank=True)
+    about_description = HTMLField(blank=True)
     now_title = models.CharField(max_length=200, default="What I'm Doing Now")
-    now_description = models.TextField(blank=True)
+    now_description = HTMLField(blank=True)
     skills_title = models.CharField(max_length=200, default="My Tech Stack")
-    skills_description = models.TextField(blank=True)
+    skills_description = HTMLField(blank=True)
     experience_title = models.CharField(max_length=200, default="Where I've Worked")
-    experience_description = models.TextField(blank=True)
+    experience_description = HTMLField(blank=True)
     
     # --- Social Media Links ---
     twitter_url = models.URLField(blank=True, default="https://x.com/logicbyroshan")
@@ -96,8 +97,8 @@ class Category(models.Model):
 class Project(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True, editable=False)
-    summary = models.TextField(help_text="A short summary displayed on the project list page.")
-    content = models.TextField(help_text="The main detailed content for the project detail page.")
+    summary = HTMLField(help_text="A short summary displayed on the project list page.")
+    content = HTMLField(help_text="The main detailed content for the project detail page.")
     cover_image = models.ImageField(upload_to='project_covers/')
     technologies = models.ManyToManyField(Technology, related_name="projects")
     categories = models.ManyToManyField(Category, limit_choices_to={'category_type': Category.CategoryType.PROJECT})
@@ -122,8 +123,8 @@ class ProjectImage(models.Model):
 class Blog(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True, editable=False)
-    summary = models.TextField(help_text="A short excerpt for the blog list page.")
-    content = models.TextField()
+    summary = HTMLField(help_text="A short excerpt for the blog list page.")
+    content = HTMLField()
     cover_image = models.ImageField(upload_to='blog_covers/')
     categories = models.ManyToManyField(Category, limit_choices_to={'category_type': Category.CategoryType.BLOG})
     created_date = models.DateTimeField(auto_now_add=True)
@@ -140,7 +141,7 @@ class Blog(models.Model):
 class Comment(models.Model):
     post = models.ForeignKey(Blog, related_name='comments', on_delete=models.CASCADE)
     author_name = models.CharField(max_length=100)
-    body = models.TextField()
+    body = HTMLField()
     likes = models.PositiveIntegerField(default=0)
     created_date = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=True)
@@ -152,7 +153,7 @@ class Comment(models.Model):
 class ProjectComment(models.Model):
     project = models.ForeignKey(Project, related_name='comments', on_delete=models.CASCADE)
     author_name = models.CharField(max_length=100, default="Anonymous")
-    body = models.TextField()
+    body = HTMLField()
     likes = models.PositiveIntegerField(default=0)
     created_date = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=True)
@@ -173,9 +174,9 @@ class Experience(models.Model):
     role = models.CharField(max_length=200)
     start_date = models.DateField()
     end_date = models.DateField(blank=True, null=True)
-    summary = models.TextField()
-    responsibilities = models.TextField()
-    achievements = models.TextField()
+    summary = HTMLField()
+    responsibilities = HTMLField()
+    achievements = HTMLField()
     technologies = models.ManyToManyField(Technology, related_name="experiences")
     experience_type = models.CharField(max_length=2, choices=ExperienceType.choices, default=ExperienceType.FULL_TIME)
     
@@ -193,7 +194,7 @@ class Experience(models.Model):
 class Service(models.Model):
     """NEW: For a service listed in the 'About Me' section."""
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = HTMLField()
     icon = models.CharField(max_length=50, help_text="Font Awesome icon class (e.g., 'fas fa-code')")
     order = models.PositiveIntegerField(default=0)
     class Meta:
@@ -216,7 +217,7 @@ class Resume(models.Model):
     
     # Additional resume information
     title = models.CharField(max_length=200, default="My Resume")
-    description = models.TextField(
+    description = HTMLField(
         blank=True, 
         default="Download my latest resume to learn more about my experience and skills."
     )
@@ -248,7 +249,7 @@ class ContactSubmission(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     subject = models.CharField(max_length=200, blank=True)
-    message = models.TextField()
+    message = HTMLField()
     submitted_date = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
     class Meta:
@@ -281,7 +282,7 @@ class Skill(models.Model):
         help_text="The category this skill belongs to"
     )
     icon = models.CharField(max_length=50)
-    summary = models.TextField()
+    summary = HTMLField()
     technologies = models.ManyToManyField(Technology, through='SkillTechnologyDetail')
     
     class Meta:
@@ -297,7 +298,7 @@ class Skill(models.Model):
 class SkillTechnologyDetail(models.Model):
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
     technology = models.ForeignKey(Technology, on_delete=models.CASCADE)
-    learning_journey = models.TextField()
+    learning_journey = HTMLField()
     class Meta:
         unique_together = ('skill', 'technology')
     def __str__(self):
@@ -305,7 +306,7 @@ class SkillTechnologyDetail(models.Model):
 
 class FAQ(models.Model):
     question = models.CharField(max_length=255)
-    answer = models.TextField()
+    answer = HTMLField()
     order = models.PositiveIntegerField(default=0)
     class Meta:
         ordering = ['order']
@@ -322,7 +323,7 @@ class Achievement(models.Model):
 
     title = models.CharField(max_length=200)
     issuing_organization = models.CharField(max_length=200)
-    summary = models.TextField(help_text="A brief description of the achievement.")
+    summary = HTMLField(help_text="A brief description of the achievement.")
     date_issued = models.DateField()
     credential_url = models.URLField(max_length=255, blank=True, null=True, help_text="Link to verify the credential, if available.")
     image = models.ImageField(upload_to='achievements/', blank=True, null=True, help_text="Optional: A scan or image of the certificate/award.")

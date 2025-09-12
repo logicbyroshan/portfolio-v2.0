@@ -16,8 +16,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
-    margin-top: 200px;
+    gap: 40px; /* Increased back to 40px */
 }
 
 .page-header {
@@ -318,6 +317,7 @@
     .page-header h1 {
         font-size: 40px;
     }
+    .blogs-container { gap: 35px; } /* Increased from 25px */
     .page-toolbar {
         flex-direction: column;
         align-items: stretch;
@@ -334,6 +334,7 @@
     .blog-grid {
         grid-template-columns: 1fr;
     }
+    .blogs-container { gap: 30px; } /* Increased from 20px */
     .page-header h1 {
         font-size: 36px;
     }

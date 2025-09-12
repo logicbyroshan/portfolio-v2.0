@@ -140,7 +140,7 @@
                                     <h5>{{ comment.author_name }}</h5>
                                     <span>{{ comment.created_date|timesince }} ago</span>
                                 </div>
-                                <p>{{ comment.body|linebreaks }}</p>
+                                <p>{{ comment.body|safe }}</p>
                                 <div class="comment-actions">
                                     <button class="like-btn">
                                         <i class="fa-regular fa-heart"></i>

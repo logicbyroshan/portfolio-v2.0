@@ -20,10 +20,10 @@
     <section class="hero-section portfolio-container">
         <div class="home-container">
             <div class="home-content" data-animation="fade-in-up">
-                <p>HIII, IT'S ME</p>
-                <h1>Roshan Damor</h1>
-                <h4>I am a <span id="skill-text">Web Developer</span></h4>
-                <p>GREETINGS, ALL DIGITAL EXPLORERS! I AM ROSHAN, A PASSIONATE AND INNOVATIVE DEVELOPER <b><i>"BUILDING AI-POWERED SOLUTIONS & SCALABLE WEB APPS — SDE & AI ENGINEER"</i></b> </p>
+                <p>{{ config.hero_greeting|default:"HIII, IT'S ME" }}</p>
+                <h1>{{ config.hero_name|default:"Roshan Damor" }}</h1>
+                <h4>I am a <span id="skill-text">{{ config.hero_tagline|default:"Web Developer" }}</span></h4>
+                <p>{{ config.hero_bio|default:"GREETINGS, ALL DIGITAL EXPLORERS! I AM ROSHAN, A PASSIONATE AND INNOVATIVE DEVELOPER <b><i>\"BUILDING AI-POWERED SOLUTIONS & SCALABLE WEB APPS — SDE & AI ENGINEER\"</i></b>"|safe }}</p>
                 
                 <!-- Simple Ask AI Button -->
                 <div class="hero-actions">
@@ -56,7 +56,7 @@
     <section id="about" class="about-section portfolio-container" data-animation="fade-in">
         <div class="section-title">
             <h2>{{ config.about_title|safe|default:"About <span>Me</span>" }}</h2>
-            <p>{{ config.about_description|default:"A passionate developer dedicated to building beautiful, functional, and user-centric digital experiences." }}</p>
+            <p>{{ config.about_description|default:"A passionate developer dedicated to building beautiful, functional, and user-centric digital experiences."|safe }}</p>
             <a href="#" class="awesome">Know More <i class="fa-solid fa-arrow-right"></i></a>
         </div>
         <div class="about-content card">
@@ -64,7 +64,7 @@
                 {% for service in services_col1 %}
                 <div class="service-box box-reverse" data-animation="fade-in-right" data-animation-delay="{{ service.animation_delay }}">
                     <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
-                    <div class="service-text text-reverse"><h4>{{ service.title }}</h4><p>{{ service.description }}</p></div>
+                    <div class="service-text text-reverse"><h4>{{ service.title }}</h4><p>{{ service.description|safe }}</p></div>
                 </div>
                 {% endfor %}
             </div>
@@ -76,7 +76,7 @@
                 {% for service in services_col2 %}
                 <div class="service-box" data-animation="fade-in-left" data-animation-delay="{{ service.animation_delay }}">
                     <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
-                    <div class="service-text"><h4>{{ service.title }}</h4><p>{{ service.description }}</p></div>
+                    <div class="service-text"><h4>{{ service.title }}</h4><p>{{ service.description|safe }}</p></div>
                 </div>
                 {% endfor %}
             </div>
@@ -87,7 +87,7 @@
     <section id="experience" class="experience-section portfolio-container" data-animation="fade-in">
         <div class="portfolio-header">
             <div class="head">
-                <h1>Where I've <span>Worked</span></h1>
+                <h1>Where I've <br><span>Worked</span></h1>
                 <a href="{% url 'portfolio:experience_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a>
             </div>
             <p>"A glimpse into my professional journey, contributing to impactful projects and collaborating with talented teams."</p>
@@ -117,7 +117,35 @@
         </header>
         <div class="cards-container">
             {% for project in projects %}
-            <div class="project-card card clickable-card" data-animation="fade-in-up" data-url="{% url 'portfolio:project_detail' slug=project.slug %}"><a href="{% url 'portfolio:project_detail' slug=project.slug %}" class="project-image"><img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ project.title|urlencode }}{% endif %}" alt="{{ project.title }}"></a><div class="project-content"><h3><a href="{% url 'portfolio:project_detail' slug=project.slug %}">{{ project.title }}</a></h3><p>{{ project.summary }}</p><div class="skills">{% for tech in project.technologies.all %}<span class="teg">{{ tech.name }}</span>{% endfor %}</div></div><div class="project-links">{% if project.github_url %}<a href="{{ project.github_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-brands fa-github"></i>Github</a>{% endif %}{% if project.live_url %}<a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live</a>{% endif %}</div></div>
+            <div class="project-card card clickable-card" data-animation="fade-in-up" data-url="{% url 'portfolio:project_detail' slug=project.slug %}">
+                <a href="{% url 'portfolio:project_detail' slug=project.slug %}" class="project-image">
+                    <img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ project.title|urlencode }}{% endif %}" alt="{{ project.title }}">
+                </a>
+                <div class="project-content">
+                    <h3><a href="{% url 'portfolio:project_detail' slug=project.slug %}">{{ project.title }}</a></h3>
+                    <p>{{ project.summary|safe }}</p>
+                    <div class="skills">
+                        {% for tech in project.technologies.all|slice:":5" %}
+                        <span class="teg">{{ tech.name }}</span>
+                        {% endfor %}
+                        {% if project.technologies.count > 5 %}
+                        <span class="teg more-tech">+{{ project.technologies.count|add:"-5" }} more</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="project-links">
+                    {% if project.github_url %}
+                    <a href="{{ project.github_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();">
+                        <i class="fa-brands fa-github"></i>Github
+                    </a>
+                    {% endif %}
+                    {% if project.live_url %}
+                    <a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>Live
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
             {% endfor %}
         </div>
     </section>
@@ -130,7 +158,24 @@
         </header>
         <div class="cards-container">
             {% for blog in blogs %}
-            <a href="{% url 'portfolio:blog_detail' slug=blog.slug %}" class="blog-card card clickable-card" data-animation="fade-in-up" data-url="{% url 'portfolio:blog_detail' slug=blog.slug %}"><div class="blog-image"><img src="{% if blog.cover_image %}{{ blog.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ blog.title|urlencode }}{% endif %}" alt="{{ blog.title }}"></div><div class="blog-content"><h4>{{ blog.title }}</h4><p>{{ blog.summary }}</p></div><div class="blog-footer"><div class="publisher">{% if blog.author_avatar %}<img src="{{ blog.author_avatar.url }}" alt="{{ blog.author_name }}">{% endif %}<span>{{ blog.author_name }}</span></div><span class="blog-date">{{ blog.created_date|date:"M d, Y" }}</span></div></a>
+            <a href="{% url 'portfolio:blog_detail' slug=blog.slug %}" class="blog-card card clickable-card" data-animation="fade-in-up" data-url="{% url 'portfolio:blog_detail' slug=blog.slug %}">
+                <div class="blog-image">
+                    <img src="{% if blog.cover_image %}{{ blog.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ blog.title|urlencode }}{% endif %}" alt="{{ blog.title }}">
+                </div>
+                <div class="blog-content">
+                    <h4>{{ blog.title }}</h4>
+                    <p>{{ blog.summary|safe }}</p>
+                </div>
+                <div class="blog-footer">
+                    <div class="publisher">
+                        {% if blog.author_avatar %}
+                        <img src="{{ blog.author_avatar.url }}" alt="{{ blog.author_name }}">
+                        {% endif %}
+                        <span>{{ blog.author_name }}</span>
+                    </div>
+                    <span class="blog-date">{{ blog.created_date|date:"M d, Y" }}</span>
+                </div>
+            </a>
             {% endfor %}
         </div>
     </section>
