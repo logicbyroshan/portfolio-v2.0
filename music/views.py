@@ -1,8 +1,9 @@
 import requests
 import base64
 import logging
+import json
 from django.conf import settings
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -41,50 +42,62 @@ def my_playlist(request):
     
     # Check if we have any playlists
     if not playlists.exists():
-        # Show demo playlists if no real data
+        # Show demo playlists if no real data with sample audio
         demo_playlists = {
             'items': [
                 {
+                    'id': 'demo1',
                     'name': 'Coding Focus 🎯',
                     'owner': {'display_name': 'Roshan Damor'},
                     'images': [{'url': 'https://placehold.co/300x300/1a1a2e/16213e?text=Coding+Focus'}],
                     'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo1'},
-                    'description': 'Perfect beats for deep focus coding sessions'
+                    'description': 'Perfect beats for deep focus coding sessions',
+                    'tracks': {'total': 5}
                 },
                 {
+                    'id': 'demo2',
                     'name': 'Late Night Coding 🌙',
                     'owner': {'display_name': 'Roshan Damor'},
                     'images': [{'url': 'https://placehold.co/300x300/0f0f0f/ffd700?text=Late+Night'}],
                     'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo2'},
-                    'description': 'Chill vibes for those midnight coding marathons'
+                    'description': 'Chill vibes for those midnight coding marathons',
+                    'tracks': {'total': 6}
                 },
                 {
+                    'id': 'demo3',
                     'name': 'Debugging Chill 🐛',
                     'owner': {'display_name': 'Roshan Damor'},
                     'images': [{'url': 'https://placehold.co/300x300/2c3e50/e74c3c?text=Debug+Chill'}],
                     'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo3'},
-                    'description': 'Relaxing tunes to keep you calm while hunting bugs'
+                    'description': 'Relaxing tunes to keep you calm while hunting bugs',
+                    'tracks': {'total': 4}
                 },
                 {
+                    'id': 'demo4',
                     'name': 'Coffee & Code ☕',
                     'owner': {'display_name': 'Roshan Damor'},
                     'images': [{'url': 'https://placehold.co/300x300/8b4513/deb887?text=Coffee+Code'}],
                     'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo4'},
-                    'description': 'Morning energy with your favorite brew'
+                    'description': 'Morning energy with your favorite brew',
+                    'tracks': {'total': 7}
                 },
                 {
+                    'id': 'demo5',
                     'name': 'Productivity Beats 🚀',
                     'owner': {'display_name': 'Roshan Damor'},
                     'images': [{'url': 'https://placehold.co/300x300/4a90e2/ffffff?text=Productivity'}],
                     'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo5'},
-                    'description': 'High-energy tracks to boost your coding productivity'
+                    'description': 'High-energy tracks to boost your coding productivity',
+                    'tracks': {'total': 8}
                 },
                 {
+                    'id': 'demo6',
                     'name': 'Algorithm Vibes 🧮',
                     'owner': {'display_name': 'Roshan Damor'},
                     'images': [{'url': 'https://placehold.co/300x300/27ae60/ffffff?text=Algorithm'}],
                     'external_urls': {'spotify': 'https://open.spotify.com/playlist/demo6'},
-                    'description': 'Complex rhythms for complex algorithms'
+                    'description': 'Complex rhythms for complex algorithms',
+                    'tracks': {'total': 5}
                 }
             ]
         }
@@ -101,6 +114,101 @@ def my_playlist(request):
         "show_admin_sync": request.user.is_staff if request.user.is_authenticated else False,
         "last_sync": playlists.first().last_synced if playlists.exists() else None
     })
+
+# Playlist Detail View
+def playlist_detail(request, playlist_id):
+    """Detailed view of a specific playlist with tracks"""
+    
+    # Handle demo playlists
+    if playlist_id.startswith('demo'):
+        demo_tracks = generate_demo_tracks_for_detail(playlist_id)
+        demo_playlist = get_demo_playlist_info(playlist_id)
+        
+        # Format tracks for template
+        formatted_tracks = []
+        for i, track in enumerate(demo_tracks):
+            formatted_tracks.append({
+                'name': track['name'],
+                'artist': track['artist'],
+                'album': track.get('album', 'Demo Album'),
+                'duration_ms': track['duration_ms'],
+                'duration_formatted': format_duration(track['duration_ms']),
+                'preview_url': track['preview_url'],
+                'external_url': f'https://open.spotify.com/track/demo{i+1}',
+                'track_number': i + 1
+            })
+        
+        # Serialize tracks for JavaScript
+        tracks_json = json.dumps([{
+            'name': track['name'],
+            'artist': track['artist'],
+            'album': track['album'],
+            'duration_ms': track['duration_ms'],
+            'preview_url': track['preview_url'],
+            'external_url': track['external_url']
+        } for track in formatted_tracks])
+        
+        return render(request, "music/playlist_detail.html", {
+            "playlist": demo_playlist,
+            "tracks": formatted_tracks,
+            "tracks_json": tracks_json,
+            "is_demo": True
+        })
+    
+    # Handle real playlists
+    try:
+        playlist = SpotifyPlaylist.objects.get(spotify_id=playlist_id)
+        tracks = SpotifyTrack.objects.filter(playlist=playlist).order_by('track_number')
+        
+        # Format tracks for template
+        formatted_tracks = []
+        for track in tracks:
+            formatted_tracks.append({
+                'name': track.name,
+                'artist': track.artist,
+                'album': track.album or 'Unknown Album',
+                'duration_ms': track.duration_ms,
+                'duration_formatted': format_duration(track.duration_ms),
+                'preview_url': track.preview_url,
+                'external_url': track.external_url,
+                'track_number': track.track_number
+            })
+        
+        # Serialize tracks for JavaScript
+        tracks_json = json.dumps([{
+            'name': track['name'],
+            'artist': track['artist'],
+            'album': track['album'],
+            'duration_ms': track['duration_ms'],
+            'preview_url': track['preview_url'],
+            'external_url': track['external_url']
+        } for track in formatted_tracks])
+        
+        # Calculate total duration
+        total_duration_ms = sum(track.duration_ms for track in tracks)
+        total_duration = format_duration(total_duration_ms)
+        
+        playlist_data = {
+            'id': playlist.spotify_id,
+            'name': playlist.name,
+            'description': playlist.description,
+            'owner_name': playlist.owner_name,
+            'image_url': playlist.image_url,
+            'external_url': playlist.external_url,
+            'track_count': tracks.count(),
+            'total_duration': total_duration
+        }
+        
+        return render(request, "music/playlist_detail.html", {
+            "playlist": playlist_data,
+            "tracks": formatted_tracks,
+            "tracks_json": tracks_json,
+            "is_demo": False
+        })
+        
+    except SpotifyPlaylist.DoesNotExist:
+        messages.error(request, "Playlist not found.")
+        return redirect("my_playlist")
 
 # ADMIN ONLY - Sync playlists from Spotify
 @login_required
@@ -303,8 +411,7 @@ def get_playlist_tracks(request, playlist_id):
                     'album': track.album,
                     'duration_ms': track.duration_ms,
                     'preview_url': track.preview_url,
-                    'external_url': track.external_url,
-                    'image_url': track.image_url
+                    'external_url': track.external_url
                 }
                 for track in tracks
             ],
@@ -343,3 +450,124 @@ def spotify_logout(request):
     """No longer needed - redirect to playlist page"""
     messages.info(request, "No logout needed - playlists are public!")
     return redirect("my_playlist")
+
+# Helper functions
+def format_duration(duration_ms):
+    """Format duration from milliseconds to MM:SS format"""
+    if not duration_ms:
+        return "0:00"
+    
+    total_seconds = duration_ms // 1000
+    minutes = total_seconds // 60
+    seconds = total_seconds % 60
+    
+    return f"{minutes}:{seconds:02d}"
+
+def get_demo_playlist_info(playlist_id):
+    """Get demo playlist information"""
+    demo_playlists = {
+        'demo1': {
+            'id': 'demo1',
+            'name': 'Coding Focus 🎯',
+            'description': 'Perfect beats for deep focus coding sessions',
+            'owner_name': 'Roshan Damor',
+            'image_url': 'https://placehold.co/300x300/1a1a2e/16213e?text=Coding+Focus',
+            'external_url': 'https://open.spotify.com/playlist/demo1'
+        },
+        'demo2': {
+            'id': 'demo2',
+            'name': 'Late Night Coding 🌙',
+            'description': 'Chill vibes for those midnight coding marathons',
+            'owner_name': 'Roshan Damor',
+            'image_url': 'https://placehold.co/300x300/0f0f0f/ffd700?text=Late+Night',
+            'external_url': 'https://open.spotify.com/playlist/demo2'
+        },
+        'demo3': {
+            'id': 'demo3',
+            'name': 'Debugging Chill 🐛',
+            'description': 'Relaxing tunes to keep you calm while hunting bugs',
+            'owner_name': 'Roshan Damor',
+            'image_url': 'https://placehold.co/300x300/2c3e50/e74c3c?text=Debug+Chill',
+            'external_url': 'https://open.spotify.com/playlist/demo3'
+        },
+        'demo4': {
+            'id': 'demo4',
+            'name': 'Coffee & Code ☕',
+            'description': 'Morning energy with your favorite brew',
+            'owner_name': 'Roshan Damor',
+            'image_url': 'https://placehold.co/300x300/8b4513/deb887?text=Coffee+Code',
+            'external_url': 'https://open.spotify.com/playlist/demo4'
+        },
+        'demo5': {
+            'id': 'demo5',
+            'name': 'Productivity Beats 🚀',
+            'description': 'High-energy tracks to boost your coding productivity',
+            'owner_name': 'Roshan Damor',
+            'image_url': 'https://placehold.co/300x300/4a90e2/ffffff?text=Productivity',
+            'external_url': 'https://open.spotify.com/playlist/demo5'
+        },
+        'demo6': {
+            'id': 'demo6',
+            'name': 'Algorithm Vibes 🧮',
+            'description': 'Complex rhythms for complex algorithms',
+            'owner_name': 'Roshan Damor',
+            'image_url': 'https://placehold.co/300x300/27ae60/ffffff?text=Algorithm',
+            'external_url': 'https://open.spotify.com/playlist/demo6'
+        }
+    }
+    
+    return demo_playlists.get(playlist_id, demo_playlists['demo1'])
+
+def generate_demo_tracks_for_detail(playlist_id):
+    """Generate detailed demo tracks for playlist detail view"""
+    track_sets = {
+        'demo1': [
+            {'name': 'Code Flow', 'artist': 'Dev Beats', 'album': 'Productivity Sessions', 'duration_ms': 210000, 'preview_url': 'demo'},
+            {'name': 'Algorithm Dreams', 'artist': 'Binary Rhythms', 'album': 'Logic Loops', 'duration_ms': 195000, 'preview_url': 'demo'},
+            {'name': 'Syntax Smooth', 'artist': 'Logic Loop', 'album': 'Code Compilation', 'duration_ms': 225000, 'preview_url': None},
+            {'name': 'Debug Mode', 'artist': 'Error Collective', 'album': 'Fix & Flow', 'duration_ms': 180000, 'preview_url': 'demo'},
+            {'name': 'Compile Time', 'artist': 'Function Flow', 'album': 'Build Process', 'duration_ms': 240000, 'preview_url': None}
+        ],
+        'demo2': [
+            {'name': 'Midnight Variables', 'artist': 'Late Night Logic', 'album': 'After Hours', 'duration_ms': 220000, 'preview_url': 'demo'},
+            {'name': 'Coffee Loop', 'artist': 'Caffeine Code', 'album': 'Brew & Build', 'duration_ms': 205000, 'preview_url': None},
+            {'name': 'Silent Debugging', 'artist': 'Quiet Quarters', 'album': 'Peaceful Programming', 'duration_ms': 190000, 'preview_url': 'demo'},
+            {'name': 'Terminal Dreams', 'artist': 'Command Line', 'album': 'Shell Scripts', 'duration_ms': 235000, 'preview_url': None},
+            {'name': 'Empty Strings', 'artist': 'Null Pointer', 'album': 'Memory Management', 'duration_ms': 200000, 'preview_url': 'demo'},
+            {'name': 'Async Await', 'artist': 'Promise Resolve', 'album': 'Concurrent Computing', 'duration_ms': 215000, 'preview_url': None}
+        ],
+        'demo3': [
+            {'name': 'Bug Hunt', 'artist': 'Debug Masters', 'album': 'Error Tracking', 'duration_ms': 195000, 'preview_url': 'demo'},
+            {'name': 'Exception Handler', 'artist': 'Try Catch', 'album': 'Error Management', 'duration_ms': 210000, 'preview_url': None},
+            {'name': 'Stack Trace', 'artist': 'Error Log', 'album': 'Debugging Tools', 'duration_ms': 185000, 'preview_url': 'demo'},
+            {'name': 'Memory Leak', 'artist': 'Performance Fix', 'album': 'Optimization', 'duration_ms': 225000, 'preview_url': None}
+        ],
+        'demo4': [
+            {'name': 'Morning Commit', 'artist': 'Git Flow', 'album': 'Version Control', 'duration_ms': 200000, 'preview_url': 'demo'},
+            {'name': 'Espresso Logic', 'artist': 'Caffeine Driven', 'album': 'Coffee Code', 'duration_ms': 190000, 'preview_url': None},
+            {'name': 'Fresh Branch', 'artist': 'Version Control', 'album': 'Git Workflow', 'duration_ms': 215000, 'preview_url': 'demo'},
+            {'name': 'Pull Request', 'artist': 'Code Review', 'album': 'Collaboration', 'duration_ms': 205000, 'preview_url': None},
+            {'name': 'Merge Conflict', 'artist': 'Resolution Squad', 'album': 'Problem Solving', 'duration_ms': 220000, 'preview_url': 'demo'},
+            {'name': 'Deploy Friday', 'artist': 'CI/CD Pipeline', 'album': 'Release Management', 'duration_ms': 240000, 'preview_url': None},
+            {'name': 'Weekend Hotfix', 'artist': 'Emergency Patch', 'album': 'Crisis Management', 'duration_ms': 180000, 'preview_url': 'demo'}
+        ],
+        'demo5': [
+            {'name': 'Sprint Start', 'artist': 'Agile Beats', 'album': 'Scrum Sessions', 'duration_ms': 210000, 'preview_url': 'demo'},
+            {'name': 'Velocity High', 'artist': 'Scrum Master', 'album': 'Team Dynamics', 'duration_ms': 195000, 'preview_url': None},
+            {'name': 'Stand Up Meeting', 'artist': 'Daily Sync', 'album': 'Communication', 'duration_ms': 185000, 'preview_url': 'demo'},
+            {'name': 'Backlog Refined', 'artist': 'Story Points', 'album': 'Planning Poker', 'duration_ms': 220000, 'preview_url': None},
+            {'name': 'Demo Day', 'artist': 'Show & Tell', 'album': 'Presentation Skills', 'duration_ms': 235000, 'preview_url': 'demo'},
+            {'name': 'Retrospective', 'artist': 'Improvement Loop', 'album': 'Continuous Learning', 'duration_ms': 200000, 'preview_url': None},
+            {'name': 'Technical Debt', 'artist': 'Refactor Time', 'album': 'Code Quality', 'duration_ms': 250000, 'preview_url': 'demo'},
+            {'name': 'Production Ready', 'artist': 'Release Candidate', 'album': 'Go Live', 'duration_ms': 215000, 'preview_url': None}
+        ],
+        'demo6': [
+            {'name': 'Binary Search', 'artist': 'O(log n)', 'album': 'Algorithm Anthology', 'duration_ms': 190000, 'preview_url': 'demo'},
+            {'name': 'Quick Sort', 'artist': 'Divide & Conquer', 'album': 'Sorting Solutions', 'duration_ms': 205000, 'preview_url': None},
+            {'name': 'Dynamic Programming', 'artist': 'Memoization', 'album': 'Optimization Techniques', 'duration_ms': 225000, 'preview_url': 'demo'},
+            {'name': 'Graph Traversal', 'artist': 'BFS/DFS', 'album': 'Data Structures', 'duration_ms': 210000, 'preview_url': None},
+            {'name': 'Hash Function', 'artist': 'Constant Time', 'album': 'Performance Patterns', 'duration_ms': 195000, 'preview_url': 'demo'}
+        ]
+    }
+    
+    return track_sets.get(playlist_id, track_sets['demo1'])

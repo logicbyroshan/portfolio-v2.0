@@ -5,6 +5,7 @@ urlpatterns = [
     # Public routes
     path("", views.my_playlist, name="my_playlist"),
     path("my-playlist/", views.my_playlist, name="my_playlist"),
+    path("playlist/<str:playlist_id>/", views.playlist_detail, name="playlist_detail"),
     path("playlist/<str:playlist_id>/tracks/", views.get_playlist_tracks, name="get_playlist_tracks"),
     
     # Admin routes for Spotify sync
