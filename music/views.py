@@ -571,3 +571,86 @@ def generate_demo_tracks_for_detail(playlist_id):
     }
     
     return track_sets.get(playlist_id, track_sets['demo1'])
+
+# API VIEWS FOR FRONTEND
+def api_playlists(request):
+    """API endpoint to get all playlists as JSON"""
+    try:
+        playlists = SpotifyPlaylist.objects.filter(is_public=True).order_by('-updated_at')
+        
+        playlist_data = []
+        for playlist in playlists:
+            playlist_data.append({
+                'id': playlist.spotify_id,
+                'name': playlist.name,
+                'description': playlist.description or "",
+                'image_url': playlist.image_url,
+                'external_url': playlist.external_url,
+                'owner_name': playlist.owner_name,
+                'track_count': playlist.track_count,
+                'last_synced': playlist.last_synced.isoformat() if playlist.last_synced else None
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'playlists': playlist_data,
+            'total': len(playlist_data)
+        })
+    
+    except Exception as e:
+        logger.error(f"API playlists error: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': 'Failed to fetch playlists'
+        }, status=500)
+
+def api_playlist_tracks(request, playlist_id):
+    """API endpoint to get tracks for a specific playlist"""
+    try:
+        playlist = get_object_or_404(SpotifyPlaylist, spotify_id=playlist_id, is_public=True)
+        tracks = playlist.tracks.all().order_by('track_number')
+        
+        track_data = []
+        for track in tracks:
+            # Format duration
+            duration_minutes = track.duration_ms // 60000
+            duration_seconds = (track.duration_ms % 60000) // 1000
+            duration_formatted = f"{duration_minutes}:{duration_seconds:02d}"
+            
+            track_data.append({
+                'id': track.spotify_id,
+                'name': track.name,
+                'artist': track.artist,
+                'album': track.album,
+                'duration_ms': track.duration_ms,
+                'duration_formatted': duration_formatted,
+                'preview_url': track.preview_url,
+                'external_url': track.external_url,
+                'track_number': track.track_number
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'playlist': {
+                'id': playlist.spotify_id,
+                'name': playlist.name,
+                'description': playlist.description,
+                'image_url': playlist.image_url,
+                'track_count': playlist.track_count
+            },
+            'tracks': track_data,
+            'total_tracks': len(track_data)
+        })
+    
+    except SpotifyPlaylist.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'error': 'Playlist not found'
+        }, status=404)
+    
+    except Exception as e:
+        logger.error(f"API playlist tracks error: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': 'Failed to fetch playlist tracks'
+        }, status=500)

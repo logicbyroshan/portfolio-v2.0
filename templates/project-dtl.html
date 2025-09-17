@@ -110,9 +110,9 @@
                                 <p>{{ comment.body|safe }}</p>
                             </div>
                             <div class="comment-actions">
-                                <button class="like-btn" data-comment-id="{{ comment.id }}">
-                                    <i class="fa-regular fa-heart"></i>
-                                    <span class="like-count">{{ comment.likes }}</span>
+                                <button class="like-btn{% if comment.id in user_liked_comments %} active{% endif %}" data-comment-id="{{ comment.id }}">
+                                    <i class="fa-{% if comment.id in user_liked_comments %}solid{% else %}regular{% endif %} fa-heart"></i>
+                                    <span class="like-count">{{ comment.total_likes }}</span>
                                 </button>
                             </div>
                         </div>

@@ -47,14 +47,18 @@ class AIQuerySubmitView(View):
             portfolio_data = get_portfolio_context()
             
             prompt = f"""
-You are an AI assistant representing Roshan Damor's portfolio. You should answer questions professionally and helpfully about his background, skills, projects, and experience.
-
-Here is Roshan's portfolio information:
 {portfolio_data}
 
-User Question: "{question_text}"
+## Current User Question: 
+"{question_text}"
 
-Please provide a helpful, accurate response based on the portfolio information provided. If the question is outside the scope of Roshan's portfolio, politely redirect to relevant topics.
+## Response Instructions:
+- Respond as Roshan Damor in first person (use "I", "my", "me")
+- Be enthusiastic and professional
+- For job/project opportunities: ALWAYS say "Yes, I'd love to work on this!"
+- Always encourage direct contact for further discussion
+- Keep responses focused on the context provided above
+- If question is outside my expertise, politely redirect to my core skills
 """
             
             ai_response = ask_gemini(prompt)

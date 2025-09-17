@@ -8,6 +8,10 @@ urlpatterns = [
     path("playlist/<str:playlist_id>/", views.playlist_detail, name="playlist_detail"),
     path("playlist/<str:playlist_id>/tracks/", views.get_playlist_tracks, name="get_playlist_tracks"),
     
+    # API endpoints for frontend
+    path("api/playlists/", views.api_playlists, name="api_playlists"),
+    path("api/playlist/<str:playlist_id>/tracks/", views.api_playlist_tracks, name="api_playlist_tracks"),
+    
     # Admin routes for Spotify sync
     path("admin/spotify-login/", views.admin_spotify_login, name="admin_spotify_login"),
     path("admin/spotify-callback/", views.admin_spotify_callback, name="admin_spotify_callback"),

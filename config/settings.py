@@ -14,6 +14,11 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_
 # Gemini AI Configuration
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
+# Spotify Configuration
+SPOTIFY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
+SPOTIFY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
+SPOTIFY_REDIRECT_URI = os.getenv('SPOTIFY_REDIRECT_URI', 'http://localhost:8000/music/admin/spotify-callback/')
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

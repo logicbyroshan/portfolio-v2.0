@@ -7,6 +7,10 @@ from django.views.generic import TemplateView, ListView, DetailView
 from django.db import models
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 # Import all models from your models.py
 from .models import (
@@ -14,7 +18,8 @@ from .models import (
     NewsletterSubscriber, Comment, ProjectComment, Service, Achievement, 
     SiteConfiguration, Resume, VideoResume, AboutMeConfiguration,
     CodeTogetherConfiguration, CollaborationProposal, Testimonial,
-    ResourcesConfiguration, Resource, ResourceCategory, ResourceView
+    Resource, Technology, ContactSubmission, ResourceView,
+    CommentLike, ProjectCommentLike
 )
 
 # Import all forms from your forms.py
@@ -108,6 +113,16 @@ class ProjectDetailView(DetailView):
         initial_comments = project.comments.filter(is_approved=True).order_by('-created_date')[:5]
         context['comments'] = initial_comments
         
+        # Add user's liked comments for proper state management
+        if self.request.user.is_authenticated:
+            user_liked_comments = ProjectCommentLike.objects.filter(
+                user=self.request.user,
+                comment__in=initial_comments
+            ).values_list('comment_id', flat=True)
+            context['user_liked_comments'] = list(user_liked_comments)
+        else:
+            context['user_liked_comments'] = []
+        
         # Check if there are more comments beyond the initial 5
         total_comments_count = project.comments.filter(is_approved=True).count()
         context['has_more_comments'] = total_comments_count > 5
@@ -149,13 +164,23 @@ def load_more_project_comments(request, slug):
         comments = project.comments.filter(is_approved=True).order_by('-created_date')[offset:offset+10]
         total_comments = project.comments.filter(is_approved=True).count()
         
+        # Get user's liked comments if authenticated
+        user_liked_comments = []
+        if request.user.is_authenticated:
+            user_liked_comments = ProjectCommentLike.objects.filter(
+                user=request.user,
+                comment__in=comments
+            ).values_list('comment_id', flat=True)
+            user_liked_comments = list(user_liked_comments)
+        
         comments_data = []
         for comment in comments:
             comments_data.append({
                 'id': comment.id,
                 'author_name': comment.author_name,
                 'body': comment.body,
-                'likes': comment.likes,
+                'likes': comment.total_likes,  # Use the new property
+                'is_liked': comment.id in user_liked_comments,
                 'created_at': comment.created_date.strftime('%B %d, %Y at %I:%M %p'),
             })
         
@@ -208,6 +233,17 @@ class BlogDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         post = self.get_object()
         context['comments'] = post.comments.filter(is_approved=True)
+        
+        # Add user's liked comments for proper state management
+        if self.request.user.is_authenticated:
+            user_liked_comments = CommentLike.objects.filter(
+                user=self.request.user,
+                comment__in=context['comments']
+            ).values_list('comment_id', flat=True)
+            context['user_liked_comments'] = list(user_liked_comments)
+        else:
+            context['user_liked_comments'] = []
+        
         post_categories = post.categories.all()
         context['suggested_posts'] = Blog.objects.filter(categories__in=post_categories)\
                                                  .exclude(pk=post.pk)\
@@ -679,3 +715,83 @@ class ResourceDetailView(DetailView):
             return related
         except Exception:
             return Resource.objects.none()
+
+
+# =========================================================================
+# COMMENT LIKE VIEWS
+# =========================================================================
+
+@login_required
+@require_POST
+def toggle_comment_like(request, comment_id):
+    """AJAX view to toggle like/unlike for blog comments."""
+    try:
+        comment = get_object_or_404(Comment, id=comment_id)
+        like, created = CommentLike.objects.get_or_create(
+            comment=comment,
+            user=request.user
+        )
+        
+        if not created:
+            # Unlike - delete the like
+            like.delete()
+            liked = False
+        else:
+            # Like - like object was created
+            liked = True
+        
+        return JsonResponse({
+            'success': True,
+            'liked': liked,
+            'total_likes': comment.total_likes
+        })
+    
+    except Comment.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'error': 'Comment not found'
+        }, status=404)
+    
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
+
+
+@login_required
+@require_POST 
+def toggle_project_comment_like(request, comment_id):
+    """AJAX view to toggle like/unlike for project comments."""
+    try:
+        comment = get_object_or_404(ProjectComment, id=comment_id)
+        like, created = ProjectCommentLike.objects.get_or_create(
+            comment=comment,
+            user=request.user
+        )
+        
+        if not created:
+            # Unlike - delete the like
+            like.delete()
+            liked = False
+        else:
+            # Like - like object was created
+            liked = True
+        
+        return JsonResponse({
+            'success': True,
+            'liked': liked,
+            'total_likes': comment.total_likes
+        })
+    
+    except ProjectComment.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'error': 'Comment not found'
+        }, status=404)
+    
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)

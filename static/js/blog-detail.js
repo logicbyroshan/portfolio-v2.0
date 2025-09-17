@@ -84,25 +84,63 @@ document.addEventListener('DOMContentLoaded', () => {
         let commentsShown = 0;
 
         // --- Like Button Functionality ---
-        commentList.addEventListener('click', (e) => {
+        commentList.addEventListener('click', async (e) => {
             const likeBtn = e.target.closest('.like-btn');
             if (!likeBtn) return;
             
+            // Prevent multiple clicks
+            if (likeBtn.disabled) return;
+            likeBtn.disabled = true;
+            
+            const commentId = likeBtn.dataset.commentId;
+            if (!commentId) {
+                likeBtn.disabled = false;
+                return;
+            }
+            
             const likeIcon = likeBtn.querySelector('i');
             const likeCountSpan = likeBtn.querySelector('.like-count');
-            let likeCount = parseInt(likeCountSpan.textContent);
-
-            // Toggle active state and update UI
-            if (likeBtn.classList.toggle('active')) {
-                likeIcon.classList.replace('fa-regular', 'fa-solid');
-                likeCount++;
-            } else {
-                likeIcon.classList.replace('fa-solid', 'fa-regular');
-                likeCount--;
+            
+            try {
+                // Get CSRF token
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
+                                 document.querySelector('meta[name="csrf-token"]')?.content;
+                
+                const response = await fetch(`/blog/comment/${commentId}/like/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                    },
+                });
+                
+                if (response.status === 401 || response.status === 403) {
+                    // User not authenticated - redirect to login
+                    window.location.href = `/auth/login/?next=${window.location.pathname}%23comments`;
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update UI based on server response
+                    if (data.liked) {
+                        likeBtn.classList.add('active');
+                        likeIcon.classList.replace('fa-regular', 'fa-solid');
+                    } else {
+                        likeBtn.classList.remove('active');
+                        likeIcon.classList.replace('fa-solid', 'fa-regular');
+                    }
+                    likeCountSpan.textContent = data.total_likes;
+                } else {
+                    console.error('Error toggling like:', data.error);
+                }
+                
+            } catch (error) {
+                console.error('Network error:', error);
+            } finally {
+                likeBtn.disabled = false;
             }
-            likeCountSpan.textContent = likeCount;
-
-            // Note: In a real app, you would send an AJAX request here to update the like count on the server.
         });
 
         // --- Load More Comments Functionality ---

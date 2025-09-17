@@ -13,7 +13,11 @@ from .views import (
     ContactSubmissionView,
     NewsletterSubscribeHomeView,
     NewsletterSubscribeAjaxView,
-    load_more_project_comments
+    load_more_project_comments,
+    
+    # Like Toggle Views
+    toggle_comment_like,
+    toggle_project_comment_like
 )
 
 app_name = 'portfolio'
@@ -54,5 +58,9 @@ urlpatterns = [
     path('subscribe-home/', NewsletterSubscribeHomeView.as_view(), name='subscribe_home'),
     path('subscribe/', NewsletterSubscribeAjaxView.as_view(), name='subscribe_ajax'),
     path('achievements/', AchievementListView.as_view(), name='achievements_list'),
+    
+    # Like Toggle URLs
+    path('blog/comment/<int:comment_id>/like/', toggle_comment_like, name='toggle_comment_like'),
+    path('project/comment/<int:comment_id>/like/', toggle_project_comment_like, name='toggle_project_comment_like'),
 
 ]

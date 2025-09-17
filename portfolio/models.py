@@ -131,27 +131,53 @@ class Comment(models.Model):
     post = models.ForeignKey(Blog, related_name='comments', on_delete=models.CASCADE)
     author_name = models.CharField(max_length=100)
     body = HTMLField()
-    likes = models.PositiveIntegerField(default=0)
+    likes = models.PositiveIntegerField(default=0)  # Keep for backward compatibility
     created_date = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=True)
+    
     class Meta:
         ordering = ['created_date']
+    
     def __str__(self):
         return f"Comment by {self.author_name} on {self.post.title}"
+    
+    @property
+    def total_likes(self):
+        """Get total number of likes for this comment."""
+        return self.user_likes.count()
+    
+    def is_liked_by_user(self, user):
+        """Check if a specific user has liked this comment."""
+        if user.is_authenticated:
+            return self.user_likes.filter(user=user).exists()
+        return False
 
 class ProjectComment(models.Model):
     project = models.ForeignKey(Project, related_name='comments', on_delete=models.CASCADE)
     author_name = models.CharField(max_length=100, default="Anonymous")
     body = HTMLField()
-    likes = models.PositiveIntegerField(default=0)
+    likes = models.PositiveIntegerField(default=0)  # Keep for backward compatibility
     created_date = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=True)
+    
     class Meta:
         ordering = ['created_date']
         verbose_name = "Project Comment"
         verbose_name_plural = "Project Comments"
+    
     def __str__(self):
         return f"Comment by {self.author_name} on {self.project.title}"
+    
+    @property
+    def total_likes(self):
+        """Get total number of likes for this comment."""
+        return self.user_likes.count()
+    
+    def is_liked_by_user(self, user):
+        """Check if a specific user has liked this comment."""
+        if user.is_authenticated:
+            return self.user_likes.filter(user=user).exists()
+        return False
 
 class Experience(models.Model):
     class ExperienceType(models.TextChoices):
@@ -817,3 +843,37 @@ class ResourceView(models.Model):
     
     def __str__(self):
         return f"View of {self.resource.title} on {self.viewed_date.date()}"
+
+
+# =========================================================================
+# COMMENT LIKE MODELS
+# =========================================================================
+
+class CommentLike(models.Model):
+    """Model to track individual user likes on blog comments."""
+    comment = models.ForeignKey(Comment, related_name='user_likes', on_delete=models.CASCADE)
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    created_date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('comment', 'user')  # Prevent duplicate likes
+        verbose_name = "Comment Like"
+        verbose_name_plural = "Comment Likes"
+    
+    def __str__(self):
+        return f"{self.user.username} likes comment on {self.comment.post.title}"
+
+
+class ProjectCommentLike(models.Model):
+    """Model to track individual user likes on project comments."""
+    comment = models.ForeignKey(ProjectComment, related_name='user_likes', on_delete=models.CASCADE)
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    created_date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('comment', 'user')  # Prevent duplicate likes
+        verbose_name = "Project Comment Like"
+        verbose_name_plural = "Project Comment Likes"
+    
+    def __str__(self):
+        return f"{self.user.username} likes comment on {self.comment.project.title}"
