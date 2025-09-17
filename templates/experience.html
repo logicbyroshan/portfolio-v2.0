@@ -45,7 +45,8 @@
         <!-- ======================= Experience Cards List ======================= -->
         <div class="card-container" id="experience-card-container">
             {% for exp in experiences %}
-            <a href="{% url 'portfolio:experience_detail' pk=exp.pk %}" class="exp-card card" data-animation="fade-in-up">
+            <div class="exp-card card clickable-card" data-animation="fade-in-up"
+                data-url="{% url 'portfolio:experience_detail' pk=exp.pk %}">
                 <div class="exp-img">
                     <img src="https://placehold.co/80x80/010409/eaeaea?text={{ exp.company_name|slice:':2'|upper }}" alt="{{ exp.company_name }} Logo">
                 </div>
@@ -61,7 +62,7 @@
                         {% endfor %}
                     </div>
                 </div>
-            </a>
+            </div>
             {% endfor %}
         </div>
 

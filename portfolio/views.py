@@ -19,7 +19,7 @@ from .models import (
     SiteConfiguration, Resume, VideoResume, AboutMeConfiguration,
     CodeTogetherConfiguration, CollaborationProposal, Testimonial,
     Resource, Technology, ContactSubmission, ResourceView,
-    CommentLike, ProjectCommentLike
+    CommentLike, ProjectCommentLike, ResourcesConfiguration, ResourceCategory
 )
 
 # Import all forms from your forms.py
@@ -795,3 +795,28 @@ def toggle_project_comment_like(request, comment_id):
             'success': False,
             'error': str(e)
         }, status=500)
+
+
+# =========================================================================
+# LEGAL PAGES VIEWS
+# =========================================================================
+class PrivacyPolicyView(TemplateView):
+    """View for the Privacy Policy page."""
+    template_name = 'legal/privacy-policy.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Privacy Policy'
+        context['meta_description'] = 'Privacy Policy for Roshan Damor\'s portfolio website. Learn how we collect, use, and protect your personal information.'
+        return context
+
+
+class TermsOfServiceView(TemplateView):
+    """View for the Terms of Service page."""
+    template_name = 'legal/terms-of-service.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Terms of Service'
+        context['meta_description'] = 'Terms of Service for Roshan Damor\'s portfolio website. Please read these terms carefully before using our services.'
+        return context

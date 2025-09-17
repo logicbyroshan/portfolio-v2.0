@@ -21,44 +21,44 @@
     --special-heading-font: 'Rozha One', cursive;
     --code-font: 'Inconsolata', monospace;
 
-    /* Dark Theme Colors (Default) */
-    --bg-gradient-start: #020b1c;
-    --bg-gradient-mid: #010409;
+    /* Dark Theme Colors (Default) - Pure Black with Blue Accents */
+        --bg-gradient-start: #000000;
+        --bg-gradient-mid: #000000;
     --bg-gradient-end: #000000;
     
     --accent-color: #00A9FF;
     --accent-color-hover: #0087cc;
 
     /* Text colors */
-    --title-color: #EAEAEA;
-    --paragraph-color: #A0A0A0;
+    --title-color: #FFFFFF;
+        --paragraph-color: #B3B3B3;
 
     /* Component styling */
-    --card-bg: #161B22;
-    --card-border: #30363d;
+    --card-bg: #0A0A0A;
+        --card-border: #1A1A1A;
     --card-border-hover: var(--accent-color);
-    --card-shadow: rgba(0, 169, 255, 0.1);
+    --card-shadow: rgba(0, 169, 255, 0.15);
 }
 
 /* Light Theme */
 [data-theme="light"] {
-    /* Light Theme Colors */
-    --bg-gradient-start: #f8fafc;
-    --bg-gradient-mid: #f1f5f9;
-    --bg-gradient-end: #e2e8f0;
+    /* Light Theme Colors - Subtle Light Blues */
+        --bg-gradient-start: #fafbff;
+        --bg-gradient-mid: #f5f7ff;
+        --bg-gradient-end: #eff2ff;
     
     --accent-color: #0066cc;
     --accent-color-hover: #0052a3;
 
     /* Text colors */
-    --title-color: #1e293b;
-    --paragraph-color: #475569;
+    --title-color: #1a202c;
+        --paragraph-color: #4a5568;
 
     /* Component styling */
     --card-bg: #ffffff;
-    --card-border: #e2e8f0;
+    --card-border: #e6ebff;
     --card-border-hover: var(--accent-color);
-    --card-shadow: rgba(0, 102, 204, 0.1);
+    --card-shadow: rgba(0, 102, 204, 0.08);
 }
 
 
@@ -69,10 +69,18 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    /* Add smooth transitions for theme changes */
+        transition: background-color 0.6s ease,
+            color 0.6s ease,
+            border-color 0.6s ease,
+            box-shadow 0.6s ease,
+            opacity 0.4s ease;
 }
 
 html {
   scroll-behavior: smooth;
+/* Smooth transition for document theme changes */
+    transition: all 0.6s ease;
 }
 
 body {
@@ -83,6 +91,8 @@ body {
   background-size: 200% 200%;
   animation: background-pan 25s linear infinite;
   overflow-x: hidden; /* Prevent horizontal scroll */
+/* Enhanced background transition */
+    transition: background 0.8s ease, color 0.6s ease;
 }
 
 @keyframes background-pan {
@@ -243,7 +253,8 @@ img { max-width: 100%; height: auto; display: block; }
     backdrop-filter: blur(10px);
     border: 1px solid var(--card-border);
     border-radius: 12px;
-    padding: 10px 10px;
+    padding: 15px 25px;
+        /* Increased padding for better spacing */
 }
 
 /* Light theme navbar background */
@@ -277,26 +288,100 @@ img { max-width: 100%; height: auto; display: block; }
 .nav-left a:hover .nav-dot {
     background: var(--title-color);
 }
-.nav-center-logo img {
+.nav-center-logo {
+    perspective: 1000px;
+    /* Enable 3D transformations */
+    cursor: pointer;
+    /* Indicate interactivity */
+    position: relative;
+    /* For positioning context */
+    display: flex;
+    /* Use flexbox for centering */
+    align-items: center;
+    justify-content: center;
+    width: auto;
     height: 50px;
 }
+.nav-center-logo img {
+    height: 50px;
+    width: auto;
+        /* Preserve aspect ratio */
+        max-width: none;
+        /* Override any constraints */
+        flex-shrink: 0;
+        /* Prevent compression */
+        transition: transform 0.6s ease-in-out, opacity 0.5s ease;
+        transform-style: preserve-3d;
+    
+        /* Position logos on top of each other for smooth dissolve */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    
+        /* Automatic flip animation every 5 seconds */
+        animation: logo-auto-flip 5s ease-in-out infinite;
+}
 
-/* Theme-aware logo visibility */
+/* Hover effect for interactivity */
+.nav-center-logo:hover img {
+    transform: translateX(-50%) translateY(-50%) scale(1.05) rotateY(10deg);
+}
+
+/* Automatic flip animation keyframes */
+@keyframes logo-auto-flip {
+
+    0%,
+    90% {
+        transform: translateX(-50%) translateY(-50%) rotateY(0deg);
+    }
+
+    95% {
+        transform: translateX(-50%) translateY(-50%) rotateY(180deg);
+    }
+
+    100% {
+        transform: translateX(-50%) translateY(-50%) rotateY(360deg);
+    }
+}
+
+/* Click animation for manual 360-degree flip */
+.nav-center-logo.clicked img {
+    animation: logo-click-flip 0.8s ease-in-out;
+}
+
+@keyframes logo-click-flip {
+    0% {
+        transform: translateX(-50%) translateY(-50%) rotateY(0deg) scale(1);
+    }
+
+    50% {
+        transform: translateX(-50%) translateY(-50%) rotateY(180deg) scale(1.1);
+    }
+
+    100% {
+        transform: translateX(-50%) translateY(-50%) rotateY(360deg) scale(1);
+    }
+}
+
+/* Theme-aware logo visibility with smooth transitions */
 .logo-light {
-    display: block;
+    opacity: 1;
+        transition: opacity 0.5s ease;
 }
 
 .logo-dark {
-    display: none;
+    opacity: 0;
+        transition: opacity 0.5s ease;
 }
 
-/* Light theme logo switching */
+/* Light theme logo switching with dissolve effect */
 [data-theme="light"] .logo-light {
-    display: none;
+    opacity: 0;
 }
 
 [data-theme="light"] .logo-dark {
-    display: block;
+    opacity: 1;
 }
 .nav-right {
     display: flex;
@@ -315,18 +400,33 @@ img { max-width: 100%; height: auto; display: block; }
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease, transform 0.2s ease;
     color: var(--paragraph-color);
+    position: relative;
+        overflow: hidden;
 }
 
 .theme-toggle:hover {
     border-color: var(--accent-color);
     color: var(--accent-color);
+    transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(0, 169, 255, 0.3);
+    }
+    
+    .theme-toggle:active {
+        transform: scale(0.95);
 }
 
 .theme-toggle i {
     font-size: 18px;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease, transform 0.3s ease;
+        z-index: 2;
+    }
+    
+    /* Enhanced icon transition effect */
+    .theme-toggle.transitioning i {
+        transform: rotate(180deg) scale(0.8);
+        opacity: 0.6;
 }
 /* Mobile Navigation Toggle Button */
 .mobile-nav-toggle { display: none; } /* Hidden on desktop */
@@ -379,10 +479,11 @@ img { max-width: 100%; height: auto; display: block; }
     padding-bottom: 40px;
 }
 .footer-col-about .footer-logo {
-    font-family: var(--special-heading-font);
-    font-size: 28px;
-    color: var(--title-color);
     margin-bottom: 15px;
+}
+.footer-col-about .footer-logo img {
+    height: 50px;
+    transition: opacity 0.3s ease;
 }
 .footer-col-about p {
     font-size: 15px;
@@ -392,6 +493,13 @@ img { max-width: 100%; height: auto; display: block; }
     list-style: none;
     display: flex;
     gap: 15px;
+    margin: 0;
+        padding: 0;
+    }
+    
+    .social-icons li {
+        margin: 0;
+        padding: 0;
 }
 .social-icons a {
     display: flex;
@@ -399,10 +507,13 @@ img { max-width: 100%; height: auto; display: block; }
     justify-content: center;
     width: 40px;
     height: 40px;
-    border: 1px solid var(--card-border);
+    border: 2px solid var(--accent-color);
     border-radius: 50%;
-    color: var(--paragraph-color);
+    color: var(--accent-color);
     transition: all 0.3s ease;
+    text-decoration: none;
+        font-size: 16px;
+        background-color: rgba(255, 255, 255, 0.1);
 }
 .social-icons a:hover {
     background-color: var(--accent-color);
@@ -702,6 +813,27 @@ img { max-width: 100%; height: auto; display: block; }
 /* Mobile header theme toggle - only visible on mobile */
 .mobile-header-theme-toggle { 
     display: none; 
+    transition: all 0.4s ease, transform 0.2s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .mobile-header-theme-toggle:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px rgba(0, 169, 255, 0.3);
+    }
+    
+    .mobile-header-theme-toggle:active {
+        transform: scale(0.95);
+    }
+    
+    .mobile-header-theme-toggle i {
+        transition: all 0.4s ease, transform 0.3s ease;
+    }
+    
+    .mobile-header-theme-toggle.transitioning i {
+        transform: rotate(180deg) scale(0.8);
+        opacity: 0.6;
 }
 
 @media (max-width: 992px) {
@@ -717,6 +849,9 @@ img { max-width: 100%; height: auto; display: block; }
         justify-content: space-between;
         align-items: center;
         position: relative;
+        min-width: 100%;
+            padding: 12px 20px;
+            /* Better mobile padding */
     }
     
     /* Mobile hamburger - left side */
@@ -737,6 +872,19 @@ img { max-width: 100%; height: auto; display: block; }
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
+        flex-shrink: 0;
+            /* Prevent shrinking */
+        }
+        
+        .nav-center-logo img {
+            height: 40px;
+            /* Slightly smaller for mobile but maintains aspect ratio */
+            width: auto;
+            /* Preserve aspect ratio */
+            max-width: none;
+            /* Override any max-width constraints */
+            flex-shrink: 0;
+            /* Prevent shrinking */
     }
     
     /* Mobile theme toggle - right side */
@@ -821,6 +969,27 @@ img { max-width: 100%; height: auto; display: block; }
         width: 50px;
         height: 50px;
         flex-shrink: 0;
+        transition: all 0.4s ease, transform 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mobile-theme-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(0, 169, 255, 0.3);
+        }
+        
+        .mobile-theme-toggle:active {
+            transform: scale(0.95);
+        }
+        
+        .mobile-theme-toggle i {
+            transition: all 0.4s ease, transform 0.3s ease;
+        }
+        
+        .mobile-theme-toggle.transitioning i {
+            transform: rotate(180deg) scale(0.8);
+            opacity: 0.6;
     }
     
     /* Active (X) state for hamburger */
@@ -851,6 +1020,15 @@ img { max-width: 100%; height: auto; display: block; }
         align-items: center; 
         margin-bottom: 10px; 
     }
+                                                                                                                                                                                                                                                                .footer-col-about .footer-logo {
+                                                                                                                                                                                                                                                                    display: flex;
+                                                                                                                                                                                                                                                                    justify-content: center;
+                                                                                                                                                                                                                                                                    margin-bottom: 15px;
+                                                                                                                                                                                                                                                                }
+                                                                                                                                
+                                                                                                                                                                                                                                                                .footer-col-about .footer-logo img {
+                                                                                                                                                                                                                                                                    margin: 0 auto;
+                                                                                                                                                                                                                                                                }
     /* Arrange the 4 link columns in 2x2 grid */
     .footer-col-links:nth-child(2) { grid-column: 1; grid-row: 2; text-align: left; } /* Quick Links */
     .footer-col-links:nth-child(3) { grid-column: 2; grid-row: 2; text-align: right; } /* Explore */
@@ -867,6 +1045,16 @@ img { max-width: 100%; height: auto; display: block; }
     .card { padding: 20px; }
     .filled-btn, .outline-btn { padding: 10px 14px; font-size: 14px; }
     
+                                                                                                                                /* Improve mobile nav buttons for small screens */
+                                                                                                                                .mobile-nav-buttons {
+                                                                                                                                    gap: 10px;
+                                                                                                                                }
+                                                                
+                                                                                                                                .mobile-nav-buttons .outline-btn,
+                                                                                                                                .mobile-nav-buttons .filled-btn {
+                                                                                                                                    font-size: 12px;
+                                                                                                                                    padding: 6px 12px;
+                                                                                                                                }
     /* Mobile: Keep 2x2 grid but with smaller gaps */
     .footer-top { 
         gap: 20px; 
@@ -874,6 +1062,20 @@ img { max-width: 100%; height: auto; display: block; }
     .footer-col-about { 
         margin-bottom: 5px; 
     }
+                                                                                                                                                                                                                                                                .footer-col-about .footer-logo {
+                                                                                                                                                                                                                                                                    display: flex;
+                                                                                                                                                                                                                                                                    justify-content: center;
+                                                                                                                                                                                                                                                                    margin-bottom: 15px;
+                                                                                                                                                                                                                                                                }
+                                                                                                                                
+                                                                                                                                                                                                                                                                .footer-col-about .footer-logo img {
+                                                                                                                                                                                                                                                                    margin: 0 auto;
+                                                                                                                                                                                                                                                                }
+                                                                                                                                
+                                                                                                                                                                                                                                                                .footer-col-about .footer-logo img {
+                                                                                                                                                                                                                                                                    height: 50px;
+                                                                                                                                                                                                                                                                    /* Same size as navbar logo on mobile */
+                                                                                                                                                                                                                                                                }
     .footer-col-links h4 {
         font-size: 16px;
         margin-bottom: 10px;
@@ -886,6 +1088,22 @@ img { max-width: 100%; height: auto; display: block; }
     }
 }
 
+/* Very Small Screens - Stack mobile nav buttons vertically */
+@media (max-width: 400px) {
+    .mobile-nav-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .mobile-nav-buttons .outline-btn,
+    .mobile-nav-buttons .filled-btn {
+        flex: none;
+        width: 100%;
+        font-size: 11px;
+        padding: 8px 10px;
+        white-space: nowrap;
+    }
+}
 /* ==========================================================================
    9. Clickable Cards Enhancement
    ========================================================================== */
@@ -1005,5 +1223,39 @@ img { max-width: 100%; height: auto; display: block; }
     /* Adjust main container padding for mobile */
     .main-container {
         padding-top: 90px; /* Further reduced padding on mobile from 100px */
+    }
+}
+/* ==========================================================================
+   GLOBAL READING PROGRESS INDICATOR
+   ========================================================================== */
+.reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: var(--accent-color);
+    z-index: 1001;
+    transition: width 0.1s ease;
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: progress-reveal 0.3s ease forwards;
+}
+
+.reading-progress.active {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+@keyframes progress-reveal {
+    from {
+        opacity: 0;
+        transform: scaleX(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: scaleX(1);
     }
 }

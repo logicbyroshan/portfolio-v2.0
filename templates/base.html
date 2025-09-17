@@ -119,7 +119,14 @@
             <div class="footer-top">
                 <!-- Column 1: About & Socials -->
                 <div class="footer-col-about">
-                    <h3 class="footer-logo">{{ config.hero_name|default:"Roshan Damor" }}</h3>
+                    <div class="footer-logo">
+                        <a href="{% url 'portfolio:home' %}">
+                            <!-- Light logo (visible in dark theme) -->
+                            <img src="{% static 'images/logo.png' %}" alt="Roshan Damor Logo" class="logo-light">
+                            <!-- Dark logo (visible in light theme) -->
+                            <img src="{% static 'images/logo-dark.png' %}" alt="Roshan Damor Logo" class="logo-dark">
+                        </a>
+                    </div>
                     <p>A passionate developer building AI-powered solutions and scalable web applications for a digital-first world.</p>
                     <ul class="social-icons">
                         {% if config.twitter_url %}
@@ -191,8 +198,8 @@
             <div class="footer-bottom">
                 <p class="copyright">&copy; {% now "Y" %} Roshan Damor. All Rights Reserved.</p> <!-- DYNAMIC: Current year -->
                 <div class="footer-bottom-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
+                    <a href="{% url 'portfolio:privacy_policy' %}">Privacy Policy</a>
+                    <a href="{% url 'portfolio:terms_of_service' %}">Terms of Service</a>
                 </div>
             </div>
         </div>

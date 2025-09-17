@@ -66,6 +66,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // 2.1. FAQ Show More Functionality
+    const faqShowMoreBtn = document.getElementById('faq-show-more-btn');
+    const faqContainer = document.getElementById('faq-container');
+    const hiddenFaqs = document.querySelectorAll('.faq-hidden');
+    
+    if (faqShowMoreBtn && hiddenFaqs.length > 0) {
+        let isShowing = false;
+        
+        faqShowMoreBtn.addEventListener('click', () => {
+            isShowing = !isShowing;
+            
+            if (isShowing) {
+                // Show hidden FAQs
+                faqContainer.classList.add('faq-showing');
+                faqShowMoreBtn.classList.add('showing');
+                faqShowMoreBtn.innerHTML = '<i class="fas fa-chevron-up"></i> Show Less FAQs';
+                
+                // Re-initialize accordion for new FAQs
+                const newFaqCards = document.querySelectorAll('.faq-hidden');
+                newFaqCards.forEach(card => {
+                    card.addEventListener('click', () => {
+                        const isActive = card.classList.contains('active');
+                        if (!isActive) {
+                            card.classList.add('active');
+                        } else {
+                            card.classList.remove('active');
+                        }
+                    });
+                });
+            } else {
+                // Hide FAQs
+                faqContainer.classList.remove('faq-showing');
+                faqShowMoreBtn.classList.remove('showing');
+                faqShowMoreBtn.innerHTML = '<i class="fas fa-chevron-down"></i> Show More FAQs';
+                
+                // Close any open hidden FAQs
+                hiddenFaqs.forEach(faq => {
+                    faq.classList.remove('active');
+                });
+            }
+        });
+    }
+
 
     // 3. Clickable Cards (UPDATED)
     // This now targets any element with a 'data-url' attribute, making it reusable.
@@ -73,7 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
     clickableElements.forEach(card => {
         const url = card.dataset.url;
         if (url && url !== '#') {
-            card.addEventListener('click', () => {
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 window.open(url, '_blank');
             });
             card.style.cursor = 'pointer';
@@ -181,28 +226,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. Clickable Cards Navigation
-    const clickableCards = document.querySelectorAll('.clickable-card');
-    
-    clickableCards.forEach(card => {
-        // Add cursor pointer style for better UX
-        card.style.cursor = 'pointer';
-        
-        card.addEventListener('click', function(e) {
-            // Check if click was on a link or button to prevent navigation conflict
-            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('a') || e.target.closest('button')) {
-                return; // Let the link/button handle the click
-            }
-            
-            const url = this.getAttribute('data-url');
-            if (url) {
-                // Add a small delay for visual feedback
-                setTimeout(() => {
-                    window.location.href = url;
-                }, 100);
-            }
-        });
-        
-        // Removed hover effects for simplified interaction
-    });
 });

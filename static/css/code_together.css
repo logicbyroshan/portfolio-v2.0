@@ -143,9 +143,14 @@
 
 .collaboration-form-section {
     position: relative;
-    margin: 0 20px;
 }
 
+.form-wrapper {
+    width: 100%;
+    padding: 20px !important;
+    /* Override card default padding */
+    margin: 0 auto;
+}
 
 .form-wrapper form {
     display: flex;
@@ -568,7 +573,7 @@
     }
     
     .form-wrapper {
-        padding: 40px;
+        padding: 25px !important;
     }
 }
 
@@ -584,13 +589,8 @@
     }
 
     .form-wrapper {
-        padding: 30px 25px;
-        margin: 0 10px;
-    }
-
-    .collaboration-form-section {
-        padding: 40px 20px;
-        margin: 0 10px;
+        padding: 20px !important;
+            margin: 0 auto;
     }
 
     .form-wrapper button {
@@ -628,10 +628,6 @@
         padding: 25px 20px;
     }
 
-    .collaboration-form-section {
-        padding: 30px 15px;
-        margin: 0 5px;
-    }
 
     .form-group input,
     .form-group textarea,

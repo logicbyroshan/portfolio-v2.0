@@ -1,7 +1,6 @@
 /* css/playlist_detail.css */
 
 .playlist-detail-container {
-    padding-bottom: 250px; /* Increased space for the fixed player on mobile */
     width: 100%;
     overflow-x: hidden; /* Prevent horizontal overflow */
 }
@@ -21,16 +20,29 @@
         box-sizing: border-box;
     }
     
-    .playlist-detail-container {
-        padding-bottom: 300px; /* Extra space on mobile for music player */
-    }
-    
     /* Ensure no horizontal overflow */
     * {
         box-sizing: border-box;
     }
 }
-.back-navigation { margin-bottom: 2rem; }
+.back-navigation {
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.track-count-badge {
+    background: linear-gradient(135deg, #00A9FF, #0078D4);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    border: none;
+    white-space: nowrap;
+}
 
 /* Playlist Header */
 .playlist-header { display: flex; gap: 2.5rem; margin-bottom: 3rem; align-items: flex-end; }
@@ -43,28 +55,29 @@
 .playlist-info h1 { font-family: var(--heading-font); font-size: 3.5rem; margin-bottom: 0.5rem; color: var(--title-color); }
 .playlist-owner { font-size: 1.1rem; color: var(--paragraph-color); margin-bottom: 1rem; }
 .playlist-description { font-size: 1rem; color: var(--paragraph-color); line-height: 1.6; }
-.playlist-stats { display: flex; gap: 1.5rem; margin-top: 1rem; color: var(--paragraph-color); }
-.track-count.highlight { 
-    background: linear-gradient(135deg, #00A9FF, #0078D4);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 0.95rem;
-    border: none;
+.playlist-stats {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    color: var(--paragraph-color);
 }
 .playlist-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
 
 /* Track List */
 .track-list-container { padding: 0; }
-.track-list-header { display: grid; grid-template-columns: 50px 1fr 1fr 100px 120px; gap: 1rem; padding: 1rem 1.5rem; background: rgba(0, 169, 255, 0.1); border-bottom: 1px solid var(--card-border); font-weight: 500; color: var(--title-color); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
-.track-list { max-height: 60vh; overflow-y: auto; }
-
-/* Custom Scrollbar */
-.track-list::-webkit-scrollbar { width: 8px; }
-.track-list::-webkit-scrollbar-track { background: var(--card-bg); }
-.track-list::-webkit-scrollbar-thumb { background-color: var(--card-border); border-radius: 10px; }
-.track-list::-webkit-scrollbar-thumb:hover { background-color: var(--accent-color); }
+.track-list-header {
+    display: grid;
+    grid-template-columns: 50px 1fr 1fr 100px 120px;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: rgba(0, 169, 255, 0.1);
+    border-bottom: 1px solid var(--card-border);
+    font-weight: 500;
+    color: var(--title-color);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
 
 .track-item { display: grid; grid-template-columns: 50px 1fr 1fr 100px 120px; gap: 1rem; padding: 1rem 1.5rem; cursor: pointer; transition: background-color 0.2s ease; border-bottom: 1px solid var(--card-border); align-items: center; }
 .track-item:hover { background-color: rgba(0, 169, 255, 0.05); }
@@ -79,6 +92,11 @@
 .track-actions { display: flex; gap: 0.5rem; }
 .action-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1px solid var(--card-border); background: transparent; color: var(--paragraph-color); border-radius: 50%; cursor: pointer; transition: all 0.2s ease; font-size: 14px; }
 .action-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
+.play-track-btn:hover {
+    background-color: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+}
 .no-tracks { text-align: center; padding: 4rem 2rem; color: var(--paragraph-color); }
 .no-tracks i { font-size: 3rem; margin-bottom: 1rem; }
 .desktop-only { display: block; }
@@ -136,39 +154,189 @@
 .progress-fill { height: 100%; background: var(--title-color); border-radius: 2px; width: 0%; }
 
 /* Responsive Adjustments */
-@media (max-width: 992px) {
-    .track-list-header, .track-item { grid-template-columns: 50px 1fr 120px; }
+@media (max-width: 1000px) {
+
+    .track-list-header,
+    .track-item {
+        grid-template-columns: 40px 1fr 80px 100px;
+    }
     .track-album.desktop-only { display: none; }
 }
+@media (max-width: 992px) {
+
+    .track-list-header,
+    .track-item {
+        grid-template-columns: 40px 1fr 100px;
+    }
+
+    .track-duration.desktop-only {
+        display: none;
+    }
+}
 @media (max-width: 768px) {
-    .playlist-header { flex-direction: column; text-align: center; align-items: center; }
+    .playlist-detail-content {
+            padding: 0 10px;
+        }
+    
+        .back-navigation {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 0 10px;
+        }
+    
+        .playlist-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+            padding: 0 10px;
+        }
     .playlist-cover { 
         width: 100%; 
-        height: 40vh; 
-        border-radius: 0; 
-        margin: 0; 
-        max-height: 300px;
-        min-height: 200px;
+        height: 250px;
+            border-radius: 8px;
+            margin: 0;
     }
-    .playlist-info h1 { font-size: 2.5rem; }
-    .playlist-info { padding: 0 1rem; margin-bottom: 1rem; }
+                .playlist-info h1 {
+                    font-size: 2.5rem;
+                    text-align: left;
+                    margin-bottom: 0.5rem;
+                }
+        
+                .playlist-info {
+                    width: 100%;
+                    text-align: left;
+                }
+        
+                .playlist-actions {
+                    flex-direction: column;
+                    width: 100%;
+                    gap: 0.75rem;
+                }
+        
+                .playlist-actions .filled-btn,
+                .playlist-actions .outline-btn {
+                    width: 100%;
+                    justify-content: center;
+                    padding: 12px;
+                }
     .track-list-header { display: none; }
-    .track-item { display: flex; gap: 1rem; grid-template-columns: none; padding: 1rem; }
+                .track-item {
+                    display: flex;
+                    gap: 1rem;
+                    grid-template-columns: none;
+                    padding: 1rem 15px;
+                    align-items: center;
+                }
+        
+                .track-number {
+                    flex-shrink: 0;
+                    width: 30px;
+                }
+        
+                .track-details {
+                    flex: 1;
+                    min-width: 0;
+                }
+        
+                .track-details .title {
+                    font-size: 16px;
+                    margin-bottom: 2px;
+                }
+        
+                .track-details .artist {
+                    font-size: 14px;
+                }
     .desktop-only { display: none; }
-    .track-actions { margin-left: auto; }
-    .player-main { flex-wrap: wrap; justify-content: center; padding: 1rem; }
-    .current-track-info { flex-basis: 100%; justify-content: center; text-align: center; order: 1; }
-    .player-controls-section { flex-basis: 100%; order: 3; }
-    .player-actions { flex-basis: 100%; justify-content: center; order: 2; }
-    .back-navigation { padding: 0 1rem; margin-bottom: 1rem; }
+                .track-actions {
+                    margin-left: auto;
+                    flex-shrink: 0;
+                }
     .track-list-container { 
-        margin: 0 1rem; 
+        margin: 0 10px;
         margin-bottom: 2rem;
-        /* Remove max-height to allow full content visibility */
+    }
+    .player-main {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 1rem;
+    }
+    
+    .current-track-info {
+        flex-basis: 100%;
+        justify-content: center;
+        text-align: center;
+        order: 1;
+    }
+    
+    .player-controls-section {
+        flex-basis: 100%;
+        order: 3;
+    }
+    
+    .player-actions {
+        flex-basis: 100%;
+        justify-content: center;
+        order: 2;
     }
 }
 @media (max-width: 480px) {
-    .playlist-cover { width: 180px; height: 180px; }
-    .playlist-info h1 { font-size: 2rem; }
-    .playlist-actions { flex-direction: column; width: 100%; }
+    .playlist-detail-content {
+            padding: 0 5px;
+        }
+    
+        .back-navigation {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+            padding: 0 5px;
+        }
+    
+        .track-count-badge {
+            font-size: 0.85rem;
+            padding: 0.4rem 0.8rem;
+        }
+    
+        .playlist-header {
+            padding: 0 10px;
+            gap: 1rem;
+        }
+    
+        .playlist-cover {
+            height: 200px;
+            border-radius: 6px;
+        }
+    
+        .playlist-info h1 {
+            font-size: 2rem;
+            line-height: 1.2;
+        }
+    
+        .playlist-info {
+            margin-bottom: 0.5rem;
+        }
+    
+        .playlist-actions {
+            gap: 0.5rem;
+        }
+    
+        .playlist-actions .filled-btn,
+        .playlist-actions .outline-btn {
+            padding: 10px;
+            font-size: 14px;
+        }
+    
+        .track-item {
+            padding: 0.75rem 10px;
+            gap: 0.75rem;
+        }
+    
+        .track-list-container {
+            margin: 0 5px;
+            margin-bottom: 1.5rem;
+        }
 }

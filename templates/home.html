@@ -97,7 +97,8 @@
         </div>
         <div class="experience-grid">
             {% for exp in experiences %}
-            <a href="{% url 'portfolio:experience_detail' pk=exp.pk %}" class="exp-card card" data-animation="fade-in-up">
+            <div class="exp-card card clickable-card" data-animation="fade-in-up"
+                data-url="{% url 'portfolio:experience_detail' pk=exp.pk %}">
                 <div class="exp-img"><img src="https://placehold.co/80x80/010409/eaeaea?text={{ exp.company_name|slice:':2' }}" alt="{{ exp.company_name }} Logo"></div>
                 <div class="exp-details">
                     <div class="exp-header">
@@ -107,7 +108,7 @@
                     <p>{{ exp.summary }}</p>
                     <div class="skills">{% for tech in exp.technologies.all %}<span class="teg">{{ tech.name }}</span>{% endfor %}</div>
                 </div>
-            </a>
+            </div>
             {% endfor %}
         </div>
     </section>
@@ -121,11 +122,11 @@
         <div class="cards-container">
             {% for project in projects %}
             <div class="project-card card clickable-card" data-animation="fade-in-up" data-url="{% url 'portfolio:project_detail' slug=project.slug %}">
-                <a href="{% url 'portfolio:project_detail' slug=project.slug %}" class="project-image">
+                <div class="project-image">
                     <img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ project.title|urlencode }}{% endif %}" alt="{{ project.title }}">
-                </a>
+                </div>
                 <div class="project-content">
-                    <h3><a href="{% url 'portfolio:project_detail' slug=project.slug %}">{{ project.title }}</a></h3>
+                    <h3>{{ project.title }}</h3>
                     <p>{{ project.summary|safe }}</p>
                     <div class="skills">
                         {% for tech in project.technologies.all|slice:":5" %}
@@ -161,7 +162,8 @@
         </header>
         <div class="cards-container">
             {% for blog in blogs %}
-            <a href="{% url 'portfolio:blog_detail' slug=blog.slug %}" class="blog-card card clickable-card" data-animation="fade-in-up" data-url="{% url 'portfolio:blog_detail' slug=blog.slug %}">
+            <div class="blog-card card clickable-card" data-animation="fade-in-up"
+                data-url="{% url 'portfolio:blog_detail' slug=blog.slug %}">
                 <div class="blog-image">
                     <img src="{% if blog.cover_image %}{{ blog.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ blog.title|urlencode }}{% endif %}" alt="{{ blog.title }}">
                 </div>
@@ -178,7 +180,7 @@
                     </div>
                     <span class="blog-date">{{ blog.created_date|date:"M d, Y" }}</span>
                 </div>
-            </a>
+            </div>
             {% endfor %}
         </div>
     </section>
@@ -216,11 +218,28 @@
             <div class="head"><h1>Got Some <br><span>Questions?</span></h1></div>
             <p>"Here are some common questions I get asked. If you have more queries, feel free to reach out!"</p>
         </header>
-        <div class="card-container">
+        <div class="card-container" id="faq-container">
             {% for faq in faqs %}
-            <div class="faq-card card" data-animation="fade-in-up"><div class="faq-question"><span>{{ faq.question }}</span><i class="fa-solid fa-plus faq-icon"></i></div><div class="faq-answer"><p>{{ faq.answer }}</p></div></div>
+            <div class="faq-card card {% if forloop.counter > 5 %}faq-hidden{% endif %}" data-animation="fade-in-up">
+                <div class="faq-question">
+                    <span>{{ faq.question }}</span>
+                    <i class="fa-solid fa-plus faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>{{ faq.answer }}</p>
+                </div>
+            </div>
             {% endfor %}
         </div>
+        <!-- Show More Button (only visible if more than 5 FAQs) -->
+        {% if faqs|length > 5 %}
+        <div class="faq-show-more-container" data-animation="fade-in-up">
+            <button class="outline-btn" id="faq-show-more-btn">
+                <i class="fas fa-chevron-down"></i>
+                Show More FAQs
+            </button>
+        </div>
+        {% endif %}
     </section>
 
     <!-- ========================= 8. CONTACT SECTION ========================= -->

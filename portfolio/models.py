@@ -30,9 +30,9 @@ class SiteConfiguration(models.Model):
     facebook_url = models.URLField(blank=True, null=True)
     
     # --- Contact Information ---
-    email = models.EmailField(blank=True, default="contact@roshanproject.site")
+    email = models.EmailField(blank=True, default="contact@roshandamor.me")
     phone = models.CharField(max_length=20, blank=True)
-    location = models.CharField(max_length=100, blank=True, default="India")
+    location = models.CharField(max_length=100, blank=True, default="Bhopal, India")
     
     # ... and so on for every other section ...
     
@@ -117,15 +117,34 @@ class Blog(models.Model):
     cover_image = models.ImageField(upload_to='blog_covers/')
     categories = models.ManyToManyField(Category, limit_choices_to={'category_type': Category.CategoryType.BLOG})
     created_date = models.DateTimeField(auto_now_add=True)
-    author_name = models.CharField(max_length=100, default="Roshan Damor")
-    author_avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    
     class Meta:
         ordering = ['-created_date']
+    
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+    
     def __str__(self):
         return self.title
+    
+    @property
+    def author_name(self):
+        """Get author name from SiteConfiguration."""
+        try:
+            site_config = SiteConfiguration.objects.first()
+            return site_config.hero_name if site_config else "Roshan Damor"
+        except:
+            return "Roshan Damor"
+    
+    @property
+    def author_avatar(self):
+        """Get author avatar from AboutMeConfiguration."""
+        try:
+            about_config = AboutMeConfiguration.objects.first()
+            return about_config.profile_image if about_config and about_config.profile_image else None
+        except:
+            return None
 
 class Comment(models.Model):
     post = models.ForeignKey(Blog, related_name='comments', on_delete=models.CASCADE)

@@ -49,11 +49,11 @@
         <div class="project-grid" id="project-card-container">
             {% for project in projects %}
             <div class="project-card card clickable-card" data-animation="zoom-in" data-url="{% url 'portfolio:project_detail' slug=project.slug %}">
-                <a href="{% url 'portfolio:project_detail' slug=project.slug %}" class="project-image">
+                <div class="project-image">
                     <img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ project.title|urlencode }}{% endif %}" alt="{{ project.title }}">
-                </a>
+                </div>
                 <div class="project-content">
-                    <h3><a href="{% url 'portfolio:project_detail' slug=project.slug %}">{{ project.title }}</a></h3>
+                    <h3>{{ project.title }}</h3>
                     <p>{{ project.summary|truncatewords:20|safe }}</p>
                     <div class="skills">
                         {% for tech in project.technologies.all|slice:":5" %}

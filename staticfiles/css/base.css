@@ -379,10 +379,11 @@ img { max-width: 100%; height: auto; display: block; }
     padding-bottom: 40px;
 }
 .footer-col-about .footer-logo {
-    font-family: var(--special-heading-font);
-    font-size: 28px;
-    color: var(--title-color);
     margin-bottom: 15px;
+}
+.footer-col-about .footer-logo img {
+    height: 50px;
+    transition: opacity 0.3s ease;
 }
 .footer-col-about p {
     font-size: 15px;
@@ -392,6 +393,13 @@ img { max-width: 100%; height: auto; display: block; }
     list-style: none;
     display: flex;
     gap: 15px;
+    margin: 0;
+        padding: 0;
+    }
+    
+    .social-icons li {
+        margin: 0;
+        padding: 0;
 }
 .social-icons a {
     display: flex;
@@ -399,10 +407,13 @@ img { max-width: 100%; height: auto; display: block; }
     justify-content: center;
     width: 40px;
     height: 40px;
-    border: 1px solid var(--card-border);
+    border: 2px solid var(--accent-color);
     border-radius: 50%;
-    color: var(--paragraph-color);
+    color: var(--accent-color);
     transition: all 0.3s ease;
+    text-decoration: none;
+        font-size: 16px;
+        background-color: rgba(255, 255, 255, 0.1);
 }
 .social-icons a:hover {
     background-color: var(--accent-color);
@@ -874,6 +885,10 @@ img { max-width: 100%; height: auto; display: block; }
     .footer-col-about { 
         margin-bottom: 5px; 
     }
+                .footer-col-about .footer-logo img {
+                    height: 50px;
+                    /* Same size as navbar logo on mobile */
+                }
     .footer-col-links h4 {
         font-size: 16px;
         margin-bottom: 10px;

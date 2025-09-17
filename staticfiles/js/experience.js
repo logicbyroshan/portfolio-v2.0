@@ -27,6 +27,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
+    // CLICKABLE CARDS
+    // =========================================================================
+    const clickableElements = document.querySelectorAll('[data-url]');
+    clickableElements.forEach(card => {
+        const url = card.dataset.url;
+        if (url && url !== '#') {
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open(url, '_blank');
+            });
+            card.style.cursor = 'pointer';
+        }
+    });
+
+    // =========================================================================
     // TOOLBAR LOGIC (SORT & FILTER)
     // =========================================================================
     const sortButton = document.getElementById('sort-button');
@@ -113,30 +129,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // =========================================================================
-    // CLICKABLE CARDS NAVIGATION
-    // =========================================================================
-    const clickableCards = document.querySelectorAll('.clickable-card');
-    
-    clickableCards.forEach(card => {
-        // Add cursor pointer style for better UX
-        card.style.cursor = 'pointer';
-        
-        card.addEventListener('click', function(e) {
-            // Check if click was on a link or button to prevent navigation conflict
-            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('a') || e.target.closest('button')) {
-                return; // Let the link/button handle the click
-            }
-            
-            const url = this.getAttribute('data-href') || this.getAttribute('data-url');
-            if (url) {
-                // Add a small delay for visual feedback
-                setTimeout(() => {
-                    window.location.href = url;
-                }, 100);
-            }
-        });
-        
-        // Removed hover effects for simplified interaction
-    });
 });

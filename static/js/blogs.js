@@ -27,6 +27,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
+    // CLICKABLE CARDS
+    // =========================================================================
+    const clickableElements = document.querySelectorAll('[data-url]');
+    clickableElements.forEach(card => {
+        const url = card.dataset.url;
+        if (url && url !== '#') {
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open(url, '_blank');
+            });
+            card.style.cursor = 'pointer';
+        }
+    });
+
+    // =========================================================================
     // TOOLBAR LOGIC (SORT & FILTER)
     // =========================================================================
     const sortButton = document.getElementById('sort-button');
@@ -59,17 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-
-    // =========================================================================
-    // CLICKABLE BLOG CARDS
-    // =========================================================================
-    document.querySelectorAll('.blog-card[data-url]').forEach(card => {
-        card.addEventListener('click', (e) => {
-            if (e.target.closest('a, button')) return;
-            if (window.getSelection().toString()) return;
-            window.location.href = card.dataset.url;
-        });
-    });
 
     // =========================================================================
     // Pagination Logic

@@ -19,6 +19,7 @@
             <a href="{% url 'my_playlist' %}" class="outline-btn">
                 <i class="fa-solid fa-arrow-left"></i> Back to Playlists
             </a>
+            <span class="track-count-badge">{{ tracks|length }} tracks</span>
         </div>
 
         <!-- Playlist Header -->
@@ -35,7 +36,6 @@
                 <p class="playlist-description">{{ playlist.description }}</p>
                 {% endif %}
                 <div class="playlist-stats">
-                    <span class="track-count highlight">{{ tracks|length }} tracks</span>
                     {% if playlist.total_duration %}
                     <span class="total-duration">{{ playlist.total_duration }}</span>
                     {% endif %}
@@ -75,6 +75,9 @@
                     <div class="track-album desktop-only">{{ track.album|default:"-" }}</div>
                     <div class="track-duration desktop-only">{{ track.duration_formatted }}</div>
                     <div class="track-actions">
+                        <button class="action-btn play-track-btn" data-track-index="{{ forloop.counter0 }}" title="Play Track">
+                            <i class="fa-solid fa-play"></i>
+                        </button>
                         <a href="{{ track.external_url }}" class="action-btn" target="_blank" rel="noopener noreferrer" title="Open in Spotify">
                             <i class="fa-brands fa-spotify"></i>
                         </a>
