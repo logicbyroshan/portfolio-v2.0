@@ -12,6 +12,13 @@
 /* ==========================================================================
    1. Detail Page Layout
    ========================================================================== */
+
+/* Override main container for experience detail pages to reduce excessive spacing */
+.experience-detail-page .main-container {
+    padding-top: 120px; /* Reduced from 185px for detail pages */
+    gap: 40px; /* Reduced from 150px for tighter spacing */
+}
+
 .detail-page-container {
     width: 100%;
     display: flex;
@@ -39,7 +46,7 @@
 /* ==========================================================================
    2. Breadcrumb Navigation
    ========================================================================== */
-.breadcrumb { width: 100%; margin-bottom: 30px; }
+.breadcrumb { width: 100%; margin-bottom: 15px; } /* Reduced from 30px to 15px */
 .breadcrumb ul { list-style: none; display: flex; align-items: center; flex-wrap: wrap; gap: 5px; padding: 0; }
 .breadcrumb ul li { font-size: 14px; color: var(--paragraph-color); }
 .breadcrumb ul li:not(:last-child)::after { content: "›"; margin-left: 10px; }

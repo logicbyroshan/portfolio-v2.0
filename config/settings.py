@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'ai',
     'auth_app',
     'music',
+    'notifications',
 ]
 
 MIDDLEWARE = [
@@ -154,8 +155,26 @@ TINYMCE_DEFAULT_CONFIG = {
     'statusbar': True,
 }
 
-# Email settings for development
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email settings
+# For development - prints emails to console
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# For production - use SMTP (uncomment and configure the lines below)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')  # e.g., smtp.gmail.com for Gmail
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'False').lower() == 'true'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')  # Your email address
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')  # Your email password or app password
+
+# Default sender email
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@yourportfolio.com')
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+# Site configuration for emails
+SITE_NAME = os.getenv('SITE_NAME', 'Roshan Damor Portfolio')
+SITE_URL = os.getenv('SITE_URL', 'http://localhost:8000')
 
 # Message tags for Bootstrap
 from django.contrib.messages import constants as messages
@@ -170,3 +189,43 @@ MESSAGE_TAGS = {
 SPOTIFY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID', "your_client_id")
 SPOTIFY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET', "your_client_secret")
 SPOTIFY_REDIRECT_URI = os.getenv('SPOTIFY_REDIRECT_URI', "https://localhost:8000/callback/")
+
+# Notification System Settings
+SITE_NAME = "Roshan Damor Portfolio"
+SITE_URL = os.getenv('SITE_URL', 'http://localhost:8000')
+
+# Logging Configuration for Notifications
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'notifications.log',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'notifications': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}

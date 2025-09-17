@@ -15,6 +15,13 @@
 /* ==========================================================================
    1. Detail Page Layout
    ========================================================================== */
+
+/* Override main container for detail pages to reduce excessive spacing */
+.project-detail-page .main-container {
+    padding-top: 120px; /* Reduced from 185px for detail pages */
+    gap: 40px; /* Reduced from 150px for tighter spacing */
+}
+
 .detail-page-container {
     width: 100%;
     display: flex;
@@ -44,7 +51,7 @@
    ========================================================================== */
 .breadcrumb {
     width: 100%;
-    margin-bottom: 30px;
+    margin-bottom: 15px; /* Reduced from 30px to 15px for tighter spacing */
 }
 .breadcrumb ul {
     list-style: none;
