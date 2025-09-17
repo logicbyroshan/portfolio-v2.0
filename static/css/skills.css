@@ -41,10 +41,11 @@
     justify-content: space-between; 
     align-items: center; 
     gap: 20px; 
-    padding: 15px; 
+    padding: 15px 20px;
     background-color: var(--card-bg); 
     border: 1px solid var(--card-border); 
     border-radius: 12px; 
+    box-sizing: border-box;
 }
 
 .search-bar {
@@ -92,7 +93,8 @@
     align-items: center; 
     gap: 10px; 
     flex: 1; 
-    max-width: 500px; 
+    min-width: 0;
+        /* Allow shrinking below min-content */
 }
 
 .categories-list { 
@@ -101,6 +103,8 @@
     overflow-x: auto; 
     scroll-behavior: smooth; 
     padding: 5px 0; 
+    flex: 1;
+        min-width: 0;
 }
 
 .categories-list::-webkit-scrollbar { 
@@ -296,12 +300,18 @@
         flex-direction: column; 
         align-items: stretch; 
         gap: 15px; 
+        padding: 15px;
     }
     .search-bar {
         max-width: none;
     }
     .categories-scroller {
         max-width: none;
+        width: 100%;
+        }
+        
+        .categories-list {
+            width: 100%;
     }
 }
 

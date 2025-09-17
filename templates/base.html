@@ -5,9 +5,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
     
     <title>{% block title %}Roshan Damor - Portfolio{% endblock %}</title>
 
+    <!-- Default meta tags for better SEO -->
+    <meta name="description"
+        content="{% block meta_description %}Roshan Damor - Full Stack Developer & AI Engineer. Building innovative web applications and AI solutions with Python, Django, React, and Machine Learning.{% endblock %}">
+    <meta name="keywords"
+        content="{% block meta_keywords %}Roshan Damor, Full Stack Developer, AI Engineer, Python, Django, React, Machine Learning, Web Development, Portfolio{% endblock %}">
+    <meta name="author" content="Roshan Damor">
     {% block extra_meta %}{% endblock %}
 
     <!-- Google Fonts -->
@@ -44,8 +52,8 @@
             <nav class="nav-left">
                 <ul>
                     <!-- DYNAMIC: URL tags for navigation -->
-                    <li><a href="{% url 'portfolio:skill_list' %}"><span class="nav-dot"></span>Skills</a></li>
-                    <li><a href="{% url 'portfolio:achievements_list' %}"><span class="nav-dot"></span>Achievements</a></li>
+                    <li><a href="{% url 'portfolio:blog_list' %}"><span class="nav-dot"></span>Articles</a></li>
+                    <li><a href="{% url 'portfolio:project_list' %}"><span class="nav-dot"></span>Projects</a></li>
                     <li><a href="{% url 'portfolio:experience_list' %}"><span class="nav-dot"></span>Experiences</a></li>
                 </ul>
             </nav>
@@ -88,8 +96,8 @@
         <div class="mobile-nav-menu" id="mobile-nav-menu">
             <div class="mobile-menu-content">
                 <nav class="mobile-nav-links">
-                    <a href="{% url 'portfolio:skill_list' %}"><span class="nav-dot"></span>Skills</a>
-                    <a href="{% url 'portfolio:achievements_list' %}"><span class="nav-dot"></span>Achievements</a>
+                    <a href="{% url 'portfolio:blog_list' %}"><span class="nav-dot"></span>Articles</a>
+                    <a href="{% url 'portfolio:project_list' %}"><span class="nav-dot"></span>Projects</a>
                     <a href="{% url 'portfolio:experience_list' %}"><span class="nav-dot"></span>Experiences</a>
                 </nav>
                 <div class="mobile-nav-buttons">

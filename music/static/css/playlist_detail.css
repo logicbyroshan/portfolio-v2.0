@@ -117,13 +117,27 @@
 .left-controls, .right-controls { display: flex; align-items: center; gap: 0.5rem; flex: 1; }
 .left-controls { justify-content: flex-start; }
 .right-controls { justify-content: flex-end; }
-.center-controls { display: flex; align-items: center; justify-content: center; }
+.center-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    /* Don't grow or shrink, just use natural size */
+}
 
 .control-btn { background: none; border: none; color: var(--paragraph-color); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; font-size: 1rem; }
 .control-btn:hover { color: var(--title-color); background-color: rgba(255, 255, 255, 0.1); }
 
 /* Special button styles */
-.control-btn.play-btn { width: 44px; height: 44px; font-size: 1.2rem; background-color: var(--title-color); color: var(--card-bg); }
+.control-btn.play-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+    background-color: var(--title-color);
+    color: var(--card-bg);
+    margin: 0 auto;
+    /* Center the play button */
+}
 .control-btn.play-btn:hover { background-color: #fff; }
 
 /* Loop/Shuffle button with mode indicators */
@@ -135,19 +149,27 @@
 #loop-shuffle-btn[data-mode="shuffle"] { color: var(--accent-color); }
 #loop-shuffle-btn[data-mode="shuffle"] i::before { content: "\f074"; /* random/shuffle */ }
 
-/* Close button styling */
+/* Close button styling - Square button with cross icon */
 .close-btn { 
     background-color: rgba(255, 71, 87, 0.1); 
     color: #ff4757; 
     border: 1px solid rgba(255, 71, 87, 0.3);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
+    width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        /* Square with rounded corners */
+        font-size: 1rem;
     font-weight: 500;
-    width: auto;
-    height: auto;
+    display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
 }
-.close-btn:hover { background-color: #ff4757; color: #fff; }
+.close-btn:hover {
+    background-color: #ff4757;
+    color: #fff;
+    border-color: #ff4757;
+}
 .progress-section { display: flex; align-items: center; gap: 1rem; width: 100%; }
 .time { font-size: 13px; color: var(--paragraph-color); }
 .progress-bar { flex: 1; height: 4px; background: rgba(255, 255, 255, 0.2); border-radius: 2px; cursor: pointer; }

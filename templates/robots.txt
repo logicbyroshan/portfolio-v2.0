@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Allow all search engines to crawl the entire site
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /api/
+Disallow: /static/admin/
+Disallow: /*.json$
+
+# Important pages for SEO
+Allow: /
+Allow: /about/
+Allow: /projects/
+Allow: /blogs/
+Allow: /skills/
+Allow: /experience/
+Allow: /achievements/
+
+# Sitemap location
+Sitemap: {{ request.build_absolute_uri }}/sitemap.xml
+
+# Crawl delay (optional - 1 second between requests)
+Crawl-delay: 1

@@ -98,6 +98,9 @@
 <div class="enhanced-music-player hidden" id="music-player">
     <div class="player-main">
         <div class="current-track-info">
+            <button id="close-player-btn" class="control-btn close-btn" title="Close Player">
+                <i class="fa-solid fa-times"></i>
+            </button>
             <div class="track-cover"><img id="current-track-cover" src="{{ playlist.image_url }}" alt="Track cover"></div>
             <div class="track-meta">
                 <div class="track-name" id="current-track-name">Select a track</div>
@@ -131,9 +134,6 @@
                     </button>
                     <button id="mute-btn" class="control-btn" title="Mute/Unmute">
                         <i class="fa-solid fa-volume-high"></i>
-                    </button>
-                    <button id="close-player-btn" class="control-btn close-btn" title="Close Player">
-                        Close
                     </button>
                 </div>
             </div>

@@ -253,7 +253,7 @@ img { max-width: 100%; height: auto; display: block; }
     backdrop-filter: blur(10px);
     border: 1px solid var(--card-border);
     border-radius: 12px;
-    padding: 15px 25px;
+    padding: 15px 20px;
         /* Increased padding for better spacing */
 }
 
@@ -289,100 +289,45 @@ img { max-width: 100%; height: auto; display: block; }
     background: var(--title-color);
 }
 .nav-center-logo {
-    perspective: 1000px;
-    /* Enable 3D transformations */
-    cursor: pointer;
-    /* Indicate interactivity */
-    position: relative;
-    /* For positioning context */
     display: flex;
-    /* Use flexbox for centering */
     align-items: center;
     justify-content: center;
     width: auto;
     height: 50px;
 }
+
 .nav-center-logo img {
     height: 50px;
     width: auto;
-        /* Preserve aspect ratio */
-        max-width: none;
-        /* Override any constraints */
-        flex-shrink: 0;
-        /* Prevent compression */
-        transition: transform 0.6s ease-in-out, opacity 0.5s ease;
-        transform-style: preserve-3d;
-    
-        /* Position logos on top of each other for smooth dissolve */
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translateX(-50%) translateY(-50%);
-    
-        /* Automatic flip animation every 5 seconds */
-        animation: logo-auto-flip 5s ease-in-out infinite;
-}
-
-/* Hover effect for interactivity */
-.nav-center-logo:hover img {
-    transform: translateX(-50%) translateY(-50%) scale(1.05) rotateY(10deg);
-}
-
-/* Automatic flip animation keyframes */
-@keyframes logo-auto-flip {
-
-    0%,
-    90% {
-        transform: translateX(-50%) translateY(-50%) rotateY(0deg);
-    }
-
-    95% {
-        transform: translateX(-50%) translateY(-50%) rotateY(180deg);
-    }
-
-    100% {
-        transform: translateX(-50%) translateY(-50%) rotateY(360deg);
-    }
-}
-
-/* Click animation for manual 360-degree flip */
-.nav-center-logo.clicked img {
-    animation: logo-click-flip 0.8s ease-in-out;
-}
-
-@keyframes logo-click-flip {
-    0% {
-        transform: translateX(-50%) translateY(-50%) rotateY(0deg) scale(1);
-    }
-
-    50% {
-        transform: translateX(-50%) translateY(-50%) rotateY(180deg) scale(1.1);
-    }
-
-    100% {
-        transform: translateX(-50%) translateY(-50%) rotateY(360deg) scale(1);
-    }
+    max-width: none;
+    flex-shrink: 0;
+    transition: opacity 0.5s ease;
 }
 
 /* Theme-aware logo visibility with smooth transitions */
 .logo-light {
+    display: block;
     opacity: 1;
-        transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease;
 }
 
 .logo-dark {
+    display: none;
     opacity: 0;
-        transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease;
 }
 
 /* Light theme logo switching with dissolve effect */
 [data-theme="light"] .logo-light {
+    display: none;
     opacity: 0;
 }
 
 [data-theme="light"] .logo-dark {
+    display: block;
     opacity: 1;
 }
+
 .nav-right {
     display: flex;
     align-items: center;

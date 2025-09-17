@@ -4,7 +4,80 @@
 
 {% block body_class %}project-detail-page{% endblock %}
 
-{% block title %}Project: {{ project.title }} - Roshan Damor{% endblock %}
+{% block title %}{{ project.title }} - Full Stack Project by Roshan Damor{% endblock %}
+
+{% block extra_meta %}
+<!-- SEO Meta Tags -->
+<meta name="description" content="{{ project.summary|striptags|truncatechars:160 }}">
+<meta name="keywords"
+    content="{% for category in project.categories.all %}{{ category.name }}{% if not forloop.last %}, {% endif %}{% endfor %}, {% for tech in project.technologies.all %}{{ tech.name }}{% if not forloop.last %}, {% endif %}{% endfor %}, Roshan Damor project, web development, software project">
+<meta name="author" content="Roshan Damor">
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+<!-- Open Graph Meta Tags -->
+<meta property="og:title" content="{{ project.title }} - Project by Roshan Damor">
+<meta property="og:description" content="{{ project.summary|striptags|truncatechars:200 }}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+{% if project.cover_image %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ project.cover_image.url }}">
+{% elif project.images.first %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ project.images.first.image.url }}">
+{% endif %}
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{ project.title }}">
+<meta property="og:site_name" content="Roshan Damor - Portfolio">
+<meta property="article:author" content="Roshan Damor">
+<meta property="article:published_time" content="{{ project.created_date|date:'c' }}">
+{% for category in project.categories.all %}
+<meta property="article:tag" content="{{ category.name }}">
+{% endfor %}
+{% for tech in project.technologies.all %}
+<meta property="article:tag" content="{{ tech.name }}">
+{% endfor %}
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ project.title }} - Project by Roshan Damor">
+<meta name="twitter:description" content="{{ project.summary|striptags|truncatechars:200 }}">
+{% if project.cover_image %}
+<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ project.cover_image.url }}">
+{% elif project.images.first %}
+<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ project.images.first.image.url }}">
+{% endif %}
+<meta name="twitter:image:alt" content="{{ project.title }}">
+<meta name="twitter:site" content="@logicbyroshan">
+<meta name="twitter:creator" content="@logicbyroshan">
+
+<!-- Structured Data for Project -->
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CreativeWork",
+        "name": "{{ project.title }}",
+        "description": "{{ project.summary|striptags }}",
+        "url": "{{ request.build_absolute_uri }}",
+        "creator": {
+            "@type": "Person",
+            "name": "Roshan Damor",
+            "url": "{{ request.scheme }}://{{ request.get_host }}"
+        },
+        "dateCreated": "{{ project.created_date|date:'c' }}",
+        {% if project.cover_image %}
+        "image": "{{ request.scheme }}://{{ request.get_host }}{{ project.cover_image.url }}",
+        {% endif %}
+        "keywords": [
+            {% for category in project.categories.all %}"{{ category.name }}"{% if not forloop.last %},{% endif %}{% endfor %}
+            {% if project.categories.all and project.technologies.all %},{% endif %}
+            {% for tech in project.technologies.all %}"{{ tech.name }}"{% if not forloop.last %},{% endif %}{% endfor %}
+        ],
+        "about": [
+            {% for category in project.categories.all %}"{{ category.name }}"{% if not forloop.last %},{% endif %}{% endfor %}
+        ]
+    }
+    </script>
+{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/project-dtl.css' %}">

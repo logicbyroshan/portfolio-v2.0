@@ -1,7 +1,73 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Home - Roshan Damor - Portfolio{% endblock %}
+{% block title %}Roshan Damor - Full Stack Developer & AI Engineer | Portfolio{% endblock %}
+
+{% block extra_meta %}
+<!-- SEO Meta Tags -->
+<meta name="description"
+    content="Roshan Damor - Experienced Full Stack Developer & AI Engineer. Specializing in Python, Django, React, Machine Learning, and scalable web applications. View portfolio, projects, and hire for your next project.">
+<meta name="keywords"
+    content="Roshan Damor, Full Stack Developer, AI Engineer, Python Developer, Django, React, Machine Learning, Web Development, Software Engineer, Portfolio, Freelancer, India">
+<meta name="author" content="Roshan Damor">
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+<!-- Open Graph Meta Tags -->
+<meta property="og:title" content="Roshan Damor - Full Stack Developer & AI Engineer">
+<meta property="og:description"
+    content="Experienced Full Stack Developer & AI Engineer specializing in Python, Django, React, and Machine Learning. Building scalable web applications and AI-powered solutions.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/hero.png' %}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Roshan Damor - Full Stack Developer & AI Engineer">
+<meta property="og:site_name" content="Roshan Damor - Portfolio">
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Roshan Damor - Full Stack Developer & AI Engineer">
+<meta name="twitter:description"
+    content="Experienced Full Stack Developer & AI Engineer. Specializing in Python, Django, React, and Machine Learning. Building scalable solutions.">
+<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/hero.png' %}">
+<meta name="twitter:image:alt" content="Roshan Damor Portfolio">
+<meta name="twitter:site" content="@logicbyroshan">
+<meta name="twitter:creator" content="@logicbyroshan">
+
+<!-- Structured Data for Personal Portfolio -->
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Roshan Damor",
+        "jobTitle": "Full Stack Developer & AI Engineer",
+        "description": "Experienced Full Stack Developer & AI Engineer specializing in Python, Django, React, Machine Learning, and scalable web applications",
+        "url": "{{ request.build_absolute_uri }}",
+        "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/hero.png' %}",
+        "sameAs": [
+            "{{ config.github_url|default:'https://github.com/logicbyroshan' }}",
+            "{{ config.linkedin_url|default:'https://linkedin.com/in/logicbyroshan' }}",
+            "{{ config.twitter_url|default:'https://twitter.com/logicbyroshan' }}",
+            "{{ config.youtube_url|default:'https://youtube.com/channel/logicbyroshan' }}"
+        ],
+        "email": "{{ config.email|default:'contact@roshanproject.site' }}",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "{{ config.location|default:'India' }}"
+        },
+        "knowsAbout": [
+            "Full Stack Development",
+            "Python",
+            "Django",
+            "React",
+            "Machine Learning",
+            "AI Engineering",
+            "Web Development",
+            "Software Engineering"
+        ]
+    }
+    </script>
+{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/home.css' %}">

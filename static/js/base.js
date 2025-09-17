@@ -1,24 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // =========================================================================
-    // LOGO ANIMATION FUNCTIONALITY
+    // LOGO HOME LINK FUNCTIONALITY
     // =========================================================================
     const logoContainer = document.querySelector('.nav-center-logo');
     
     if (logoContainer) {
         logoContainer.addEventListener('click', (e) => {
             e.preventDefault();
-            
-            // Add clicked class to trigger animation
-            logoContainer.classList.add('clicked');
-            
-            // Remove the class after animation completes (800ms)
-            setTimeout(() => {
-                logoContainer.classList.remove('clicked');
-            }, 800);
+            // Navigate to home page
+            window.location.href = '/';
         });
         
-        // Add hover effect to indicate interactivity
+        // Add cursor pointer to indicate it's clickable
         logoContainer.style.cursor = 'pointer';
     }
 

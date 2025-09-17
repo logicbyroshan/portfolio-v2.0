@@ -62,7 +62,7 @@ class SignupView(View):
             
             # Log the user in immediately
             login(request, user)
-            messages.success(request, f"Welcome {name}! Your account has been created successfully.")
+            messages.success(request, f"Welcome {name}! I'm thrilled to have you join me here.")
             
             # Redirect to the original page or home
             next_url = request.session.get('next_url', '/')
@@ -71,7 +71,7 @@ class SignupView(View):
             return redirect(next_url)
             
         except Exception as e:
-            messages.error(request, f"Error creating account: {str(e)}. Please try again.")
+            messages.error(request, f"I encountered an error creating your account: {str(e)}. Please try again.")
             return render(request, 'auth_app/signup.html')
 
 
@@ -115,7 +115,7 @@ class LoginView(View):
                     del request.session['next_url']
                 return redirect(next_url)
             else:
-                messages.error(request, "Your account is not active. Please contact support.")
+                messages.error(request, "Your account is not active. Please reach out to me directly for assistance.")
                 return render(request, 'auth_app/login.html')
         else:
             messages.error(request, "Invalid email or password.")
@@ -183,18 +183,18 @@ class ForgotPasswordView(View):
                 # Continue anyway - user can still use the printed link in development
             
             messages.success(request, 
-                "If an account with this email exists, you will receive a password reset link shortly. "
+                "If an account with this email exists, I'll send you a password reset link shortly. "
                 "Check the console output for the reset link in development mode.")
             return redirect('auth_app:login')
             
         except User.DoesNotExist:
             # Don't reveal that the user doesn't exist for security
             messages.success(request, 
-                "If an account with this email exists, you will receive a password reset link shortly.")
+                "If an account with this email exists, I'll send you a password reset link shortly.")
             return redirect('auth_app:login')
         except Exception as e:
             print(f"Password reset error: {e}")
-            messages.error(request, "Error processing password reset. Please try again later.")
+            messages.error(request, "I encountered an error processing your password reset request. Please try again later.")
             return render(request, 'auth_app/forgot_password.html')
 
 

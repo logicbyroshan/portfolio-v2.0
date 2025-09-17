@@ -1,7 +1,92 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}About Me - Roshan Damor{% endblock %}
+{% block title %}About Roshan Damor - Full Stack Developer & AI Engineer Story{% endblock %}
+
+{% block extra_meta %}
+<!-- SEO Meta Tags -->
+<meta name="description"
+    content="Learn about Roshan Damor's journey as a Full Stack Developer & AI Engineer. Discover his passion for building innovative web applications, AI solutions, and contributing to open-source projects.">
+<meta name="keywords"
+    content="About Roshan Damor, Full Stack Developer story, AI Engineer background, Python developer journey, web development experience, software engineer bio, tech career">
+<meta name="author" content="Roshan Damor">
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+<!-- Open Graph Meta Tags -->
+<meta property="og:title" content="About Roshan Damor - Full Stack Developer & AI Engineer Story">
+<meta property="og:description"
+    content="Discover Roshan Damor's journey as a passionate Full Stack Developer & AI Engineer, his mission to build impactful software, and his interests in AI ethics and open-source contribution.">
+<meta property="og:type" content="profile">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+{% if config.profile_image %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ config.profile_image.url }}">
+{% else %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/hero.png' %}">
+{% endif %}
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Roshan Damor - About Me">
+<meta property="og:site_name" content="Roshan Damor - Portfolio">
+<meta property="profile:first_name" content="Roshan">
+<meta property="profile:last_name" content="Damor">
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About Roshan Damor - Full Stack Developer & AI Engineer">
+<meta name="twitter:description"
+    content="Discover Roshan Damor's journey as a passionate Full Stack Developer & AI Engineer, building impactful software and contributing to open-source projects.">
+{% if config.profile_image %}
+<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ config.profile_image.url }}">
+{% else %}
+<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/hero.png' %}">
+{% endif %}
+<meta name="twitter:image:alt" content="About Roshan Damor">
+<meta name="twitter:site" content="@logicbyroshan">
+<meta name="twitter:creator" content="@logicbyroshan">
+
+<!-- Structured Data for About Page -->
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "AboutPage",
+        "mainEntity": {
+            "@type": "Person",
+            "name": "Roshan Damor",
+            "jobTitle": "Full Stack Developer & AI Engineer",
+            "description": "{{ config.intro_paragraph|default:'Passionate Full Stack Developer & AI Engineer building innovative web applications and AI solutions' }}",
+            "url": "{{ request.scheme }}://{{ request.get_host }}",
+            {% if config.profile_image %}
+            "image": "{{ request.scheme }}://{{ request.get_host }}{{ config.profile_image.url }}",
+            {% endif %}
+            "sameAs": [
+                "https://github.com/logicbyroshan",
+                "https://linkedin.com/in/logicbyroshan",
+                "https://twitter.com/logicbyroshan"
+            ],
+            "knowsAbout": [
+                "Full Stack Development",
+                "Python Programming",
+                "Django Framework",
+                "React Development",
+                "Machine Learning",
+                "Artificial Intelligence",
+                "Web Development",
+                "Software Engineering",
+                "Open Source Contribution"
+            ],
+            "hasOccupation": {
+                "@type": "Occupation",
+                "name": "Full Stack Developer & AI Engineer",
+                "occupationLocation": {
+                    "@type": "Country",
+                    "name": "India"
+                },
+                "skills": "Python, Django, React, Machine Learning, AI, Web Development"
+            }
+        }
+    }
+    </script>
+{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/about.css' %}">
@@ -60,6 +145,30 @@
                 <h3>{{ config.action3_title|default:"View My Resources" }}</h3>
                 <p>{{ config.action3_description|default:"A curated list of tools, articles, and learning materials that I find valuable." }}</p>
                 <a href="{% url 'portfolio:resource_list' %}" class="outline-btn">{{ config.action3_button_text|default:"Explore Resources" }}</a>
+            </div>
+            <!-- Card 4: Achievements -->
+            <div class="action-card card" data-animation="fade-in-up" data-animation-delay="800">
+                <i class="fa-solid fa-trophy action-icon"></i>
+                <h3>My Achievements</h3>
+                <p>Explore my certifications, awards, and milestones that showcase my journey and growth as a developer.</p>
+                <a href="{% url 'portfolio:achievements_list' %}" class="outline-btn">View Achievements</a>
+            </div>
+
+            <!-- Card 5: Skills -->
+            <div class="action-card card" data-animation="fade-in-up" data-animation-delay="1000">
+                <i class="fa-solid fa-code action-icon"></i>
+                <h3>Explore My Skills</h3>
+                <p>Discover my technical expertise, programming languages, frameworks, and tools that I use to build amazing
+                    projects.</p>
+                <a href="{% url 'portfolio:skill_list' %}" class="outline-btn">Explore Skills</a>
+            </div>
+
+            <!-- Card 6: Code Together -->
+            <div class="action-card card" data-animation="fade-in-up" data-animation-delay="1200">
+                <i class="fa-solid fa-handshake action-icon"></i>
+                <h3>Let's Code Together</h3>
+                <p>Ready to collaborate on a project? Let's work together to build something amazing and innovative.</p>
+                <a href="{% url 'portfolio:code_together' %}" class="outline-btn">Start Collaboration</a>
             </div>
         </div>
     </section>

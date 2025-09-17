@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You for Your Message - Roshan Damor</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #e2e8f0;
+            background-color: #0f172a;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .email-card {
+            background: #1e293b;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #00A9FF, #0078D4);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .greeting {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: #f1f5f9;
+        }
+
+        .message {
+            font-size: 16px;
+            color: #cbd5e1;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(0, 169, 255, 0.1), rgba(0, 120, 212, 0.1));
+            border: 1px solid rgba(0, 169, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .highlight-box h3 {
+            margin: 0 0 15px 0;
+            color: #00A9FF;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .highlight-box ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #94a3b8;
+        }
+
+        .highlight-box li {
+            margin-bottom: 8px;
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #00A9FF, #0078D4);
+            color: white;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 169, 255, 0.3);
+        }
+
+        .personal-note {
+            background: rgba(15, 23, 42, 0.5);
+            border-left: 4px solid #00A9FF;
+            border-radius: 0 8px 8px 0;
+            padding: 20px;
+            margin: 25px 0;
+            font-style: italic;
+        }
+
+        .footer {
+            background: #0f172a;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #334155;
+        }
+
+        .footer p {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .footer .signature {
+            color: #00A9FF;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .divider {
+            height: 1px;
+            background: #334155;
+            margin: 30px 0;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .footer {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="email-card">
+            <div class="header">
+                <h1>✨ Thank You for Reaching Out!</h1>
+                <p>I've received your message and I'm excited to connect with you</p>
+            </div>
+
+            <div class="content">
+                <div class="greeting">
+                    Hi {{ user_name }},
+                </div>
+
+                <div class="message">
+                    Thank you so much for taking the time to contact me through my portfolio website!
+                    I've successfully received your message about "{{ contact_subject }}" and I truly appreciate you
+                    reaching out.
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🚀 What happens next?</h3>
+                    <ul>
+                        <li>I personally review every message that comes through</li>
+                        <li>I'll get back to you within a few hours (usually much sooner!)</li>
+                        <li>You'll receive my response directly at {{ user_email }}</li>
+                        <li>I'm always excited to discuss new opportunities and collaborations</li>
+                    </ul>
+                </div>
+
+                <div class="personal-note">
+                    <strong>Personal Note:</strong> I believe in building meaningful connections, and I'm looking
+                    forward to learning more about your project or opportunity. Whether it's about web development, AI
+                    solutions, or just a friendly chat about tech, I'm here for it!
+                </div>
+
+                <div class="message">
+                    While you're waiting for my response, feel free to explore my latest projects, check out my blog
+                    posts, or connect with me on social media. I love sharing knowledge and learning from the amazing
+                    developer community.
+                </div>
+
+                <div class="button-container">
+                    <a href="{{ site_url }}" class="cta-button">🌐 Explore My Portfolio</a>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="message">
+                    Thanks again for considering me for your project. I can't wait to hear more about what you're
+                    working on!
+                </div>
+            </div>
+
+            <div class="footer">
+                <p class="signature">Best regards,<br>Roshan Damor</p>
+                <p>Full-Stack Developer & AI Enthusiast</p>
+                <p>This email was sent automatically from my portfolio contact form.</p>
+                <p>For urgent matters, feel free to reach me directly at: <a href="mailto:{{ reply_email }}"
+                        style="color: #00A9FF;">{{ reply_email }}</a></p>
+                <p>© {{ "now"|date:"Y" }} Roshan Damor. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
