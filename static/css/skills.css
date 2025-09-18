@@ -94,7 +94,7 @@
     gap: 10px; 
     flex: 1; 
     min-width: 0;
-        /* Allow shrinking below min-content */
+    max-width: 100%;
 }
 
 .categories-list { 
@@ -104,7 +104,7 @@
     scroll-behavior: smooth; 
     padding: 5px 0; 
     flex: 1;
-        min-width: 0;
+    min-width: 0;
 }
 
 .categories-list::-webkit-scrollbar { 
