@@ -65,7 +65,57 @@
    4. Sidebar
    ========================================================================== */
 .sidebar-card h3 { font-size: 20px; color: var(--title-color); margin-bottom: 20px; font-weight: 600; }
-.company-info-list .filled-btn { width: 100%; }
+/* Company Info Section */
+.company-info-list .filled-btn {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.company-info-list .filled-btn i {
+    margin-right: 8px;
+}
+
+/* Experience Details Section */
+.experience-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-item strong {
+    font-size: 14px;
+    color: var(--title-color);
+    font-weight: 600;
+}
+
+.detail-item span {
+    font-size: 14px;
+    color: var(--paragraph-color);
+}
+
+/* Technologies Used Section */
+.experience-skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.experience-skills-list .teg {
+    align-self: flex-start;
+    margin: 0;
+}
 .skills-list { display: flex; flex-wrap: wrap; gap: 10px; }
 .author-info { display: flex; align-items: center; gap: 15px; }
 .author-info img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--card-border); }

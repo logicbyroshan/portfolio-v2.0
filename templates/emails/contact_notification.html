@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Contact Form Submission - {{ contact_name }}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #e2e8f0;
+            background-color: #0f172a;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .email-card {
+            background: #1e293b;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .alert-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .field {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
+        }
+
+        .field-label {
+            font-weight: 600;
+            color: #10b981;
+            margin-bottom: 5px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .field-value {
+            color: #cbd5e1;
+            line-height: 1.5;
+            font-size: 16px;
+        }
+
+        .message-field {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .message-field .field-value {
+            white-space: pre-line;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .quick-actions {
+            background: rgba(15, 23, 42, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .action-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            margin: 5px 10px;
+            transition: all 0.2s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .secondary-button {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+        }
+
+        .secondary-button:hover {
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .footer {
+            background: #0f172a;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #334155;
+        }
+
+        .footer p {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .timestamp {
+            font-family: 'Courier New', monospace;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 8px 12px;
+            border-radius: 4px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .divider {
+            height: 1px;
+            background: #334155;
+            margin: 30px 0;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .footer {
+                padding: 20px;
+            }
+
+            .action-button {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="email-card">
+            <div class="header">
+                <h1>📬 New Contact Message!</h1>
+                <p>Someone wants to connect with you</p>
+            </div>
+
+            <div class="content">
+                <div class="alert-badge">
+                    🔔 New Inquiry
+                </div>
+
+                <div class="contact-info">
+                    <h3 style="margin: 0 0 20px 0; color: #10b981; font-size: 18px;">
+                        📝 Contact Details
+                    </h3>
+
+                    <div class="field">
+                        <div class="field-label">👤 From</div>
+                        <div class="field-value">{{ contact_name }}</div>
+                    </div>
+
+                    <div class="field">
+                        <div class="field-label">📧 Email</div>
+                        <div class="field-value">{{ contact_email }}</div>
+                    </div>
+
+                    <div class="field">
+                        <div class="field-label">📋 Subject</div>
+                        <div class="field-value">{{ contact_subject }}</div>
+                    </div>
+
+                    <div class="field">
+                        <div class="field-label">⏰ Submitted</div>
+                        <div class="field-value">
+                            <span class="timestamp">{{ submission_date }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-field">
+                    <div class="field-label">💬 Message</div>
+                    <div class="field-value">{{ contact_message }}</div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3 style="margin: 0 0 20px 0; color: #e2e8f0; font-size: 16px;">
+                        ⚡ Quick Actions
+                    </h3>
+                    <a href="mailto:{{ contact_email }}?subject=Re: {{ contact_subject }}" class="action-button">
+                        📧 Reply Now
+                    </a>
+                    <a href="{{ site_url }}/admin/" class="action-button secondary-button">
+                        🛠️ Admin Panel
+                    </a>
+                </div>
+
+                <div class="divider"></div>
+
+                <p style="color: #94a3b8; font-style: italic; text-align: center;">
+                    💡 <strong>Tip:</strong> I recommend responding to inquiries within a few hours for the best
+                    impression.
+                    This person took the time to reach out - they're probably excited to hear back from you!
+                </p>
+            </div>
+
+            <div class="footer">
+                <p style="color: #10b981; font-weight: 600;">🚀 Portfolio Contact System</p>
+                <p>This notification was automatically generated from your portfolio website</p>
+                <p><a href="{{ site_url }}" style="color: #10b981;">{{ site_name }}</a></p>
+                <p>© {{ "now"|date:"Y" }} Roshan Damor. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -9,6 +9,9 @@ from .views import (
     AboutMeView, CodeTogetherView,
     ResourcesListView, ResourceDetailView,
 
+    # Legal Pages
+    PrivacyPolicyView, TermsOfServiceView,
+
     # Form/API Views
     ContactSubmissionView,
     NewsletterSubscribeHomeView,
@@ -58,6 +61,10 @@ urlpatterns = [
     path('subscribe-home/', NewsletterSubscribeHomeView.as_view(), name='subscribe_home'),
     path('subscribe/', NewsletterSubscribeAjaxView.as_view(), name='subscribe_ajax'),
     path('achievements/', AchievementListView.as_view(), name='achievements_list'),
+    
+    # Legal Pages
+    path('privacy-policy/', PrivacyPolicyView.as_view(), name='privacy_policy'),
+    path('terms-of-service/', TermsOfServiceView.as_view(), name='terms_of_service'),
     
     # Like Toggle URLs
     path('blog/comment/<int:comment_id>/like/', toggle_comment_like, name='toggle_comment_like'),

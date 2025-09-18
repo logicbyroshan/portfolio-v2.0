@@ -177,43 +177,46 @@ class EmailNotificationService:
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>New Contact Form Submission</title>
             <style>
-                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
-                .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-                .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background-color: #0f172a; color: #e2e8f0; }
+                .container { max-width: 600px; margin: 0 auto; background: #1e293b; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.3); border: 1px solid #334155; }
+                .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; text-align: center; }
+                .header h1 { margin: 0; font-size: 24px; font-weight: 600; }
+                .header p { margin: 10px 0 0 0; opacity: 0.9; }
                 .content { padding: 30px; }
-                .field { margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px; border-left: 4px solid #667eea; }
-                .field-label { font-weight: 600; color: #333; margin-bottom: 5px; }
-                .field-value { color: #666; line-height: 1.5; }
-                .footer { background: #f8f9fa; padding: 20px; text-align: center; font-size: 14px; color: #666; }
+                .field { margin-bottom: 20px; padding: 15px; background: rgba(15, 23, 42, 0.5); border-radius: 5px; border-left: 4px solid #10b981; }
+                .field-label { font-weight: 600; color: #10b981; margin-bottom: 5px; font-size: 14px; text-transform: uppercase; }
+                .field-value { color: #cbd5e1; line-height: 1.5; }
+                .footer { background: #0f172a; padding: 20px; text-align: center; font-size: 14px; color: #64748b; border-top: 1px solid #334155; }
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>New Contact Form Submission</h1>
-                    <p>You have received a new message from your portfolio website</p>
+                    <h1>📬 New Contact Message!</h1>
+                    <p>Someone wants to connect with you</p>
                 </div>
                 <div class="content">
                     <div class="field">
-                        <div class="field-label">From:</div>
+                        <div class="field-label">👤 From:</div>
                         <div class="field-value">{{ contact_name }} ({{ contact_email }})</div>
                     </div>
                     <div class="field">
-                        <div class="field-label">Subject:</div>
+                        <div class="field-label">📋 Subject:</div>
                         <div class="field-value">{{ contact_subject }}</div>
                     </div>
                     <div class="field">
-                        <div class="field-label">Message:</div>
+                        <div class="field-label">💬 Message:</div>
                         <div class="field-value" style="white-space: pre-line;">{{ contact_message }}</div>
                     </div>
                     <div class="field">
-                        <div class="field-label">Submitted:</div>
+                        <div class="field-label">⏰ Submitted:</div>
                         <div class="field-value">{{ submission_date }}</div>
                     </div>
                 </div>
                 <div class="footer">
-                    <p>This email was sent from {{ site_name }}</p>
-                    <p><a href="{{ site_url }}">Visit Website</a></p>
+                    <p style="color: #10b981; font-weight: 600;">🚀 Portfolio Contact System</p>
+                    <p>This notification was sent from {{ site_name }}</p>
+                    <p><a href="{{ site_url }}" style="color: #10b981;">Visit Website</a></p>
                 </div>
             </div>
         </body>
@@ -223,17 +226,18 @@ class EmailNotificationService:
     def _get_default_admin_text_template(self):
         """Default text template for admin notification"""
         return """
-        NEW CONTACT FORM SUBMISSION
+        📬 NEW CONTACT MESSAGE!
         
-        From: {{ contact_name }} ({{ contact_email }})
-        Subject: {{ contact_subject }}
-        Submitted: {{ submission_date }}
+        👤 From: {{ contact_name }} ({{ contact_email }})
+        📋 Subject: {{ contact_subject }}
+        ⏰ Submitted: {{ submission_date }}
         
-        Message:
+        💬 Message:
         {{ contact_message }}
         
         ---
-        This email was sent from {{ site_name }}
+        🚀 Portfolio Contact System
+        This notification was sent from {{ site_name }}
         {{ site_url }}
         """
     
@@ -245,49 +249,59 @@ class EmailNotificationService:
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Thank You for Contacting Us</title>
+            <title>Thank You for Your Message</title>
             <style>
-                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
-                .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-                .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
-                .content { padding: 30px; line-height: 1.6; color: #333; }
-                .highlight { background: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 4px solid #667eea; margin: 20px 0; }
-                .footer { background: #f8f9fa; padding: 20px; text-align: center; font-size: 14px; color: #666; }
-                .button { display: inline-block; background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 10px 0; }
+                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background-color: #0f172a; color: #e2e8f0; }
+                .container { max-width: 600px; margin: 0 auto; background: #1e293b; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.3); border: 1px solid #334155; }
+                .header { background: linear-gradient(135deg, #00A9FF 0%, #0078D4 100%); color: white; padding: 30px; text-align: center; }
+                .header h1 { margin: 0; font-size: 24px; font-weight: 600; }
+                .header p { margin: 10px 0 0 0; opacity: 0.9; }
+                .content { padding: 30px; line-height: 1.6; color: #cbd5e1; }
+                .highlight { background: linear-gradient(135deg, rgba(0, 169, 255, 0.1), rgba(0, 120, 212, 0.1)); padding: 15px; border-radius: 5px; border-left: 4px solid #00A9FF; margin: 20px 0; }
+                .footer { background: #0f172a; padding: 20px; text-align: center; font-size: 14px; color: #64748b; border-top: 1px solid #334155; }
+                .button { display: inline-block; background: #00A9FF; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 10px 0; font-weight: 500; }
+                .personal-note { background: rgba(15, 23, 42, 0.5); border-left: 4px solid #00A9FF; border-radius: 0 8px 8px 0; padding: 20px; margin: 25px 0; font-style: italic; }
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Thank You for Contacting Us!</h1>
-                    <p>We've received your message and will get back to you soon</p>
+                    <h1>✨ Thank You for Reaching Out!</h1>
+                    <p>I've received your message and I'm excited to connect</p>
                 </div>
                 <div class="content">
                     <p>Hi {{ user_name }},</p>
                     
-                    <p>Thank you for reaching out through our contact form. We have successfully received your message regarding "{{ contact_subject }}" and appreciate you taking the time to contact us.</p>
+                    <p>Thank you so much for taking the time to contact me through my portfolio! I've successfully received your message about "{{ contact_subject }}" and I truly appreciate you reaching out.</p>
                     
                     <div class="highlight">
-                        <strong>What happens next?</strong><br>
-                        • Your message has been forwarded to our team<br>
-                        • We typically respond within 24-48 hours<br>
-                        • You'll receive a reply at {{ user_email }}<br>
-                        • For urgent matters, feel free to reach out directly
+                        <strong>🚀 What happens next?</strong><br>
+                        • I personally review every message that comes through<br>
+                        • I'll get back to you within a few hours (usually much sooner!)<br>
+                        • You'll receive my response directly at {{ user_email }}<br>
+                        • I'm always excited to discuss new opportunities and collaborations
                     </div>
                     
-                    <p>In the meantime, feel free to explore our website and check out our latest projects and blog posts.</p>
+                    <div class="personal-note">
+                        <strong>Personal Note:</strong> I believe in building meaningful connections, and I'm looking forward to learning more about your project or opportunity. Whether it's about web development, AI solutions, or just a friendly chat about tech, I'm here for it!
+                    </div>
+                    
+                    <p>While you're waiting for my response, feel free to explore my latest projects and blog posts.</p>
                     
                     <p style="text-align: center;">
-                        <a href="{{ site_url }}" class="button">Visit Our Website</a>
+                        <a href="{{ site_url }}" class="button">🌐 Explore My Portfolio</a>
                     </p>
+                    
+                    <p>Thanks again for considering me for your project. I can't wait to hear more about what you're working on!</p>
                     
                     <p>Best regards,<br>
                     <strong>{{ admin_name }}</strong><br>
-                    {{ site_name }}</p>
+                    Full-Stack Developer & AI Enthusiast</p>
                 </div>
                 <div class="footer">
-                    <p>This is an automated message. Please do not reply to this email.</p>
-                    <p>For direct communication, reach us at: <a href="mailto:{{ reply_email }}">{{ reply_email }}</a></p>
+                    <p>This email was sent automatically from my portfolio contact form.</p>
+                    <p>For urgent matters, reach me directly at: <a href="mailto:{{ reply_email }}" style="color: #00A9FF;">{{ reply_email }}</a></p>
+                    <p style="color: #00A9FF; font-weight: 600;">{{ site_name }}</p>
                 </div>
             </div>
         </body>
@@ -297,27 +311,31 @@ class EmailNotificationService:
     def _get_default_thankyou_text_template(self):
         """Default text template for thank you email"""
         return """
-        Thank You for Contacting Us!
+        ✨ Thank You for Reaching Out!
         
         Hi {{ user_name }},
         
-        Thank you for reaching out through our contact form. We have successfully received your message regarding "{{ contact_subject }}" and appreciate you taking the time to contact us.
+        Thank you so much for taking the time to contact me through my portfolio! I've successfully received your message about "{{ contact_subject }}" and I truly appreciate you reaching out.
         
-        What happens next?
-        • Your message has been forwarded to our team
-        • We typically respond within 24-48 hours
-        • You'll receive a reply at {{ user_email }}
-        • For urgent matters, feel free to reach out directly
+        🚀 What happens next?
+        • I personally review every message that comes through
+        • I'll get back to you within a few hours (usually much sooner!)
+        • You'll receive my response directly at {{ user_email }}
+        • I'm always excited to discuss new opportunities and collaborations
         
-        In the meantime, feel free to explore our website and check out our latest projects and blog posts.
+        Personal Note: I believe in building meaningful connections, and I'm looking forward to learning more about your project or opportunity. Whether it's about web development, AI solutions, or just a friendly chat about tech, I'm here for it!
         
-        Visit our website: {{ site_url }}
+        While you're waiting for my response, feel free to explore my latest projects and blog posts.
+        
+        Visit my portfolio: {{ site_url }}
+        
+        Thanks again for considering me for your project. I can't wait to hear more about what you're working on!
         
         Best regards,
         {{ admin_name }}
-        {{ site_name }}
+        Full-Stack Developer & AI Enthusiast
         
         ---
-        This is an automated message. Please do not reply to this email.
-        For direct communication, reach us at: {{ reply_email }}
+        This email was sent automatically from my portfolio contact form.
+        For urgent matters, reach me directly at: {{ reply_email }}
         """

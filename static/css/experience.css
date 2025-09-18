@@ -200,6 +200,7 @@
 .exp-header h3 {
     color: var(--title-color);
     font-size: 20px;
+    line-height: 1.2;
 }
 .exp-header span {
     font-size: 14px;

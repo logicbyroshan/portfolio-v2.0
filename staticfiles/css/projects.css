@@ -199,6 +199,7 @@
 }
 .project-content h3 {
     font-size: 22px;
+    line-height: 1.2;
 }
 .project-content h3 a {
     color: var(--title-color);
