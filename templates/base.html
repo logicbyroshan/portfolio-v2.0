@@ -52,18 +52,16 @@
             <nav class="nav-left">
                 <ul>
                     <!-- DYNAMIC: URL tags for navigation -->
-                    <li><a href="{% url 'portfolio:blog_list' %}"><span class="nav-dot"></span>Articles</a></li>
-                    <li><a href="{% url 'portfolio:project_list' %}"><span class="nav-dot"></span>Projects</a></li>
-                    <li><a href="{% url 'portfolio:experience_list' %}"><span class="nav-dot"></span>Experiences</a></li>
+                    <li><a href="{% url 'portfolio:blog_list' %}"><span class="nav-dot"></span>ARTICLES</a></li>
+                    <li><a href="{% url 'portfolio:project_list' %}"><span class="nav-dot"></span>PROJECTS</a></li>
+                    <li><a href="{% url 'portfolio:experience_list' %}"><span class="nav-dot"></span>EXPERIENCES</a></li>
                 </ul>
             </nav>
 
             <!-- Center Logo -->
             <div class="nav-center-logo">
                 <a href="{% url 'portfolio:home' %}">
-                    <!-- Light logo (visible in dark theme) -->
                     <img src="{% static 'images/logo.png' %}" alt="Roshan Damor Logo" class="logo-light">
-                    <!-- Dark logo (visible in light theme) -->
                     <img src="{% static 'images/logo-dark.png' %}" alt="Roshan Damor Logo" class="logo-dark">
                 </a>
             </div>
@@ -77,12 +75,12 @@
                 
                 <!-- Resume Button -->
                 <button class="outline-btn" id="open-resume-modal">
-                    <i class="fas fa-file-alt"></i> Resume
+                    <i class="fas fa-file-alt"></i> RESUME
                 </button>
                 
                 <!-- Video Resume Button -->
                 <button class="filled-btn" id="open-video-modal">
-                    <i class="fas fa-video"></i> Video Resume
+                    <i class="fas fa-video"></i> VIDEO RESUME
                 </button>
             </div>
 
@@ -96,18 +94,18 @@
         <div class="mobile-nav-menu" id="mobile-nav-menu">
             <div class="mobile-menu-content">
                 <nav class="mobile-nav-links">
-                    <a href="{% url 'portfolio:blog_list' %}"><span class="nav-dot"></span>Articles</a>
-                    <a href="{% url 'portfolio:project_list' %}"><span class="nav-dot"></span>Projects</a>
-                    <a href="{% url 'portfolio:experience_list' %}"><span class="nav-dot"></span>Experiences</a>
+                    <a href="{% url 'portfolio:blog_list' %}"><span class="nav-dot"></span>ARTICLES</a>
+                    <a href="{% url 'portfolio:project_list' %}"><span class="nav-dot"></span>PROJECTS</a>
+                    <a href="{% url 'portfolio:experience_list' %}"><span class="nav-dot"></span>EXPERIENCES</a>
                 </nav>
                 <div class="mobile-nav-buttons">
                     <!-- Resume Button -->
                     <button class="outline-btn" id="mobile-open-resume-modal">
-                        <i class="fas fa-file-alt"></i> Resume
+                        <i class="fas fa-file-alt"></i> RESUME
                     </button>
                     <!-- Video Resume Button -->
                     <button class="filled-btn" id="mobile-open-video-modal">
-                        <i class="fas fa-video"></i> Video Resume
+                        <i class="fas fa-video"></i> VIDEO RESUME
                     </button>
                 </div>
             </div>
@@ -163,10 +161,10 @@
                     <h4>Quick Links</h4>
                     <ul>
                         <!-- DYNAMIC: URL tags with anchors -->
-                        <li><a href="{% url 'portfolio:home' %}">Home</a></li>
-                        <li><a href="{% url 'portfolio:about_me' %}">About Me</a></li>
-                        <li><a href="{% url 'portfolio:skill_list' %}">Skills</a></li>
-                        <li><a href="{% url 'portfolio:home' %}#contact">Contact</a></li>
+                        <li><a href="{% url 'portfolio:home' %}">HOME</a></li>
+                        <li><a href="{% url 'portfolio:about_me' %}">ABOUT</a></li>
+                        <li><a href="{% url 'portfolio:skill_list' %}">SKILLS</a></li>
+                        <li><a href="{% url 'portfolio:home' %}#contact">CONTACT</a></li>
                     </ul>
                 </div>
 
@@ -174,10 +172,10 @@
                 <div class="footer-col-links">
                     <h4>Explore</h4>
                     <ul>
-                        <li><a href="https://www.ideamitra.roshanproject.site">Startups</a></li>
-                        <li><a href="https://www.gigmitra.roshanproject.site">Freelance</a></li>
-                        <li><a href="https://www.blogmitra.roshanproject.site">Articles</a></li>
-                        <li><a href="https://www.knowroshan.roshanproject.site">Personal</a></li>
+                        <li><a href="https://www.blogmitra.roshanproject.site">ARTICLES</a></li>
+                        <li><a href="https://www.knowroshan.roshanproject.site">PERSONAL</a></li>
+                        <li><a href="https://www.ideamitra.roshanproject.site">STARTUPS</a></li>
+                        <li><a href="https://www.gigmitra.roshanproject.site">FREELANCE</a></li>
                     </ul>
                 </div>
 
@@ -185,10 +183,10 @@
                 <div class="footer-col-links">
                     <h4>Resources</h4>
                     <ul>
-                        <li><a href="{% url 'portfolio:project_list' %}">All Projects</a></li>
-                        <li><a href="{% url 'portfolio:blog_list' %}">All Articles</a></li>
-                        <li><a href="{% url 'portfolio:achievements_list' %}">All Achievements</a></li>
-                        <li><a href="{% url 'portfolio:experience_list' %}">All Experiences</a></li>
+                        <li><a href="{% url 'portfolio:blog_list' %}">ALL ARTICLES</a></li>
+                        <li><a href="{% url 'portfolio:project_list' %}">ALL PROJECTS</a></li>
+                        <li><a href="{% url 'portfolio:experience_list' %}">ALL EXPERIENCES</a></li>
+                        <li><a href="{% url 'portfolio:achievements_list' %}">ALL ACHIEVEMENTS</a></li>
                     </ul>
                 </div>
 
@@ -196,10 +194,10 @@
                 <div class="footer-col-links">
                     <h4>Connect</h4>
                     <ul>
-                        <li><a href="https://risetogethr.tech" target="_blank">My Community</a></li>
-                        <li><a href="{% url 'portfolio:resource_list' %}">My Resources</a></li>
-                        <li><a href="{% url 'my_playlist' %}">My Playlist</a></li>
-                        <li><a href="{% url 'portfolio:code_together' %}">Code Together</a></li>
+                        <li><a href="{% url 'my_playlist' %}">MY PLAYLIST</a></li>
+                        <li><a href="{% url 'portfolio:resource_list' %}">MY RESOURCES</a></li>
+                        <li><a href="https://risetogethr.tech" target="_blank">MY COMMUNITY</a></li>
+                        <li><a href="{% url 'portfolio:code_together' %}">CODE TOGETHER</a></li>
                     </ul>
                 </div>
             </div>

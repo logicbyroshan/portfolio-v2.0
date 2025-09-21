@@ -26,8 +26,8 @@ class SiteConfiguration(models.Model):
     github_url = models.URLField(blank=True, default="https://github.com/logicbyroshan")
     linkedin_url = models.URLField(blank=True, default="https://www.linkedin.com/in/logicbyroshan")
     youtube_url = models.URLField(blank=True, default="https://www.youtube.com/channel/logicbyroshan")
-    instagram_url = models.URLField(blank=True, null=True)
-    facebook_url = models.URLField(blank=True, null=True)
+    instagram_url = models.URLField(blank=True, default="https://www.instagram.com/logicbyroshan")
+    facebook_url = models.URLField(blank=True, default="https://www.facebook.com/logicbyroshan")
     
     # --- Contact Information ---
     email = models.EmailField(blank=True, default="contact@roshandamor.me")
@@ -62,6 +62,8 @@ class Category(models.Model):
         PROJECT = 'PRO', 'Project'
         BLOG = 'BLG', 'Blog'
         EXPERIENCE = 'EXP', 'Experience'
+        SKILL = 'SKL', 'Skill'
+        ACHIEVEMENT = 'ACH', 'Achievement'
         OTHER = 'OTH', 'Other'
 
     name = models.CharField(max_length=100)
@@ -199,10 +201,6 @@ class ProjectComment(models.Model):
         return False
 
 class Experience(models.Model):
-    class ExperienceType(models.TextChoices):
-        FULL_TIME = 'FT', 'Full-Time'
-        INTERNSHIP = 'IN', 'Internship'
-        FREELANCE = 'FR', 'Freelance'
     company_name = models.CharField(max_length=200)
     company_url = models.URLField(blank=True, null=True)
     role = models.CharField(max_length=200)
@@ -212,7 +210,7 @@ class Experience(models.Model):
     responsibilities = HTMLField()
     achievements = HTMLField()
     technologies = models.ManyToManyField(Technology, related_name="experiences")
-    experience_type = models.CharField(max_length=2, choices=ExperienceType.choices, default=ExperienceType.FULL_TIME)
+    experience_type = models.ForeignKey(Category, limit_choices_to={'category_type': Category.CategoryType.EXPERIENCE}, on_delete=models.CASCADE)
     
     class Meta:
         ordering = ['-start_date']
@@ -224,17 +222,6 @@ class Experience(models.Model):
 # =========================================================================
 # NEW DYNAMIC SECTION MODELS
 # =========================================================================
-
-class Service(models.Model):
-    """NEW: For a service listed in the 'About Me' section."""
-    title = models.CharField(max_length=100)
-    description = HTMLField()
-    icon = models.CharField(max_length=50, help_text="Font Awesome icon class (e.g., 'fas fa-code')")
-    order = models.PositiveIntegerField(default=0)
-    class Meta:
-        ordering = ['order']
-    def __str__(self):
-        return self.title
 
 
 class Resume(models.Model):
@@ -294,29 +281,12 @@ class ContactSubmission(models.Model):
 
 # --- SKILL MODELS (enhanced with categories) ---
 class Skill(models.Model):
-    # Skill Category Choices
-    class SkillCategory(models.TextChoices):
-        FRONTEND = 'FRONTEND', 'Frontend Development'
-        BACKEND = 'BACKEND', 'Backend Development'
-        DATABASE = 'DATABASE', 'Database & Storage'
-        DEVOPS = 'DEVOPS', 'DevOps & Deployment'
-        MOBILE = 'MOBILE', 'Mobile Development'
-        AI_ML = 'AI_ML', 'AI & Machine Learning'
-        DESIGN = 'DESIGN', 'Design & UI/UX'
-        TOOLS = 'TOOLS', 'Development Tools'
-        TESTING = 'TESTING', 'Testing & QA'
-        OTHER = 'OTHER', 'Other Skills'
-
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True, editable=False)
-    category = models.CharField(
-        max_length=20, 
-        choices=SkillCategory.choices, 
-        default=SkillCategory.OTHER,
-        help_text="The category this skill belongs to"
-    )
+    category = models.ForeignKey(Category, limit_choices_to={'category_type': Category.CategoryType.SKILL}, on_delete=models.CASCADE)
     icon = models.CharField(max_length=50)
     summary = HTMLField()
+    order = models.PositiveIntegerField(default=0)
     technologies = models.ManyToManyField(Technology, through='SkillTechnologyDetail')
     
     class Meta:
@@ -348,20 +318,13 @@ class FAQ(models.Model):
         return self.question
 
 class Achievement(models.Model):
-    # Choices for the type of achievement for easy filtering
-    class AchievementType(models.TextChoices):
-        CERTIFICATION = 'CERT', 'Certification'
-        AWARD = 'AWRD', 'Award'
-        PUBLICATION = 'PUBL', 'Publication'
-        HONOR = 'HONR', 'Honor'
-
     title = models.CharField(max_length=200)
     issuing_organization = models.CharField(max_length=200)
     summary = HTMLField(help_text="A brief description of the achievement.")
     date_issued = models.DateField()
     credential_url = models.URLField(max_length=255, blank=True, null=True, help_text="Link to verify the credential, if available.")
     image = models.ImageField(upload_to='achievements/', blank=True, null=True, help_text="Optional: A scan or image of the certificate/award.")
-    category = models.CharField(max_length=4, choices=AchievementType.choices, default=AchievementType.CERTIFICATION)
+    category = models.ForeignKey(Category, limit_choices_to={'category_type': Category.CategoryType.ACHIEVEMENT}, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['-date_issued'] # Show newest first by default
@@ -400,34 +363,6 @@ class AboutMeConfiguration(models.Model):
         </ul>""",
         help_text="Detailed description with HTML support"
     )
-    
-    # --- Action Card 1: Music ---
-    action1_title = models.CharField(max_length=100, default="My Song Playlists")
-    action1_description = models.TextField(
-        max_length=300,
-        default="Discover the music that fuels my coding sessions and creative work."
-    )
-    action1_button_text = models.CharField(max_length=50, default="Listen Now")
-    
-    # --- Action Card 2: Community ---
-    action2_title = models.CharField(max_length=100, default="Join My Community")
-    action2_description = models.TextField(
-        max_length=300,
-        default="Let's connect, share ideas, and build amazing things together."
-    )
-    action2_button_text = models.CharField(max_length=50, default="Join Community")
-    action2_link = models.URLField(
-        default="https://risetogethr.tech",
-        help_text="External link for community"
-    )
-    
-    # --- Action Card 3: Resources ---
-    action3_title = models.CharField(max_length=100, default="View My Resources")
-    action3_description = models.TextField(
-        max_length=300,
-        default="A curated list of tools, articles, and learning materials that I find valuable."
-    )
-    action3_button_text = models.CharField(max_length=50, default="Explore Resources")
     
     # --- Meta Information ---
     created_at = models.DateTimeField(auto_now_add=True)

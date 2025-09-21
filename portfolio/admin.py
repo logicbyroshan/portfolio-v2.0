@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from django.contrib import admin
 from .models import (
     SiteConfiguration, Technology, Category, Project, ProjectImage, Blog, Comment, 
-    Experience, FAQ, Skill, SkillTechnologyDetail, Service, Achievement,
-    Resume, VideoResume, NewsletterSubscriber, ContactSubmission, AboutMeConfiguration,
+    Experience, FAQ, Skill, SkillTechnologyDetail, Achievement, Resume, VideoResume,
+    NewsletterSubscriber, ContactSubmission, AboutMeConfiguration,
     CodeTogetherConfiguration, CollaborationProposal, Testimonial,
     ResourcesConfiguration, Resource, ResourceCategory, ResourceView
 )
@@ -118,11 +118,6 @@ class SkillAdmin(admin.ModelAdmin):
     list_filter = ('category',)
     search_fields = ('title', 'summary')
     list_editable = ('category',)
-
-@admin.register(Service)
-class ServiceAdmin(admin.ModelAdmin):
-    list_display = ('title', 'order')
-    list_editable = ('order',)
 
 
 @admin.register(NewsletterSubscriber)

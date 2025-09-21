@@ -1,6 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // =========================================================================
+    // LOGO HOME LINK FUNCTIONALITY
+    // =========================================================================
+    const logoContainer = document.querySelector('.nav-center-logo');
+    
+    if (logoContainer) {
+        logoContainer.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Navigate to home page
+            window.location.href = '/';
+        });
+        
+        // Add cursor pointer to indicate it's clickable
+        logoContainer.style.cursor = 'pointer';
+    }
+
+    // =========================================================================
     // MOBILE NAVIGATION TOGGLE
     // =========================================================================
     const mobileNavToggle = document.getElementById('mobile-nav-toggle');
@@ -115,20 +131,40 @@ document.addEventListener('DOMContentLoaded', () => {
     // Get current theme from localStorage or default to dark
     const getCurrentTheme = () => localStorage.getItem('theme') || 'dark';
     
-    // Set theme on document
+    // Set theme on document with smooth transitions
     const setTheme = (theme) => {
-        if (theme === 'light') {
-            document.documentElement.setAttribute('data-theme', 'light');
-            if (themeIcon) themeIcon.className = 'fas fa-moon';
-            if (mobileThemeIcon) mobileThemeIcon.className = 'fas fa-moon';
-            if (mobileHeaderThemeIcon) mobileHeaderThemeIcon.className = 'fas fa-moon';
-        } else {
-            document.documentElement.removeAttribute('data-theme');
-            if (themeIcon) themeIcon.className = 'fas fa-sun';
-            if (mobileThemeIcon) mobileThemeIcon.className = 'fas fa-sun';
-            if (mobileHeaderThemeIcon) mobileHeaderThemeIcon.className = 'fas fa-sun';
-        }
-        localStorage.setItem('theme', theme);
+        // Add transition class to theme toggle buttons for smooth icon rotation
+        const toggleButtons = [themeToggle, mobileThemeToggle, mobileHeaderThemeToggle].filter(Boolean);
+        toggleButtons.forEach(button => button?.classList.add('transitioning'));
+        
+        // Add dissolve transition to body
+        document.body.style.transition = 'all 0.6s ease';
+        
+        // Set theme with a slight delay for smoother transition
+        setTimeout(() => {
+            if (theme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                if (themeIcon) themeIcon.className = 'fas fa-moon';
+                if (mobileThemeIcon) mobileThemeIcon.className = 'fas fa-moon';
+                if (mobileHeaderThemeIcon) mobileHeaderThemeIcon.className = 'fas fa-moon';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                if (themeIcon) themeIcon.className = 'fas fa-sun';
+                if (mobileThemeIcon) mobileThemeIcon.className = 'fas fa-sun';
+                if (mobileHeaderThemeIcon) mobileHeaderThemeIcon.className = 'fas fa-sun';
+            }
+            localStorage.setItem('theme', theme);
+            
+            // Re-initialize particles with new theme colors
+            setTimeout(() => {
+                initParticles();
+            }, 100);
+        }, 100);
+        
+        // Remove transition classes after animation
+        setTimeout(() => {
+            toggleButtons.forEach(button => button?.classList.remove('transitioning'));
+        }, 400);
     };
 
     // Initialize particles function
@@ -185,6 +221,69 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileHeaderThemeToggle.addEventListener('click', toggleTheme);
     }
 
+    // =========================================================================
+    // GLOBAL READING PROGRESS INDICATOR
+    // =========================================================================
+    function initReadingProgress() {
+        // Only add reading progress if page has sufficient content
+        const bodyHeight = document.body.scrollHeight;
+        const viewportHeight = window.innerHeight;
+        
+        // Only show progress bar if page is longer than 1.5 viewports
+        if (bodyHeight > viewportHeight * 1.5) {
+            const progressBar = document.createElement('div');
+            progressBar.className = 'reading-progress';
+            progressBar.setAttribute('aria-label', 'Reading progress');
+            progressBar.setAttribute('role', 'progressbar');
+            
+            document.body.appendChild(progressBar);
+            
+            // Show progress bar after a short delay
+            setTimeout(() => {
+                progressBar.classList.add('active');
+            }, 500);
+            
+            // Update reading progress on scroll
+            function updateProgress() {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = Math.min((winScroll / height) * 100, 100);
+                
+                progressBar.style.width = scrolled + '%';
+                progressBar.setAttribute('aria-valuenow', Math.round(scrolled));
+                progressBar.setAttribute('aria-valuemin', '0');
+                progressBar.setAttribute('aria-valuemax', '100');
+            }
+            
+            // Throttled scroll event for better performance
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                if (scrollTimeout) {
+                    cancelAnimationFrame(scrollTimeout);
+                }
+                scrollTimeout = requestAnimationFrame(updateProgress);
+            }, { passive: true });
+            
+            // Update on resize
+            window.addEventListener('resize', () => {
+                const newBodyHeight = document.body.scrollHeight;
+                const newViewportHeight = window.innerHeight;
+                
+                if (newBodyHeight <= newViewportHeight * 1.5) {
+                    progressBar.style.display = 'none';
+                } else {
+                    progressBar.style.display = 'block';
+                    updateProgress();
+                }
+            }, { passive: true });
+            
+            // Initial update
+            updateProgress();
+        }
+    }
+
+    // Initialize reading progress
+    initReadingProgress();
 
     // =========================================================================
     // PARTICLES.JS INITIALIZATION (GLOBAL)

@@ -15,7 +15,7 @@ import json
 # Import all models from your models.py
 from .models import (
     Skill, Experience, Project, Blog, FAQ, Category,
-    NewsletterSubscriber, Comment, ProjectComment, Service, Achievement, 
+    NewsletterSubscriber, Comment, ProjectComment, Achievement, 
     SiteConfiguration, Resume, VideoResume, AboutMeConfiguration,
     CodeTogetherConfiguration, CollaborationProposal, Testimonial,
     Resource, Technology, ContactSubmission, ResourceView,
@@ -42,7 +42,7 @@ class HomeView(TemplateView):
         # =================================================================
         # NEW & UPDATED: Services with Dynamic Animation Delay
         # =================================================================
-        services = Service.objects.order_by('order')
+        services = Skill.objects.order_by('order')
         services_col1 = list(services[:2]) # Convert queryset slice to list
         services_col2 = list(services[2:4])
 

@@ -125,6 +125,8 @@
     align-items: center;
     gap: 8px;
     transition: all 0.3s ease;
+    white-space: nowrap;
+        min-width: fit-content;
 }
 #sort-button:hover {
     border-color: var(--accent-color);
@@ -165,7 +167,7 @@
    ========================================================================== */
 .blog-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 30px;
     width: 100%;
 }
@@ -311,7 +313,7 @@
    ========================================================================== */
 @media (max-width: 992px) {
     .blog-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     }
 }
 @media (max-width: 768px) {

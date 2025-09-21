@@ -86,19 +86,19 @@
     <section class="hero-section portfolio-container">
         <div class="home-container">
             <div class="home-content" data-animation="fade-in-up">
-                <p>{{ config.hero_greeting|default:"HIII, IT'S ME" }}</p>
+                <p>👋 {{ config.hero_greeting|default:"HIII, IT'S ME" }}</p>
                 <h1>{{ config.hero_name|default:"Roshan Damor" }}</h1>
                 <h4>I am a <span id="skill-text">{{ config.hero_tagline|default:"Web Developer" }}</span></h4>
-                <p>GREETINGS, ALL DIGITAL EXPLORERS! I AM ROSHAN, A PASSIONATE AND INNOVATIVE DEVELOPER <b><i>"BUILDING AI-POWERED SOLUTIONS & SCALABLE WEB APPS — SDE & AI ENGINEER"</i></b> </p>
+                <p>🙏 GREETINGS, ALL DIGITAL EXPLORERS! I AM ROSHAN, A PASSIONATE AND INNOVATIVE DEVELOPER <b><i>"BUILDING AI-POWERED SOLUTIONS & SCALABLE WEB APPS — SDE & AI ENGINEER"</i></b> </p>
                 <!-- Hero Action Buttons -->
                 <div class="hero-actions">
                     <a type="button" class="filled-btn" id="open-ai-modal">
                         <i class="fas fa-robot"></i>
                         Ask AI
                     </a>
-                    <a href="{% url 'portfolio:code_together' %}" class="outline-btn">
-                        <i class="fa-solid fa-code"></i>
-                        Code Together
+                    <a href="{% url 'portfolio:about_me' %}" class="outline-btn">
+                        <i class="fa-solid fa-user"></i>
+                        About Me
                     </a>
                 </div>
             </div>
@@ -125,8 +125,6 @@
     <section id="about" class="about-section portfolio-container" data-animation="fade-in">
         <div class="section-title">
             <h2>About <span>Me</span></h2>
-            <p>A passionate developer dedicated to building beautiful, functional, and user-centric digital experiences.</p>
-            <a href="{% url 'portfolio:about_me' %}" class="awesome">Know More <i class="fa-solid fa-arrow-right"></i></a>
         </div>
         <div class="about-content card">
             <div class="services-column">
@@ -156,7 +154,7 @@
     <section id="experience" class="experience-section portfolio-container" data-animation="fade-in">
         <div class="portfolio-header">
             <div class="head">
-                <h1>Where I've <br><span>Worked</span></h1>
+                <h2>Where I've <span>Worked</span></h2>
                 <a href="{% url 'portfolio:experience_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a>
             </div>
             <p>"A glimpse into my professional journey, contributing to impactful projects and collaborating with talented teams."</p>
@@ -182,7 +180,7 @@
     <!-- ========================= 4. PROJECTS SECTION ========================= -->
     <section class="projects-section portfolio-container">
         <header class="portfolio-header" data-animation="fade-in-up">
-            <div class="head"><h1>Things I've <br><span>Built</span></h1><a href="{% url 'portfolio:project_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a></div>
+            <div class="head"><h2>Things I've <span>Crafted</span></h2><a href="{% url 'portfolio:project_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a></div>
             <p>"I love turning ideas into reality through code. Each project is a reflection of my skills, problem-solving approach, and creativity."</p>
         </header>
         <div class="cards-container">
@@ -223,7 +221,7 @@
     <!-- ========================= 5. BLOGS SECTION ========================= -->
     <section class="blogs-section portfolio-container">
         <header class="portfolio-header" data-animation="fade-in-up">
-            <div class="head"><h1>Latest I've <br><span>Written</span></h1><a href="{% url 'portfolio:blog_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a></div>
+            <div class="head"><h2>Latest I've <span>Written</span></h2><a href="{% url 'portfolio:blog_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a></div>
             <p>"I enjoy sharing insights and experiences through writing. Check out some of my latest posts:"</p>
         </header>
         <div class="cards-container">
@@ -255,8 +253,7 @@
     <section id="newsletter" class="cta-section portfolio-container" data-animation="fade-in">
         <div class="cta-container card">
             <div class="cta-left-content">
-                <i class="fa-solid fa-paper-plane"></i>
-                <h2>Stay Updated</h2>
+                <h2><i class="fa-solid fa-paper-plane"></i> Stay Updated</h2>
                 <p>Subscribe to my newsletter for the latest articles, project updates, and tech insights delivered straight to your inbox.</p>
             </div>
             <div class="cta-right-content">
@@ -281,7 +278,7 @@
     <!-- ========================= 7. FAQ SECTION ========================= -->
     <section class="faq-section portfolio-container">
         <header class="portfolio-header" data-animation="fade-in-up">
-            <div class="head"><h1>Got Some <br><span>Questions?</span></h1></div>
+            <div class="head"><h2>Got Some <span>Questions?</span></h2></div>
             <p>"Here are some common questions I get asked. If you have more queries, feel free to reach out!"</p>
         </header>
         <div class="card-container" id="faq-container">
@@ -310,15 +307,15 @@
 
     <!-- ========================= 8. CONTACT SECTION ========================= -->
     <section id="contact" class="contact-section portfolio-container" data-animation="fade-in">
-        <div class="section-title"><h2>Let's Get <span>Connected!</span></h2><p>"Interested in working together or have a question? I’d love to hear from you!"</p></div>
+        <div class="section-title"><h2>Let's Get <span>Connected!</span></h2></div>
         <div class="contact-wrapper card">
             <div class="mail-contact-card">
                 <div class="left-contact-info">
                     <h3>Contact Information</h3><p>Have a project in mind or just want to say hello? Feel free to reach out.</p>
                     <ul class="contact-details-list">
-                        <li><i class="fa-solid fa-phone"></i><span>+12 345 678 90</span></li>
-                        <li><i class="fa-solid fa-envelope"></i><span>roshan.damor@example.com</span></li>
-                        <li><i class="fa-solid fa-location-dot"></i><span>Mumbai, India</span></li>
+                        <li><i class="fa-solid fa-phone"></i><span>{% if config.phone %}{{ config.phone }}{% else %}Not provided{% endif %}</span></li>
+                        <li><i class="fa-solid fa-envelope"></i><span>{% if config.email %}{{ config.email }}{% else %}Not provided{% endif %}</span></li>
+                        <li><i class="fa-solid fa-location-dot"></i><span>{% if config.location %}{{ config.location }}{% else %}Not provided{% endif %}</span></li>
                     </ul>
                 </div>
                 <div class="right-contact-form">
@@ -351,26 +348,13 @@
             </div>
             
             <div class="ai-chat-interface">
-                <!-- Chat messages area -->
                 <div class="ai-chat-messages" id="ai-chat-messages">
-                    <div class="welcome-message">
-                        <div class="ai-avatar">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="message-content">
-                            <p>👋 Hi! I'm your AI assistant. Ask me anything about Roshan's skills, experience, or projects!</p>
-                        </div>
-                    </div>
+                    <!-- Chat messages will be dynamically inserted here -->
                 </div>
-                
                 <!-- Input form -->
                 <form id="ai-form" class="ai-query-form" action="{% url 'ai:submit_ai_query' %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="input-container">
-                        <button type="button" class="attach-btn" id="attach-file-btn" title="Attach Files">
-                            <i class="fas fa-paperclip"></i>
-                        </button>
-                        <input type="file" name="attachment" id="ai-file-input" hidden multiple accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png">
                         <div class="textarea-container">
                             <textarea name="question" placeholder="Ask anything about me, e.g., 'What are your key skills?' (Ctrl+Enter to send)" rows="1" maxlength="1000"></textarea>
                             <div class="char-count">
