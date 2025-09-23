@@ -26,8 +26,10 @@
                 <div class="categories-list" id="categories-list">
                     <!-- DYNAMIC: Category links with active state check -->
                     <a href="{% url 'portfolio:experience_list' %}" class="category-badge {% if not request.GET.category or request.GET.category == 'all' %}active{% endif %}">All</a>
-                    {% for value, label in experience_types %}
-                        <a href="?category={{ value }}" class="category-badge {% if request.GET.category == value %}active{% endif %}">{{ label }}</a>
+                    {% for category in experience_types %}
+                        <a href="?category={{ category.id }}" class="category-badge {% if request.GET.category == category.id|stringformat:"s" %}active{% endif %}">
+                            {{ category.name }}
+                        </a>
                     {% endfor %}
                 </div>
                 <button class="scroll-btn" id="scroll-right" aria-label="Scroll right"><i class="fa-solid fa-chevron-right"></i></button>
@@ -55,7 +57,7 @@
                         <h3>{{ exp.role }} @ {{ exp.company_name }}</h3>
                         <span>{{ exp.start_date|date:"M Y" }} - {% if exp.end_date %}{{ exp.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
                     </div>
-                    <p>{{ exp.summary }}</p>
+                    <p>{{ exp.summary|truncatewords:40|safe }}</p>
                     <div class="skills">
                         {% for tech in exp.technologies.all %}
                         <span class="teg">{{ tech.name }}</span>

@@ -27,12 +27,16 @@
     <link rel="stylesheet" href="{% static 'css/ai_query.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
     {% block extra_css %}{% endblock %}
-    {% block extra_js %}{% endblock %}
+    
+    <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/9da37a3f78.js" crossorigin="anonymous"></script>
+    <!-- Particles.js -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     
+    <!-- Deferred JS at the end of head for faster rendering -->
     <script src="{% static 'js/base.js' %}" defer></script>
     <script src="{% static 'js/ai_modal.js' %}" defer></script>
+    {% block extra_js %}{% endblock %} {# extra_js block moved to after base scripts #}
 </head>
 <body class="{% block body_class %}{% endblock %}">
     <div id="particles-js"></div>
@@ -49,7 +53,7 @@
             </button>
 
             <!-- Left Navigation -->
-            <nav class="nav-left">
+            <nav class="nav-left" id="primary-navigation"> {# Added id for aria-controls #}
                 <ul>
                     <!-- DYNAMIC: URL tags for navigation -->
                     <li><a href="{% url 'portfolio:blog_list' %}"><span class="nav-dot"></span>ARTICLES</a></li>
@@ -60,9 +64,9 @@
 
             <!-- Center Logo -->
             <div class="nav-center-logo">
-                <a href="{% url 'portfolio:home' %}">
-                    <img src="{% static 'images/logo.png' %}" alt="Roshan Damor Logo" class="logo-light">
-                    <img src="{% static 'images/logo-dark.png' %}" alt="Roshan Damor Logo" class="logo-dark">
+                <a href="{% url 'portfolio:home' %}" aria-label="Home - Roshan Damor Portfolio"> {# Added aria-label #}
+                    <img src="{% static 'images/logo.png' %}" alt="Roshan Damor Logo - Light Theme" class="logo-light"> {# More descriptive alt text #}
+                    <img src="{% static 'images/logo-dark.png' %}" alt="Roshan Damor Logo - Dark Theme" class="logo-dark"> {# More descriptive alt text #}
                 </a>
             </div>
 
@@ -126,39 +130,39 @@
                 <!-- Column 1: About & Socials -->
                 <div class="footer-col-about">
                     <div class="footer-logo">
-                        <a href="{% url 'portfolio:home' %}">
+                        <a href="{% url 'portfolio:home' %}" aria-label="Home - Roshan Damor Portfolio"> {# Added aria-label #}
                             <!-- Light logo (visible in dark theme) -->
-                            <img src="{% static 'images/logo.png' %}" alt="Roshan Damor Logo" class="logo-light">
+                            <img src="{% static 'images/logo.png' %}" alt="Roshan Damor Logo - Light Theme" class="logo-light"> {# More descriptive alt text #}
                             <!-- Dark logo (visible in light theme) -->
-                            <img src="{% static 'images/logo-dark.png' %}" alt="Roshan Damor Logo" class="logo-dark">
+                            <img src="{% static 'images/logo-dark.png' %}" alt="Roshan Damor Logo - Dark Theme" class="logo-dark"> {# More descriptive alt text #}
                         </a>
                     </div>
                     <p>A passionate developer building AI-powered solutions and scalable web applications for a digital-first world.</p>
                     <ul class="social-icons">
                         {% if config.twitter_url %}
-                            <li><a href="{{ config.twitter_url }}" aria-label="Twitter" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="{{ config.twitter_url }}" aria-label="Twitter Profile" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a></li> {# Added rel="noopener noreferrer" #}
                         {% endif %}
                         {% if config.github_url %}
-                            <li><a href="{{ config.github_url }}" aria-label="GitHub" target="_blank"><i class="fab fa-github"></i></a></li>
+                            <li><a href="{{ config.github_url }}" aria-label="GitHub Profile" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a></li> {# Added rel="noopener noreferrer" #}
                         {% endif %}
                         {% if config.linkedin_url %}
-                            <li><a href="{{ config.linkedin_url }}" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
+                            <li><a href="{{ config.linkedin_url }}" aria-label="LinkedIn Profile" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in"></i></a></li> {# Added rel="noopener noreferrer" #}
                         {% endif %}
                         {% if config.youtube_url %}
-                            <li><a href="{{ config.youtube_url }}" aria-label="YouTube" target="_blank"><i class="fab fa-youtube"></i></a></li>
+                            <li><a href="{{ config.youtube_url }}" aria-label="YouTube Channel" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a></li> {# Added rel="noopener noreferrer" #}
                         {% endif %}
                         {% if config.instagram_url %}
-                            <li><a href="{{ config.instagram_url }}" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a></li>
+                            <li><a href="{{ config.instagram_url }}" aria-label="Instagram Profile" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a></li> {# Added rel="noopener noreferrer" #}
                         {% endif %}
                         {% if config.facebook_url %}
-                            <li><a href="{{ config.facebook_url }}" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="{{ config.facebook_url }}" aria-label="Facebook Profile" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a></li> {# Added rel="noopener noreferrer" #}
                         {% endif %}
                     </ul>
                 </div>
 
                 <!-- Column 2: Quick Links -->
                 <div class="footer-col-links">
-                    <h4>Quick Links</h4>
+                    <h4>Links</h4>
                     <ul>
                         <!-- DYNAMIC: URL tags with anchors -->
                         <li><a href="{% url 'portfolio:home' %}">HOME</a></li>
@@ -172,10 +176,10 @@
                 <div class="footer-col-links">
                     <h4>Explore</h4>
                     <ul>
-                        <li><a href="https://www.blogmitra.roshanproject.site">ARTICLES</a></li>
-                        <li><a href="https://www.knowroshan.roshanproject.site">PERSONAL</a></li>
-                        <li><a href="https://www.ideamitra.roshanproject.site">STARTUPS</a></li>
-                        <li><a href="https://www.gigmitra.roshanproject.site">FREELANCE</a></li>
+                        <li><a href="https://www.blogmitra.roshanproject.site" target="_blank" rel="noopener noreferrer">ARTICLES</a></li> {# Added target="_blank" rel="noopener noreferrer" #}
+                        <li><a href="https://www.knowroshan.roshanproject.site" target="_blank" rel="noopener noreferrer">PERSONAL</a></li> {# Added target="_blank" rel="noopener noreferrer" #}
+                        <li><a href="https://www.ideamitra.roshanproject.site" target="_blank" rel="noopener noreferrer">STARTUPS</a></li> {# Added target="_blank" rel="noopener noreferrer" #}
+                        <li><a href="https://www.gigmitra.roshanproject.site" target="_blank" rel="noopener noreferrer">FREELANCE</a></li> {# Added target="_blank" rel="noopener noreferrer" #}
                     </ul>
                 </div>
 
@@ -196,7 +200,7 @@
                     <ul>
                         <li><a href="{% url 'my_playlist' %}">MY PLAYLIST</a></li>
                         <li><a href="{% url 'portfolio:resource_list' %}">MY RESOURCES</a></li>
-                        <li><a href="https://risetogethr.tech" target="_blank">MY COMMUNITY</a></li>
+                        <li><a href="https://risetogethr.tech" target="_blank" rel="noopener noreferrer">MY COMMUNITY</a></li> {# Added target="_blank" rel="noopener noreferrer" #}
                         <li><a href="{% url 'portfolio:code_together' %}">CODE TOGETHER</a></li>
                     </ul>
                 </div>
@@ -212,56 +216,28 @@
     </footer>
 
     <!-- ======================= RESUME MODAL ======================= -->
-    <div id="resume-modal" class="resume-modal">
+    <div id="resume-modal" class="resume-modal" role="dialog" aria-modal="true" aria-labelledby="resume-modal-title"> {# Added ARIA attributes #}
         <div class="modal-content">
             <div class="modal-header">
-                <h3>{{ resume.title|default:"My Resume" }}</h3>
-                <button id="close-resume-modal" class="close-btn" aria-label="Close modal">&times;</button>
+                <h3 id="resume-modal-title">{{ resume.title|default:"My Resume" }}</h3> {# Added id for aria-labelledby #}
+                <button id="close-resume-modal" class="close-btn" aria-label="Close resume modal">&times;</button> {# More descriptive aria-label #}
             </div>
             <div class="modal-body">
                 {% if resume and resume.preview_image %}
-                    <img src="{{ resume.preview_image.url }}" alt="Resume Preview">
+                    <img src="{{ resume.preview_image.url }}" alt="{{ resume.title|default:'Resume Preview' }}"> {# Dynamic alt text #}
                 {% else %}
                     <!-- Fallback to static image -->
-                    <img src="{% static 'images/resume_preview.jpg' %}" alt="Resume Preview">
-                {% endif %}
-                
-                {% if resume and resume.description %}
-                    <div class="resume-description">
-                        <p>{{ resume.description|safe }}</p>
-                        {% if resume.years_experience or resume.total_projects or resume.technologies_used %}
-                            <div class="resume-stats">
-                                {% if resume.years_experience %}
-                                    <div class="stat-item">
-                                        <strong>{{ resume.years_experience }}</strong>
-                                        <span>Years Experience</span>
-                                    </div>
-                                {% endif %}
-                                {% if resume.total_projects %}
-                                    <div class="stat-item">
-                                        <strong>{{ resume.total_projects }}</strong>
-                                        <span>Projects</span>
-                                    </div>
-                                {% endif %}
-                                {% if resume.technologies_used %}
-                                    <div class="stat-item">
-                                        <strong>{{ resume.technologies_used }}</strong>
-                                        <span>Technologies</span>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% endif %}
-                    </div>
+                    <img src="{% static 'images/resume_preview.jpg' %}" alt="Default Resume Preview"> {# More descriptive alt text #}
                 {% endif %}
             </div>
             <div class="modal-footer">
                 {% if resume and resume.downloadable_file %}
-                    <a href="{{ resume.downloadable_file.url }}" class="filled-btn" download>
+                    <a href="{{ resume.downloadable_file.url }}" class="filled-btn" download="{{ resume.downloadable_file.name|default:'Roshan_Damor_Resume.pdf' }}"> {# Dynamic download filename #}
                         <i class="fas fa-download"></i> Download PDF
                     </a>
                 {% else %}
                     <!-- Fallback to static file -->
-                    <a href="{% static 'documents/Roshan_Damor_Resume.pdf' %}" class="filled-btn" download>
+                    <a href="{% static 'documents/Roshan_Damor_Resume.pdf' %}" class="filled-btn" download="Roshan_Damor_Resume.pdf"> {# Explicit download filename #}
                         <i class="fas fa-download"></i> Download PDF
                     </a>
                 {% endif %}
@@ -270,15 +246,15 @@
     </div>
 
     <!-- ======================= VIDEO RESUME MODAL ======================= -->
-    <div id="video-modal" class="video-modal">
+    <div id="video-modal" class="video-modal" role="dialog" aria-modal="true" aria-labelledby="video-modal-title"> {# Added ARIA attributes #}
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Video Resume</h3>
-                <button id="close-video-modal" class="close-btn" aria-label="Close modal">×</button>
+                <h3 id="video-modal-title">Video Resume</h3> {# Added id for aria-labelledby #}
+                <button id="close-video-modal" class="close-btn" aria-label="Close video resume modal">×</button> {# More descriptive aria-label #}
             </div>
             <div class="video-container">
                 {% if video_resume and video_resume.youtube_embed_url %}
-                    <iframe id="resume-video-iframe" src="{{ video_resume.youtube_embed_url }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe id="resume-video-iframe" src="{{ video_resume.youtube_embed_url }}" title="Roshan Damor Video Resume - YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> {# More specific title #}
                 {% else %}
                     <div class="no-video-message">
                         <i class="fa-solid fa-video-slash"></i>

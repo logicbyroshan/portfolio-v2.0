@@ -7,6 +7,8 @@
     gap: 80px; /* More space between main sections */
 }
 
+
+
 /* Profile Section */
 .profile-section {
     display: flex;
@@ -31,6 +33,13 @@
     text-align: left;
     align-items: flex-start;
     margin-bottom: 20px;
+}
+.profile-content .page-header h1 {
+    font-family: var(--heading-font);
+    font-size: 40px;
+    color: var(--title-color);
+    line-height: 1.2;
+    margin-bottom: 10px;
 }
 .details-from-cms {
     font-size: 16px;
@@ -118,5 +127,5 @@
     }
 }
 @media (max-width: 768px) {
-    .page-header h1 { font-size: 40px; }
+    .page-header h1 { font-size: 30px; }
 }

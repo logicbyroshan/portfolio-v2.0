@@ -149,7 +149,7 @@
     <!-- Resource Header -->
     <header class="resource-header" data-animation="fade-in-up">
         <h1>{{ resource.title }}</h1>
-        <p class="resource-description">{{ resource.description }}</p>
+        <p class="resource-description">{{ resource.description|safe }}</p>
         
         <div class="resource-meta">
             <span class="meta-item">
@@ -236,7 +236,7 @@
             <!-- Additional Content -->
             <div class="resource-details">
                 <h3>About This Resource</h3>
-                <p>{{ resource.description }}</p>
+                <p>{{ resource.description|safe }}</p>
                 
                 {% if resource.technologies.all %}
                 <h4>Related Technologies</h4>
@@ -292,7 +292,7 @@
     
     <!-- Back to Resources -->
     <div style="text-align: center; margin-top: 40px;">
-        <a href="{% url 'portfolio:resource_list' %}" class="action-btn secondary-btn">
+        <a href="{% url 'portfolio:resource_list' %}" class="awesome">
             <i class="fas fa-arrow-left"></i> Back to Resources
         </a>
     </div>

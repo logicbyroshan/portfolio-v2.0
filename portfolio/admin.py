@@ -114,10 +114,8 @@ class FAQAdmin(admin.ModelAdmin):
 @admin.register(Skill)
 class SkillAdmin(admin.ModelAdmin):
     inlines = [SkillTechnologyDetailInline]
-    list_display = ('title', 'category', 'icon')
-    list_filter = ('category',)
+    list_display = ('title','icon')
     search_fields = ('title', 'summary')
-    list_editable = ('category',)
 
 
 @admin.register(NewsletterSubscriber)
@@ -166,15 +164,6 @@ class AboutMeConfigurationAdmin(admin.ModelAdmin):
         }),
         ('Profile Section', {
             'fields': ('profile_image', 'detailed_description')
-        }),
-        ('Action Card 1: Music', {
-            'fields': ('action1_title', 'action1_description', 'action1_button_text')
-        }),
-        ('Action Card 2: Community', {
-            'fields': ('action2_title', 'action2_description', 'action2_button_text', 'action2_link')
-        }),
-        ('Action Card 3: Resources', {
-            'fields': ('action3_title', 'action3_description', 'action3_button_text')
         }),
     )
     

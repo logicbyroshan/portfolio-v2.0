@@ -111,7 +111,7 @@
         <div class="profile-content" data-animation="fade-in-up">
             <header class="page-header">
                 <h1>{{ config.page_title|safe|default:"A Bit More <span>About Me</span>" }}</h1>
-                <p>{{ config.intro_paragraph|default:"This is my story, my journey, and what drives me." }}</p>
+                <p>{{ config.intro_paragraph|safe|default:"This is my story, my journey, and what drives me." }}</p>
             </header>
             <div class="details-from-cms">
                 <!-- IMPORTANT: The |safe filter renders the HTML from your TinyMCE editor -->
@@ -126,26 +126,27 @@
             <!-- Card 1: Music -->
             <div class="action-card card" data-animation="fade-in-up" data-animation-delay="200">
                 <i class="fa-solid fa-music action-icon"></i>
-                <h3>{{ config.action1_title|default:"My Song Playlists" }}</h3>
-                <p>{{ config.action1_description|default:"Discover the music that fuels my coding sessions and creative work." }}</p>
-                <a href="{% url 'my_playlist' %}" class="outline-btn">{{ config.action1_button_text|default:"Listen Now" }}</a>
+                <h3>My Song Playlists</h3>
+                <p>Discover the music that fuels my coding sessions and creative work.</p>
+                <a href="{% url 'my_playlist' %}" class="outline-btn">Listen Now</a>
             </div>
 
             <!-- Card 2: Community -->
             <div class="action-card card" data-animation="fade-in-up" data-animation-delay="400">
                 <i class="fa-solid fa-users action-icon"></i>
-                <h3>{{ config.action2_title|default:"Join My Community" }}</h3>
-                <p>{{ config.action2_description|default:"Let's connect, share ideas, and build amazing things together on Discord or Slack." }}</p>
-                <a href="{{ config.action2_link|default:'https://risetogethr.tech' }}" target="_blank" rel="noopener noreferrer" class="outline-btn">{{ config.action2_button_text|default:"Join Community" }}</a>
+                <h3>Join My Community</h3>
+                <p>Let's connect, share ideas, and build amazing things together on Discord or Slack.</p>
+                <a href="https://risetogethr.tech" target="_blank" rel="noopener noreferrer" class="outline-btn">Join Community</a>
             </div>
 
             <!-- Card 3: Resources -->
             <div class="action-card card" data-animation="fade-in-up" data-animation-delay="600">
                 <i class="fa-solid fa-book-open action-icon"></i>
-                <h3>{{ config.action3_title|default:"View My Resources" }}</h3>
-                <p>{{ config.action3_description|default:"A curated list of tools, articles, and learning materials that I find valuable." }}</p>
-                <a href="{% url 'portfolio:resource_list' %}" class="outline-btn">{{ config.action3_button_text|default:"Explore Resources" }}</a>
+                <h3>View My Resources</h3>
+                <p>A curated list of tools, articles, and learning materials that I find valuable.</p>
+                <a href="{% url 'portfolio:resource_list' %}" class="outline-btn">Explore Resources</a>
             </div>
+
             <!-- Card 4: Achievements -->
             <div class="action-card card" data-animation="fade-in-up" data-animation-delay="800">
                 <i class="fa-solid fa-trophy action-icon"></i>

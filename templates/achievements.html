@@ -27,8 +27,11 @@
             <button class="scroll-btn" id="scroll-left" aria-label="Scroll left"><i class="fa-solid fa-chevron-left"></i></button>
             <div class="categories-list" id="categories-list">
                 <a href="{% url 'portfolio:achievements_list' %}" class="category-badge {% if not request.GET.category or request.GET.category == 'all' %}active{% endif %}">All</a>
-                {% for value, label in achievement_types %}
-                    <a href="?category={{ value }}" class="category-badge {% if request.GET.category == value %}active{% endif %}">{{ label }}</a>
+                {% for cat in achievement_categories %}
+                    <a href="?category={{ cat.id }}" 
+                    class="category-badge {% if request.GET.category == cat.id|stringformat:'s' %}active{% endif %}">
+                        {{ cat.name }}
+                    </a>
                 {% endfor %}
             </div>
             <button class="scroll-btn" id="scroll-right" aria-label="Scroll right"><i class="fa-solid fa-chevron-right"></i></button>
@@ -47,7 +50,7 @@
         {% if achievements %}
             {% for ach in achievements %}
             <div class="achievement-card card {% if ach.image %}has-image{% endif %}" data-animation="zoom-in">
-                <div class="card-banner">{{ ach.get_category_display }}</div>
+                <div class="card-banner">{{ ach.category.name }}</div>
                 {% if ach.image %}
                 <div class="ach-image">
                     <img src="{{ ach.image.url }}" alt="{{ ach.title }} Preview">
@@ -56,7 +59,7 @@
                 <div class="ach-content">
                     <h3>{{ ach.title }}</h3>
                     <p class="issuer">Issued by <strong>{{ ach.issuing_organization }}</strong> on {{ ach.date_issued|date:"M d, Y" }}</p>
-                    <p>{{ ach.summary|truncatewords:20 }}</p>
+                    <p>{{ ach.summary|truncatewords:20|safe }}</p>
                 </div>
                 {% if ach.credential_url %}
                 <div class="ach-footer">

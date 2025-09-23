@@ -72,6 +72,7 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
     <link rel="stylesheet" href="{% static 'css/ai_query.css' %}">
+    <link rel="stylesheet" href="{% static 'css/achievements.css' %}">
 {% endblock %}
 
 {% block extra_js %}
@@ -80,6 +81,7 @@
     <script src="{% static 'js/newsletter_form.js' %}" defer></script>
 {% endblock %}
 
+{% load sanitize_extras %}
 
 {% block content %}
     <!-- ========================= 1. HERO SECTION ========================= -->
@@ -131,7 +133,7 @@
                 {% for service in services_col1 %}
                 <div class="service-box box-reverse" data-animation="fade-in-right" data-animation-delay="{{ service.animation_delay }}">
                     <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
-                    <div class="service-text text-reverse"><h4>{{ service.title }}</h4><p>{{ service.description|safe }}</p></div>
+                    <div class="service-text text-reverse"><h4>{{ service.title }}</h4><p>{{ service.summary|safe }}</p></div>
                 </div>
                 {% endfor %}
             </div>
@@ -143,7 +145,7 @@
                 {% for service in services_col2 %}
                 <div class="service-box" data-animation="fade-in-left" data-animation-delay="{{ service.animation_delay }}">
                     <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
-                    <div class="service-text"><h4>{{ service.title }}</h4><p>{{ service.description|safe }}</p></div>
+                    <div class="service-text"><h4>{{ service.title }}</h4><p>{{ service.summary|safe }}</p></div>
                 </div>
                 {% endfor %}
             </div>
@@ -157,19 +159,18 @@
                 <h2>Where I've <span>Worked</span></h2>
                 <a href="{% url 'portfolio:experience_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a>
             </div>
-            <p>"A glimpse into my professional journey, contributing to impactful projects and collaborating with talented teams."</p>
         </div>
         <div class="experience-grid">
             {% for exp in experiences %}
             <div class="exp-card card clickable-card" data-animation="fade-in-up"
                 data-url="{% url 'portfolio:experience_detail' pk=exp.pk %}">
-                <div class="exp-img"><img src="https://placehold.co/80x80/010409/eaeaea?text={{ exp.company_name|slice:':2' }}" alt="{{ exp.company_name }} Logo"></div>
+                <div class="exp-img"><img src="{% if exp.company_logo %}{{ exp.company_logo.url }}{% else %}https://placehold.co/80x80/010409/eaeaea?text={{ exp.company_name|slice:':2' }}{% endif %}" alt="{{ exp.company_name }} Logo"></div>
                 <div class="exp-details">
                     <div class="exp-header">
                         <h3>{{ exp.role }} @ {{ exp.company_name }}</h3>
                         <span>{{ exp.start_date|date:"M Y" }} - {% if exp.end_date %}{{ exp.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
                     </div>
-                    <p>{{ exp.summary }}</p>
+                    <p>{{ exp.summary|truncatewords:40|safe }}</p>
                     <div class="skills">{% for tech in exp.technologies.all %}<span class="teg">{{ tech.name }}</span>{% endfor %}</div>
                 </div>
             </div>
@@ -181,7 +182,6 @@
     <section class="projects-section portfolio-container">
         <header class="portfolio-header" data-animation="fade-in-up">
             <div class="head"><h2>Things I've <span>Crafted</span></h2><a href="{% url 'portfolio:project_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a></div>
-            <p>"I love turning ideas into reality through code. Each project is a reflection of my skills, problem-solving approach, and creativity."</p>
         </header>
         <div class="cards-container">
             {% for project in projects %}
@@ -191,7 +191,7 @@
                 </div>
                 <div class="project-content">
                     <h3>{{ project.title }}</h3>
-                    <p>{{ project.summary|safe }}</p>
+                    <p>{{ project.summary|truncatewords:20|safe }}</p>
                     <div class="skills">
                         {% for tech in project.technologies.all|slice:":5" %}
                         <span class="teg">{{ tech.name }}</span>
@@ -218,11 +218,60 @@
         </div>
     </section>
 
-    <!-- ========================= 5. BLOGS SECTION ========================= -->
+    <!-- ========================= 5. CALL TO ACTION SECTION ========================= -->
+    <section class="cta-section portfolio-container" data-animation="fade-in">
+        <div class="cta-container card">
+            <div class="cta-left-content">
+                <h2><i class="fa-solid fa-briefcase"></i> <span>Hire</span> Me for Your Next Project</h2>
+            </div>
+            <div class="cta-right-content">
+                <a href="#contact" class="filled-btn">Get in Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================= 6. ACHIEVEMENTS SECTION ========================= -->
+    <section class="achievement-section portfolio-container" data-animation="fade-in">
+        <header class="portfolio-header" data-animation="fade-in-up">
+            <div class="head">
+                <h2>Recent I've <span>Achieved</span></h2>
+                <a href="{% url 'portfolio:achievements_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+        </header>
+        <div class="cards-container">
+            {% for ach in achievements %}
+            <div class="achievement-card card clickable-card{% if ach.image %} has-image{% endif %}"
+                data-animation="zoom-in"
+                {% if ach.credential_url %}data-url="{{ ach.credential_url }}" onclick="window.open(this.dataset.url, '_blank'); event.stopPropagation();"{% endif %}>
+                <div class="card-banner">{{ ach.category.name }}</div>
+                {% if ach.image %}
+                <div class="ach-image">
+                    <img src="{{ ach.image.url }}" alt="{{ ach.title }} Preview">
+                </div>
+                {% endif %}
+                <div class="ach-content">
+                    <h3>{{ ach.title }}</h3>
+                    <p class="issuer">
+                        Issued by <strong>{{ ach.issuing_organization }}</strong> on {{ ach.date_issued|date:"M d, Y" }}
+                    </p>
+                    <p>{{ ach.summary|truncatewords:20|sanitize_html }}</p>
+                </div>
+                {% if ach.credential_url %}
+                <div class="ach-footer">
+                    <a href="{{ ach.credential_url }}" class="credential-link" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> View Credential
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ========================= 7. BLOGS SECTION ========================= -->
     <section class="blogs-section portfolio-container">
         <header class="portfolio-header" data-animation="fade-in-up">
             <div class="head"><h2>Latest I've <span>Written</span></h2><a href="{% url 'portfolio:blog_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a></div>
-            <p>"I enjoy sharing insights and experiences through writing. Check out some of my latest posts:"</p>
         </header>
         <div class="cards-container">
             {% for blog in blogs %}
@@ -233,7 +282,7 @@
                 </div>
                 <div class="blog-content">
                     <h4>{{ blog.title }}</h4>
-                    <p>{{ blog.summary|safe }}</p>
+                    <p>{{ blog.summary|truncatewords:20|safe }}</p>
                 </div>
                 <div class="blog-footer">
                     <div class="publisher">
@@ -249,12 +298,12 @@
         </div>
     </section>
 
-    <!-- ========================= 6. NEWSLETTER CTA SECTION (NEW) ========================= -->
-    <section id="newsletter" class="cta-section portfolio-container" data-animation="fade-in">
+    <!-- ========================= 8. NEWSLETTER CTA SECTION (NEW) ========================= -->
+    <section id="newsletter" class="cta-section portfolio-container portfolio" data-animation="fade-in">
+        <header></header> {# This header is empty, consider removing if not needed for styling #}
         <div class="cta-container card">
             <div class="cta-left-content">
-                <h2><i class="fa-solid fa-paper-plane"></i> Stay Updated</h2>
-                <p>Subscribe to my newsletter for the latest articles, project updates, and tech insights delivered straight to your inbox.</p>
+                <h2><i class="fa-solid fa-paper-plane"></i> Get <span>Updates</span> of Blogs & Projects</h2>
             </div>
             <div class="cta-right-content">
                 <!-- Message Display Area -->
@@ -268,34 +317,33 @@
                 <!-- Newsletter Form -->
                 <form id="newsletter-form" class="cta-form" method="post" action="{% url 'portfolio:subscribe_home' %}">
                     {% csrf_token %}
-                    <input type="email" name="email" id="newsletter-email" placeholder="Enter your email address" required>
+                    <input type="email" name="email" id="newsletter-email" placeholder="Enter your email address" aria-label="Enter your email address to subscribe" required>
                     <button type="submit" class="filled-btn" id="newsletter-submit-btn">Subscribe</button>
                 </form>
             </div>
         </div>
     </section>
 
-    <!-- ========================= 7. FAQ SECTION ========================= -->
+    <!-- ========================= 9. FAQ SECTION ========================= -->
     <section class="faq-section portfolio-container">
         <header class="portfolio-header" data-animation="fade-in-up">
             <div class="head"><h2>Got Some <span>Questions?</span></h2></div>
-            <p>"Here are some common questions I get asked. If you have more queries, feel free to reach out!"</p>
         </header>
         <div class="card-container" id="faq-container">
             {% for faq in faqs %}
-            <div class="faq-card card {% if forloop.counter > 5 %}faq-hidden{% endif %}" data-animation="fade-in-up">
+            <div class="faq-card card {% if forloop.counter > 4 %}faq-hidden{% endif %}" data-animation="fade-in-up"> {# Changed condition from 5 to 4 to hide items from 5th onwards, showing first 4 by default #}
                 <div class="faq-question">
                     <span>{{ faq.question }}</span>
                     <i class="fa-solid fa-plus faq-icon"></i>
                 </div>
                 <div class="faq-answer">
-                    <p>{{ faq.answer }}</p>
+                    <p>{{ faq.answer|safe }}</p>
                 </div>
             </div>
             {% endfor %}
         </div>
-        <!-- Show More Button (only visible if more than 5 FAQs) -->
-        {% if faqs|length > 5 %}
+        <!-- Show More Button (only visible if more than 4 FAQs) --> {# Updated comment #}
+        {% if faqs|length > 4 %}
         <div class="faq-show-more-container" data-animation="fade-in-up">
             <button class="outline-btn" id="faq-show-more-btn">
                 <i class="fas fa-chevron-down"></i>
@@ -305,7 +353,7 @@
         {% endif %}
     </section>
 
-    <!-- ========================= 8. CONTACT SECTION ========================= -->
+    <!-- ========================= 10. CONTACT SECTION ========================= -->
     <section id="contact" class="contact-section portfolio-container" data-animation="fade-in">
         <div class="section-title"><h2>Let's Get <span>Connected!</span></h2></div>
         <div class="contact-wrapper card">
@@ -313,16 +361,16 @@
                 <div class="left-contact-info">
                     <h3>Contact Information</h3><p>Have a project in mind or just want to say hello? Feel free to reach out.</p>
                     <ul class="contact-details-list">
-                        <li><i class="fa-solid fa-phone"></i><span>{% if config.phone %}{{ config.phone }}{% else %}Not provided{% endif %}</span></li>
-                        <li><i class="fa-solid fa-envelope"></i><span>{% if config.email %}{{ config.email }}{% else %}Not provided{% endif %}</span></li>
+                        <li><i class="fa-solid fa-phone"></i><span>{% if config.phone %}<a href="tel:{{ config.phone }}">{{ config.phone }}</a>{% else %}Not provided{% endif %}</span></li> {# Added tel: link #}
+                        <li><i class="fa-solid fa-envelope"></i><span>{% if config.email %}<a href="mailto:{{ config.email }}">{{ config.email }}</a>{% else %}Not provided{% endif %}</span></li> {# Added mailto: link #}
                         <li><i class="fa-solid fa-location-dot"></i><span>{% if config.location %}{{ config.location }}{% else %}Not provided{% endif %}</span></li>
                     </ul>
                 </div>
                 <div class="right-contact-form">
                     <form id="contact-form" method="post" action="{% url 'portfolio:contact_submit' %}">
                         {% csrf_token %}
-                        <div class="form-group-row"><div class="form-group"><label for="name">Your Name</label><input type="text" name="name" id="name" required></div><div class="form-group"><label for="email">Your Email</label><input type="email" name="email" id="email" required></div></div>
-                        <div class="form-group"><label for="subject">Your Subject</label><input type="text" name="subject" id="subject"></div>
+                        <div class="form-group-row"><div class="form-group"><label for="name">Your Name</label><input type="text" name="name" id="name" autocomplete="name" required></div><div class="form-group"><label for="email">Your Email</label><input type="email" name="email" id="email" autocomplete="email" required></div></div> {# Added autocomplete attributes #}
+                        <div class="form-group"><label for="subject">Your Subject</label><input type="text" name="subject" id="subject" autocomplete="on"></div> {# Added autocomplete attribute #}
                         <div class="form-group"><label for="contact-message">Your Message</label><textarea name="message" id="contact-message" rows="4" required></textarea></div>
                         <button type="submit" class="outline-btn" id="contact-submit-btn">Send Message</button>
                     </form>
@@ -342,7 +390,7 @@
                     </div>
                     <h3>Chat with AI Assistant</h3>
                 </div>
-                <button type="button" class="ai-modal-close" id="close-ai-modal">
+                <button type="button" class="ai-modal-close" id="close-ai-modal" aria-label="Close AI chat modal"> {# Added aria-label #}
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -356,15 +404,12 @@
                     {% csrf_token %}
                     <div class="input-container">
                         <div class="textarea-container">
-                            <textarea name="question" placeholder="Ask anything about me, e.g., 'What are your key skills?' (Ctrl+Enter to send)" rows="1" maxlength="1000"></textarea>
+                            <textarea name="question" placeholder="Ask anything about me, e.g., 'What are your key skills?' (Ctrl+Enter to send)" rows="1" maxlength="1000" aria-label="Type your question for the AI assistant"></textarea> {# Added aria-label #}
                             <div class="char-count">
                                 <span id="char-counter">0</span>/1000
                             </div>
-                            <div class="keyboard-hint">
-                                <small>💡 Press <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to send</small>
-                            </div>
                         </div>
-                        <button type="submit" class="submit-btn" title="Send Message (Ctrl+Enter)">
+                        <button type="submit" class="submit-btn" title="Send Message (Ctrl+Enter)" aria-label="Send message to AI assistant"> {# Added aria-label #}
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>

@@ -36,11 +36,6 @@
                     {% if playlist.description %}
                     <p class="playlist-description">{{ playlist.description|truncatewords:12 }}</p>
                     {% endif %}
-                    <div class="playlist-meta">
-                        {% if playlist.tracks.total %}
-                        <span class="track-count">{{ playlist.tracks.total }} tracks</span>
-                        {% endif %}
-                    </div>
                 </div>
                 <div class="playlist-footer">
                     <a href="{% url 'playlist_detail' playlist.id %}" class="outline-btn">

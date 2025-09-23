@@ -15,104 +15,101 @@
 
 
 {% block content %}
-    <main class="main-container">
 
-        <!-- ======================= Breadcrumb Navigation ======================= -->
-        <nav class="breadcrumb" aria-label="Breadcrumb" data-animation="fade-in-up">
-            <ul>
-                <li><a href="{% url 'portfolio:home' %}">Home</a></li>
-                <li><a href="{% url 'portfolio:experience_list' %}">Experience</a></li>
-                <li class="active" aria-current="page">{{ experience.role|truncatechars:30 }}</li>
-            </ul>
-        </nav>
+    <!-- ======================= Breadcrumb Navigation ======================= -->
+    <nav class="breadcrumb" aria-label="Breadcrumb" data-animation="fade-in-up">
+        <ul>
+            <li><a href="{% url 'portfolio:home' %}">Home</a></li>
+            <li><a href="{% url 'portfolio:experience_list' %}">Experience</a></li>
+            <li class="active" aria-current="page">{{ experience.role|truncatechars:30 }}</li>
+        </ul>
+    </nav>
 
-        <div class="detail-page-container">
-            <!-- ======================= Main Content Column ======================= -->
-            <article class="detail-main-content">
-                <header class="detail-page-header" data-animation="fade-in-up" data-animation-delay="100">
-                    <span class="teg">{{ experience.get_experience_type_display }}</span>
-                    <span class="teg"><i class="fa-regular fa-calendar-check"></i>
-                        {{ experience.start_date|date:"M Y" }} - {% if experience.end_date %}{{ experience.end_date|date:"M Y" }}{% else %}Present{% endif %}
-                    </span>
-                </header>
+    <div class="detail-page-container">
+        <!-- ======================= Main Content Column ======================= -->
+        <article class="detail-main-content">
+            <header class="detail-page-header" data-animation="fade-in-up" data-animation-delay="100">
+                <span class="teg">{{ experience.experience_type.name }}</span>
+                <span class="teg"><i class="fa-regular fa-calendar-check"></i>
+                    {{ experience.start_date|date:"M Y" }} - {% if experience.end_date %}{{ experience.end_date|date:"M Y" }}{% else %}Present{% endif %}
+                </span>
+            </header>
 
-                <h1 class="experience-title" data-animation="fade-in-up" data-animation-delay="200">{{ experience.role }}</h1>
-                <p class="experience-company" data-animation="fade-in-up" data-animation-delay="250">at <strong>{{ experience.company_name }}</strong></p>
+            <h1 class="experience-title" data-animation="fade-in-up" data-animation-delay="200">{{ experience.role }}</h1>
+            <p class="experience-company" data-animation="fade-in-up" data-animation-delay="250">at <strong>{{ experience.company_name }}</strong></p>
+            
+            <!-- NOTE: You can add a cover_image field to your Experience model for a dynamic hero image -->
+            <img class="experience-hero-image" src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1200" alt="Professional office setting" data-animation="zoom-in" data-animation-delay="300">
+            
+            <!-- Main Content Body -->
+            <div class="experience-content-body" data-animation="fade-in-up">
                 
-                <!-- NOTE: You can add a cover_image field to your Experience model for a dynamic hero image -->
-                <img class="experience-hero-image" src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1200" alt="Professional office setting" data-animation="zoom-in" data-animation-delay="300">
+                <!-- DYNAMIC: Render responsibilities from TinyMCE editor -->
+                <h2>Role & Responsibilities</h2>
+                {{ experience.responsibilities|safe }}
                 
-                <!-- Main Content Body -->
-                <div class="experience-content-body" data-animation="fade-in-up">
-                    
-                    <!-- DYNAMIC: Render responsibilities from TinyMCE editor -->
-                    <h2>Role & Responsibilities</h2>
-                    {{ experience.responsibilities|safe }}
-                    
-                    <!-- DYNAMIC: Render achievements from TinyMCE editor -->
-                    <h2>Key Achievements & Contributions</h2>
-                    {{ experience.achievements|safe }}
+                <!-- DYNAMIC: Render achievements from TinyMCE editor -->
+                <h2>Key Achievements & Contributions</h2>
+                {{ experience.achievements|safe }}
 
+            </div>
+        </article>
+
+        <!-- ======================= Sidebar ======================= -->
+        <aside class="detail-sidebar" data-animation="fade-in-up" data-animation-delay="400">
+            <div class="sidebar-card card">
+                <h3>Company Info</h3>
+                <div class="company-info-list">
+                    <!-- DYNAMIC: Button only shows if URL exists -->
+                    {% if experience.company_url %}
+                    <a href="{{ experience.company_url }}" class="filled-btn" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-external-link-alt"></i> Visit Company
+                    </a>
+                    {% endif %}
                 </div>
-            </article>
-
-            <!-- ======================= Sidebar ======================= -->
-            <aside class="detail-sidebar" data-animation="fade-in-up" data-animation-delay="400">
-                <div class="sidebar-card card">
-                    <h3>Company Info</h3>
-                    <div class="company-info-list">
-                       <!-- DYNAMIC: Button only shows if URL exists -->
-                       {% if experience.company_url %}
-                       <a href="{{ experience.company_url }}" class="filled-btn" target="_blank" rel="noopener noreferrer">
-                           <i class="fas fa-external-link-alt"></i> Visit Company
-                       </a>
-                       {% endif %}
+                <div class="experience-details">
+                    <div class="detail-item">
+                        <strong>Duration:</strong>
+                        <span>{{ experience.start_date|date:"M Y" }} - {% if experience.end_date %}{{ experience.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
                     </div>
-                    <div class="experience-details">
-                        <div class="detail-item">
-                            <strong>Duration:</strong>
-                            <span>{{ experience.start_date|date:"M Y" }} - {% if experience.end_date %}{{ experience.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
-                        </div>
-                        <div class="detail-item">
-                            <strong>Type:</strong>
-                            <span>{{ experience.get_experience_type_display }}</span>
-                        </div>
-                        <div class="detail-item">
-                            <strong>Company:</strong>
-                            <span>{{ experience.company_name }}</span>
-                        </div>
+                    <div class="detail-item">
+                        <strong>Type:</strong>
+                        <span><span>{{ experience.experience_type }}</span></span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Company:</strong>
+                        <span>{{ experience.company_name }}</span>
                     </div>
                 </div>
-                
-                <div class="sidebar-card card">
-                    <h3>Technologies Used</h3>
-                    <div class="experience-skills-list">
-                        <!-- DYNAMIC: Loop through technologies for this experience -->
-                        {% for tech in experience.technologies.all %}
-                        <span class="teg">{{ tech.name }}</span>
-                        {% endfor %}
+            </div>
+            
+            <div class="sidebar-card card">
+                <h3>Technologies Used</h3>
+                <div class="experience-skills-list">
+                    <!-- DYNAMIC: Loop through technologies for this experience -->
+                    {% for tech in experience.technologies.all %}
+                    <span class="teg">{{ tech.name }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="sidebar-card card">
+                <h3>Summary</h3>
+                <div class="experience-summary">
+                    <p>{{ experience.summary|safe }}</p>
+                </div>
+            </div>
+            
+            <div class="sidebar-card card">
+                <h3>Author</h3>
+                <div class="author-info">
+                    <img src="{% static 'images/author-avatar.png' %}" alt="Roshan Damor">
+                    <div>
+                        <h4>Roshan Damor</h4>
+                        <p>Full-Stack Developer</p>
                     </div>
                 </div>
-                
-                <div class="sidebar-card card">
-                    <h3>Summary</h3>
-                    <div class="experience-summary">
-                        <p>{{ experience.summary|safe }}</p>
-                    </div>
-                </div>
-                
-                <div class="sidebar-card card">
-                    <h3>Author</h3>
-                    <div class="author-info">
-                        <img src="{% static 'images/author-avatar.png' %}" alt="Roshan Damor">
-                        <div>
-                            <h4>Roshan Damor</h4>
-                            <p>Full-Stack Developer</p>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-        </div>        
-
-    </main>
+            </div>
+        </aside>
+    </div>        
 {% endblock %}

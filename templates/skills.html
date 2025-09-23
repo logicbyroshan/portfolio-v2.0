@@ -69,8 +69,11 @@
             <button class="scroll-btn" id="scroll-left" aria-label="Scroll left"><i class="fa-solid fa-chevron-left"></i></button>
             <div class="categories-list" id="categories-list">
                 <a href="{% url 'portfolio:skill_list' %}" class="category-badge {% if not request.GET.category or request.GET.category == 'all' %}active{% endif %}">All</a>
-                {% for category_value, category_label in skill_categories %}
-                    <a href="?category={{ category_value }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="category-badge {% if request.GET.category == category_value %}active{% endif %}">{{ category_label }}</a>
+                {% for cat in skill_categories %}
+                    <a href="?category={{ cat.id }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}"
+                    class="category-badge {% if request.GET.category == cat.id|stringformat:'s' %}active{% endif %}">
+                        {{ cat.name }}
+                    </a>
                 {% endfor %}
             </div>
             <button class="scroll-btn" id="scroll-right" aria-label="Scroll right"><i class="fa-solid fa-chevron-right"></i></button>
@@ -83,31 +86,33 @@
             </ul>
         </div>
     </div>
-
     <!-- Skills Grid -->
     <div class="skills-grid" id="skills-card-container">
         {% if skills %}
             {% for skill in skills %}
-            <div class="skill-card card clickable-card" data-animation="zoom-in" data-url="{% url 'portfolio:skill_detail' slug=skill.slug %}">
+            <div class="skill-card card clickable-card" data-animation="zoom-in">
+                
                 <div class="skill-header">
-                    <div class="skill-icon-wrapper"><i class="{{ skill.icon }}"></i></div>
-                    <h3>{{ skill.title }}</h3>
-                </div>
-                <p class="skill-summary">{{ skill.summary }}</p>
-                <div class="tech-stack">
-                    <h4>Core Technologies:</h4>
-                    <div class="tech-icons">
-                        {% for tech in skill.technologies.all %}
-                        <div class="tech-icon" title="{{ tech.name }}">
-                            <img src="{{ tech.icon.url }}" alt="{{ tech.name }} icon">
-                        </div>
-                        {% endfor %}
+                    <div class="skill-icon-wrapper">
+                        {% if skill.icon %}
+                            <img src="{{ skill.icon.url }}" alt="{{ skill.name }} icon">
+                        {% else %}
+                            <i class="fas fa-tools"></i> <!-- fallback icon -->
+                        {% endif %}
                     </div>
+                    <h3>{{ skill.name }}</h3>
                 </div>
+
+                {% if skill.category %}
+                    <p class="skill-summary">{{ skill.category.name }}</p>
+                {% endif %}
             </div>
             {% endfor %}
+        {% else %}
+            <p>No skills found.</p>
         {% endif %}
     </div>
+
 
     <!-- Pagination -->
     {% if is_paginated %}

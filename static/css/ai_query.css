@@ -530,7 +530,7 @@
     line-height: 1.5;
     resize: none;
     overflow-y: auto;
-    min-height: 56px;
+    min-height: 75px;
     max-height: 140px;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */

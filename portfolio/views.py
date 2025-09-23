@@ -63,6 +63,7 @@ class HomeView(TemplateView):
         context['skills'] = Skill.objects.all()
         context['experiences'] = Experience.objects.order_by('-start_date')[:2]
         context['projects'] = Project.objects.order_by('-created_date')[:3]
+        context['achievements'] = Achievement.objects.order_by('-date_issued')[:3]
         context['blogs'] = Blog.objects.order_by('-created_date')[:3]
         context['faqs'] = FAQ.objects.order_by('order')
         
@@ -298,11 +299,12 @@ class ExperienceListView(ListView):
             queryset = queryset.order_by('-start_date')
             
         return queryset
-
+        
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['experience_types'] = Experience.ExperienceType.choices
+        context['experience_types'] = Category.objects.filter(category_type=Category.CategoryType.EXPERIENCE)
         return context
+
 
 class ExperienceDetailView(DetailView):
     """View for a single experience dtl page."""
@@ -376,6 +378,7 @@ class ContactSubmissionView(View):
                 messages.error(request, "There was an error. Please check the fields and try again.")
             return redirect(reverse('portfolio:home') + '#contact')
 
+
 class NewsletterSubscribeHomeView(View):
     """Handles the submission of the newsletter form on the homepage."""
     def post(self, request, *args, **kwargs):
@@ -412,6 +415,7 @@ class NewsletterSubscribeHomeView(View):
                 messages.error(request, "Please provide a valid email address.")
             return redirect(reverse('portfolio:home') + '#newsletter')
 
+
 class NewsletterSubscribeAjaxView(View):
     """Handles AJAX requests for newsletter subscriptions from the modal."""
     def post(self, request, *args, **kwargs):
@@ -428,6 +432,7 @@ class NewsletterSubscribeAjaxView(View):
             
         return JsonResponse({'success': True, 'message': message})
 
+
 class AchievementListView(ListView):
     model = Achievement
     template_name = 'achievements.html'
@@ -436,63 +441,66 @@ class AchievementListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        
-        # Filtering by category
+
         category = self.request.GET.get('category')
         if category and category != 'all':
-            queryset = queryset.filter(category=category)
-            
-        # Sorting
+            queryset = queryset.filter(category__id=category)
+
         sort_by = self.request.GET.get('sort', 'newest')
         if sort_by == 'oldest':
             queryset = queryset.order_by('date_issued')
-        else: # Default to newest
+        else:
             queryset = queryset.order_by('-date_issued')
-            
+
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Pass the category choices to the template for the filter toolbar
-        context['achievement_types'] = Achievement.AchievementType.choices
+        context['achievement_categories'] = Category.objects.filter(
+            category_type=Category.CategoryType.ACHIEVEMENT
+        )
         return context
 
 
+
 class SkillListView(ListView):
-    model = Skill
+    model = Technology
     template_name = 'skills.html'
     context_object_name = 'skills'
     paginate_by = 9
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        
+
         # Filtering by category (if specified)
-        category = self.request.GET.get('category')
-        if category and category != 'all':
-            queryset = queryset.filter(category=category)
-            
-        # Search functionality
+        category_id = self.request.GET.get('category')
+        if category_id and category_id != 'all':
+            queryset = queryset.filter(category__id=category_id)
+
+        # Search functionality (only on 'name' since summary doesn't exist)
         search = self.request.GET.get('search')
         if search:
             queryset = queryset.filter(
-                models.Q(title__icontains=search) | 
-                models.Q(summary__icontains=search)
+                Q(name__icontains=search)
             )
-            
+
         # Sorting
         sort_by = self.request.GET.get('sort', 'name')
         if sort_by == 'newest':
-            queryset = queryset.order_by('-id', 'title')  # Using id as proxy for creation date
-        else: # Default to alphabetical
-            queryset = queryset.order_by('title')
-            
+            queryset = queryset.order_by('-id', 'name')  # newest first
+        else:  # Default alphabetical
+            queryset = queryset.order_by('name')
+
         return queryset.distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Add available skill categories for filtering
-        context['skill_categories'] = Skill.SkillCategory.choices
+        # Pass all SKL categories to template
+        context['skill_categories'] = Category.objects.filter(category_type='SKL')
+        # Pass current filters to template for UI
+        context['selected_category'] = self.request.GET.get('category', 'all')
+        context['search_query'] = self.request.GET.get('search', '')
+        context['sort_option'] = self.request.GET.get('sort', 'name')
         return context
 
 
@@ -505,16 +513,15 @@ class AboutMeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+
         # Get or create AboutMe configuration
         config, created = AboutMeConfiguration.objects.get_or_create(
             defaults={
                 'page_title': "A Bit More <span>About Me</span>",
                 'intro_paragraph': "This is my story, my journey, and what drives me.",
-                'action2_link': "https://risetogethr.tech"
             }
         )
-        
+
         context['config'] = config
         return context
 

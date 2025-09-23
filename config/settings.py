@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sitemaps',  # Added for SEO sitemaps
+    'django.contrib.sitemaps',
     'corsheaders',
     'tinymce',
     'portfolio',
@@ -155,32 +155,28 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # TinyMCE Configuration
 TINYMCE_DEFAULT_CONFIG = {
-    'height': 300,
+    'height': 500,
     'width': '100%',
     'cleanup_on_startup': True,
     'custom_undo_redo_levels': 20,
-    'selector': 'textarea',
-    'theme': 'silver',
+    'skin': 'oxide-dark',          # Dark theme for editor UI
+    'content_css': 'dark',         # Dark content area inside editor
     'plugins': '''
-            advlist autolink lists link image charmap print preview hr anchor pagebreak
-            searchreplace wordcount visualblocks visualchars code fullscreen
-            insertdatetime media nonbreaking save table directionality
-            emoticons template paste textpattern help
-            ''',
+        advlist autolink lists link image charmap print preview hr anchor pagebreak
+        searchreplace wordcount visualblocks visualchars code fullscreen
+        insertdatetime media nonbreaking save table directionality
+        emoticons template paste textpattern help
+    ''',
     'toolbar1': '''
-            fullscreen preview bold italic underline | fontselect,
-            fontsizeselect  | forecolor backcolor | alignleft alignright |
-            aligncenter alignjustify | indent outdent | bullist numlist table |
-            | link image media | codesample |
-            ''',
-    'toolbar2': '''
-            visualblocks visualchars |
-            charmap hr pagebreak nonbreaking anchor |  code |
-            ''',
+        fullscreen preview bold italic underline | fontselect fontsizeselect |
+        forecolor backcolor | alignleft alignright aligncenter alignjustify |
+        indent outdent | bullist numlist table | link image media | codesample
+    ''',
     'contextmenu': 'formats | link image',
     'menubar': True,
     'statusbar': True,
 }
+
 
 # Email Configuration
 if DEBUG:

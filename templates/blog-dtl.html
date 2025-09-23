@@ -53,202 +53,200 @@
 
 
 {% block content %}
-    <main class="main-container">
 
-        <!-- ======================= Breadcrumb Navigation ======================= -->
-        <nav class="breadcrumb" aria-label="Breadcrumb" data-animation="fade-in-up">
-            <ul>
-                <li><a href="{% url 'portfolio:home' %}">Home</a></li>
-                <li><a href="{% url 'portfolio:blog_list' %}">Blog</a></li>
-                <li class="active" aria-current="page">{{ blog.title|truncatechars:30 }}</li>
-            </ul>
-        </nav>
+    <!-- ======================= Breadcrumb Navigation ======================= -->
+    <nav class="breadcrumb" aria-label="Breadcrumb" data-animation="fade-in-up">
+        <ul>
+            <li><a href="{% url 'portfolio:home' %}">Home</a></li>
+            <li><a href="{% url 'portfolio:blog_list' %}">Blog</a></li>
+            <li class="active" aria-current="page">{{ blog.title|truncatechars:30 }}</li>
+        </ul>
+    </nav>
 
-        <div class="detail-page-container">
-            <!-- ======================= Main Content Column ======================= -->
-            <article class="detail-main-content">
-                <header class="detail-page-header" data-animation="fade-in-up" data-animation-delay="100">
-                    <!-- ENHANCED: Categories and date with better organization -->
-                    <div class="blog-meta-info">
-                        <div class="blog-categories">
-                            {% for category in blog.categories.all %}
-                                <span class="teg category-tag">
-                                    <i class="fa-solid fa-tag"></i>{{ category.name }}
-                                </span>
-                            {% empty %}
-                                <span class="teg category-tag">
-                                    <i class="fa-solid fa-tag"></i>Uncategorized
-                                </span>
-                            {% endfor %}
-                        </div>
-                        <div class="blog-date">
-                            <span class="teg date-tag">
-                                <i class="fa-regular fa-calendar-check"></i>{{ blog.created_date|date:"M d, Y" }}
+    <div class="detail-page-container">
+        <!-- ======================= Main Content Column ======================= -->
+        <article class="detail-main-content">
+            <header class="detail-page-header" data-animation="fade-in-up" data-animation-delay="100">
+                <!-- ENHANCED: Categories and date with better organization -->
+                <div class="blog-meta-info">
+                    <div class="blog-categories">
+                        {% for category in blog.categories.all %}
+                            <span class="teg category-tag">
+                                <i class="fa-solid fa-tag"></i>{{ category.name }}
                             </span>
+                        {% empty %}
+                            <span class="teg category-tag">
+                                <i class="fa-solid fa-tag"></i>Uncategorized
+                            </span>
+                        {% endfor %}
+                    </div>
+                    <div class="blog-date">
+                        <span class="teg date-tag">
+                            <i class="fa-regular fa-calendar-check"></i>{{ blog.created_date|date:"M d, Y" }}
+                        </span>
+                    </div>
+                </div>
+            </header>
+
+            <h1 class="blog-title" data-animation="fade-in-up" data-animation-delay="200">{{ blog.title }}</h1>
+            <p class="blog-summary" data-animation="fade-in-up" data-animation-delay="300">{{ blog.summary }}</p>
+            
+            {% if blog.cover_image %}
+            <img class="blog-hero-image" src="{{ blog.cover_image.url }}" alt="{{ blog.title }}" data-animation="zoom-in" data-animation-delay="400">
+            {% endif %}
+            
+            <!-- DYNAMIC: Main Content Body from TinyMCE, marked as 'safe' to render HTML -->
+            <div class="blog-content-body" data-animation="fade-in-up">
+                {{ blog.content|safe }}
+            </div>
+
+            <!-- ======================= Comments Section ======================= -->
+            <section class="comments-section" id="comments">
+                <!-- DYNAMIC: Comment count -->
+                <h2 data-animation="fade-in-up">Comments ({{ comments.count }})</h2>
+                
+                <!-- Comment Form -->
+                {% if user.is_authenticated %}
+                    <form class="comment-form card" id="comment-form" method="post" action="{% url 'portfolio:blog_detail' slug=blog.slug %}" data-animation="fade-in-up">
+                        {% csrf_token %}
+                        <div class="form-content">
+                            <textarea name="body" placeholder="Join the discussion..." rows="3" required></textarea>
+                            <button type="submit" class="filled-btn">Post Comment</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <div class="comment-auth-prompt card" data-animation="fade-in-up">
+                        <div class="auth-prompt-content">
+                            <p>Sign in to join the discussion and share your thoughts about this post.</p>
+                            <div class="auth-buttons">
+                                <a href="{% url 'auth_app:login' %}?next={% url 'portfolio:blog_detail' slug=blog.slug %}%23comments" class="filled-btn">Sign In</a>
+                                <a href="{% url 'auth_app:signup' %}?next={% url 'portfolio:blog_detail' slug=blog.slug %}%23comments" class="outline-btn">Create Account</a>
+                            </div>
                         </div>
                     </div>
-                </header>
-
-                <h1 class="blog-title" data-animation="fade-in-up" data-animation-delay="200">{{ blog.title }}</h1>
-                <p class="blog-summary" data-animation="fade-in-up" data-animation-delay="300">{{ blog.summary }}</p>
-                
-                {% if blog.cover_image %}
-                <img class="blog-hero-image" src="{{ blog.cover_image.url }}" alt="{{ blog.title }}" data-animation="zoom-in" data-animation-delay="400">
                 {% endif %}
+
+                <!-- List of Comments -->
+                <div class="comment-list" id="comment-list">
+                    <!-- DYNAMIC: Loop through comments from the view -->
+                    {% for comment in comments %}
+                    <div class="comment-item card hidden">
+                        <div class="comment-avatar" data-avatar-color="{{ comment.author_name|avatar_color }}">
+                            {{ comment.author_name|initials }}
+                        </div>
+                        <div class="comment-body">
+                            <div class="comment-header">
+                                <h5>{{ comment.author_name }}</h5>
+                                <span>{{ comment.created_date|timesince }} ago</span>
+                            </div>
+                            <p>{{ comment.body|safe }}</p>
+                            <div class="comment-actions">
+                                <button class="like-btn{% if comment.id in user_liked_comments %} active{% endif %}" data-comment-id="{{ comment.id }}">
+                                    <i class="fa-{% if comment.id in user_liked_comments %}solid{% else %}regular{% endif %} fa-heart"></i>
+                                    <span class="like-count">{{ comment.total_likes }}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                        <p>Be the first to leave a comment!</p>
+                    {% endfor %}
+                </div>
                 
-                <!-- DYNAMIC: Main Content Body from TinyMCE, marked as 'safe' to render HTML -->
-                <div class="blog-content-body" data-animation="fade-in-up">
-                    {{ blog.content|safe }}
-                </div>
+                <!-- Load More Button (controlled by JS) -->
+                {% if comments.count > 5 %}
+                    <button class="outline-btn" id="load-more-comments">Load More Comments</button>
+                {% endif %}
+            </section>
+        </article>
 
-                <!-- ======================= Comments Section ======================= -->
-                <section class="comments-section" id="comments">
-                    <!-- DYNAMIC: Comment count -->
-                    <h2 data-animation="fade-in-up">Comments ({{ comments.count }})</h2>
-                    
-                    <!-- Comment Form -->
-                    {% if user.is_authenticated %}
-                        <form class="comment-form card" id="comment-form" method="post" action="{% url 'portfolio:blog_detail' slug=blog.slug %}" data-animation="fade-in-up">
-                            {% csrf_token %}
-                            <div class="form-content">
-                                <textarea name="body" placeholder="Join the discussion..." rows="3" required></textarea>
-                                <button type="submit" class="filled-btn">Post Comment</button>
-                            </div>
-                        </form>
+        <!-- ======================= Sidebar ======================= -->
+        <aside class="detail-sidebar" data-animation="fade-in-up" data-animation-delay="500">
+            <div class="sidebar-card card">
+                <h3>Author</h3>
+                <div class="author-info">
+                    {% if blog.author_avatar %}
+                    <img src="{{ blog.author_avatar.url }}" alt="{{ blog.author_name }}">
                     {% else %}
-                        <div class="comment-auth-prompt card" data-animation="fade-in-up">
-                            <div class="auth-prompt-content">
-                                <p>Sign in to join the discussion and share your thoughts about this post.</p>
-                                <div class="auth-buttons">
-                                    <a href="{% url 'auth_app:login' %}?next={% url 'portfolio:blog_detail' slug=blog.slug %}%23comments" class="filled-btn">Sign In</a>
-                                    <a href="{% url 'auth_app:signup' %}?next={% url 'portfolio:blog_detail' slug=blog.slug %}%23comments" class="outline-btn">Create Account</a>
-                                </div>
-                            </div>
-                        </div>
+                    <img src="{% static 'images/default_avatar.png' %}" alt="Default Avatar">
                     {% endif %}
-
-                    <!-- List of Comments -->
-                    <div class="comment-list" id="comment-list">
-                        <!-- DYNAMIC: Loop through comments from the view -->
-                        {% for comment in comments %}
-                        <div class="comment-item card hidden">
-                            <div class="comment-avatar" data-avatar-color="{{ comment.author_name|avatar_color }}">
-                                {{ comment.author_name|initials }}
-                            </div>
-                            <div class="comment-body">
-                                <div class="comment-header">
-                                    <h5>{{ comment.author_name }}</h5>
-                                    <span>{{ comment.created_date|timesince }} ago</span>
-                                </div>
-                                <p>{{ comment.body|safe }}</p>
-                                <div class="comment-actions">
-                                    <button class="like-btn{% if comment.id in user_liked_comments %} active{% endif %}" data-comment-id="{{ comment.id }}">
-                                        <i class="fa-{% if comment.id in user_liked_comments %}solid{% else %}regular{% endif %} fa-heart"></i>
-                                        <span class="like-count">{{ comment.total_likes }}</span>
-                                    </button>
-                                </div>
-                            </div>
+                    <div>
+                        <h4>{{ blog.author_name }}</h4>
+                        <p>Full-Stack Developer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-card card">
+                <h3>Share this Post</h3>
+                <!-- Enhanced social sharing with proper formatting -->
+                <div class="share-buttons">
+                    <button class="share-btn twitter" data-platform="twitter" aria-label="Share on Twitter">
+                        <i class="fab fa-twitter"></i>
+                        <span>Twitter</span>
+                    </button>
+                    <button class="share-btn linkedin" data-platform="linkedin" aria-label="Share on LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                        <span>LinkedIn</span>
+                    </button>
+                    <button class="share-btn facebook" data-platform="facebook" aria-label="Share on Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                        <span>Facebook</span>
+                    </button>
+                    <button class="share-btn whatsapp" data-platform="whatsapp" aria-label="Share on WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp</span>
+                    </button>
+                    <button class="share-btn reddit" data-platform="reddit" aria-label="Share on Reddit">
+                        <i class="fab fa-reddit-alien"></i>
+                        <span>Reddit</span>
+                    </button>
+                    <button class="share-btn telegram" data-platform="telegram" aria-label="Share on Telegram">
+                        <i class="fab fa-telegram-plane"></i>
+                        <span>Telegram</span>
+                    </button>
+                    <button class="share-btn email" data-platform="email" aria-label="Share via Email">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email</span>
+                    </button>
+                    <button class="share-btn copy-link" data-platform="copy" aria-label="Copy Link">
+                        <i class="fas fa-link"></i>
+                        <span>Copy Link</span>
+                    </button>
+                </div>
+                
+                <!-- Share Analytics/Feedback -->
+                <div class="share-feedback" id="share-feedback" style="display: none;">
+                    <p class="feedback-message"></p>
+                </div>
+                
+                <!-- Hidden data for JavaScript -->
+                <div class="share-data" style="display: none;">
+                    <span data-title="{{ blog.title|escapejs }}"></span>
+                    <span data-summary="{{ blog.summary|escapejs }}"></span>
+                    <span data-url="{{ request.build_absolute_uri }}"></span>
+                    <span data-image="{% if blog.cover_image %}{{ request.scheme }}://{{ request.get_host }}{{ blog.cover_image.url }}{% endif %}"></span>
+                    <span data-author="{{ blog.author_name|escapejs }}"></span>
+                    <span data-date="{{ blog.created_date|date:'M d, Y' }}"></span>
+                    <span data-categories="{% for category in blog.categories.all %}{{ category.name }}{% if not forloop.last %}, {% endif %}{% endfor %}"></span>
+                </div>
+            </div>
+            <div class="sidebar-card card">
+                <h3>Suggested Posts</h3>
+                <div class="suggested-posts-list">
+                    <!-- DYNAMIC: Loop through suggested posts from the view -->
+                    {% for post in suggested_posts %}
+                    <a href="{% url 'portfolio:blog_detail' slug=post.slug %}" class="suggested-post">
+                        <img src="{% if post.cover_image %}{{ post.cover_image.url }}{% else %}https://placehold.co/80x80/010409/eaeaea?text={{ post.title|slice:':2'|upper }}{% endif %}" alt="{{ post.title }}">
+                        <div class="post-info">
+                            <h5>{{ post.title }}</h5>
+                            <span>{{ post.created_date|date:"M d, Y" }}</span>
                         </div>
-                        {% empty %}
-                            <p>Be the first to leave a comment!</p>
-                        {% endfor %}
-                    </div>
-                    
-                    <!-- Load More Button (controlled by JS) -->
-                    {% if comments.count > 5 %}
-                        <button class="outline-btn" id="load-more-comments">Load More Comments</button>
-                    {% endif %}
-                </section>
-            </article>
-
-            <!-- ======================= Sidebar ======================= -->
-            <aside class="detail-sidebar" data-animation="fade-in-up" data-animation-delay="500">
-                <div class="sidebar-card card">
-                    <h3>Author</h3>
-                    <div class="author-info">
-                        {% if blog.author_avatar %}
-                        <img src="{{ blog.author_avatar.url }}" alt="{{ blog.author_name }}">
-                        {% else %}
-                        <img src="{% static 'images/default_avatar.png' %}" alt="Default Avatar">
-                        {% endif %}
-                        <div>
-                            <h4>{{ blog.author_name }}</h4>
-                            <p>Full-Stack Developer</p>
-                        </div>
-                    </div>
+                    </a>
+                    {% empty %}
+                        <p>No other posts in this category yet.</p>
+                    {% endfor %}
                 </div>
-                <div class="sidebar-card card">
-                    <h3>Share this Post</h3>
-                    <!-- Enhanced social sharing with proper formatting -->
-                    <div class="share-buttons">
-                        <button class="share-btn twitter" data-platform="twitter" aria-label="Share on Twitter">
-                            <i class="fab fa-twitter"></i>
-                            <span>Twitter</span>
-                        </button>
-                        <button class="share-btn linkedin" data-platform="linkedin" aria-label="Share on LinkedIn">
-                            <i class="fab fa-linkedin-in"></i>
-                            <span>LinkedIn</span>
-                        </button>
-                        <button class="share-btn facebook" data-platform="facebook" aria-label="Share on Facebook">
-                            <i class="fab fa-facebook-f"></i>
-                            <span>Facebook</span>
-                        </button>
-                        <button class="share-btn whatsapp" data-platform="whatsapp" aria-label="Share on WhatsApp">
-                            <i class="fab fa-whatsapp"></i>
-                            <span>WhatsApp</span>
-                        </button>
-                        <button class="share-btn reddit" data-platform="reddit" aria-label="Share on Reddit">
-                            <i class="fab fa-reddit-alien"></i>
-                            <span>Reddit</span>
-                        </button>
-                        <button class="share-btn telegram" data-platform="telegram" aria-label="Share on Telegram">
-                            <i class="fab fa-telegram-plane"></i>
-                            <span>Telegram</span>
-                        </button>
-                        <button class="share-btn email" data-platform="email" aria-label="Share via Email">
-                            <i class="fas fa-envelope"></i>
-                            <span>Email</span>
-                        </button>
-                        <button class="share-btn copy-link" data-platform="copy" aria-label="Copy Link">
-                            <i class="fas fa-link"></i>
-                            <span>Copy Link</span>
-                        </button>
-                    </div>
-                    
-                    <!-- Share Analytics/Feedback -->
-                    <div class="share-feedback" id="share-feedback" style="display: none;">
-                        <p class="feedback-message"></p>
-                    </div>
-                    
-                    <!-- Hidden data for JavaScript -->
-                    <div class="share-data" style="display: none;">
-                        <span data-title="{{ blog.title|escapejs }}"></span>
-                        <span data-summary="{{ blog.summary|escapejs }}"></span>
-                        <span data-url="{{ request.build_absolute_uri }}"></span>
-                        <span data-image="{% if blog.cover_image %}{{ request.scheme }}://{{ request.get_host }}{{ blog.cover_image.url }}{% endif %}"></span>
-                        <span data-author="{{ blog.author_name|escapejs }}"></span>
-                        <span data-date="{{ blog.created_date|date:'M d, Y' }}"></span>
-                        <span data-categories="{% for category in blog.categories.all %}{{ category.name }}{% if not forloop.last %}, {% endif %}{% endfor %}"></span>
-                    </div>
-                </div>
-                <div class="sidebar-card card">
-                    <h3>Suggested Posts</h3>
-                    <div class="suggested-posts-list">
-                        <!-- DYNAMIC: Loop through suggested posts from the view -->
-                        {% for post in suggested_posts %}
-                        <a href="{% url 'portfolio:blog_detail' slug=post.slug %}" class="suggested-post">
-                            <img src="{% if post.cover_image %}{{ post.cover_image.url }}{% else %}https://placehold.co/80x80/010409/eaeaea?text={{ post.title|slice:':2'|upper }}{% endif %}" alt="{{ post.title }}">
-                            <div class="post-info">
-                                <h5>{{ post.title }}</h5>
-                                <span>{{ post.created_date|date:"M d, Y" }}</span>
-                            </div>
-                        </a>
-                        {% empty %}
-                            <p>No other posts in this category yet.</p>
-                        {% endfor %}
-                    </div>
-                </div>
-            </aside>
-        </div>
-    </main>
+            </div>
+        </aside>
+    </div>
 {% endblock %}

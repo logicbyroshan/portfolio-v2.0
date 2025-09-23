@@ -45,11 +45,11 @@ urlpatterns = [
     path('projects/<slug:slug>/load-more-comments/', load_more_project_comments, name='load_more_project_comments'),
 
     # Blog Pages
-    path('blog/', BlogListView.as_view(), name='blog_list'),
+    path('blogs/', BlogListView.as_view(), name='blog_list'),
     path('blog/<slug:slug>/', BlogDetailView.as_view(), name='blog_detail'),
 
     # Experience Pages
-    path('experience/', ExperienceListView.as_view(), name='experience_list'),
+    path('experiences/', ExperienceListView.as_view(), name='experience_list'),
     path('experience/<int:pk>/', ExperienceDetailView.as_view(), name='experience_detail'),
     
     # Skill Detail Page
