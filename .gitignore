@@ -201,3 +201,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+deploye_key
+deploye_key.pub
+
+.deploye_key
+.deploye_key.pub

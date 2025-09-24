@@ -1,47 +1,44 @@
-name: Deploy Django to cPanel
+name: Deploy Django to cPanel via SSH
 
 on:
   push:
-    branches:
-      - main   # change if your branch is different
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          python-version: '3.13'
+          ssh-private-key: ${{ secrets.CPANEL_KEY }}
 
-      - name: Install dependencies
+      - name: Deploy to cPanel
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          ssh -p 7878 -o StrictHostKeyChecking=no ${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }} << 'EOF'
+            echo "➡ Switching to project directory..."
+            cd /home/roshanpr/roshandamor.me
 
-      - name: Collect static files
-        env:
-          DJANGO_SETTINGS_MODULE: config.settings
-          SECRET_KEY: django-insecure-6d0sc!g!$b+ecm0!uttm8)zco12u72)*gmtc61j3n_t0(lgf7v
-          DEBUG: "0"
-          ALLOWED_HOSTS: "blogmitra.roshanproject.site"
-          GITHUB_ACTIONS: "true"
-        run: |
-          python manage.py collectstatic --noinput
+            echo "➡ Activating virtualenv..."
+            source /home/roshanpr/virtualenv/roshandamor.me/3.13/bin/activate
 
-      - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: blogmitra.roshanproject.site   
-          username: ${{ secrets.FTP_USERNAME }}  
-          password: ${{ secrets.FTP_PASSWORD }}  # set this in GitHub Secrets
-          protocol: ftp                         # try ftps first
-          port: 21
-          server-dir: ./  # 👈 from cPanel "Path"
-          passive: true
-          security: loose
-          log-level: verbose
+            echo "➡ Fetching latest code..."
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "➡ Installing dependencies..."
+            pip install -r requirements.txt
+
+            echo "➡ Running migrations..."
+            python manage.py migrate --noinput
+
+            echo "➡ Collecting static files..."
+            python manage.py collectstatic --noinput
+
+            echo "➡ Restarting Passenger app..."
+            touch tmp/restart.txt
+          EOF
