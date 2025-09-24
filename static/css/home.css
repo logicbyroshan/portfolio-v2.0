@@ -153,7 +153,7 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
 .home-container { display: flex; align-items: center; justify-content: space-between; gap: 40px; width: 100%; }
 .home-content { display: flex; flex-direction: column; gap: 15px; max-width: 55%; z-index: 2; }
 .home-content p:first-of-type { font-weight: 500; color: var(--title-color); }
-.home-content p b { color: var(--accent-color); }
+.home-content p b { color: var(--title-color); }
 .home-content h1 { font-family: var(--heading-font); font-size: 60px; color: var(--title-color); line-height: 1; letter-spacing: 2px; }
 .home-content h4 { font-size: 24px; font-weight: 400; color: var(--paragraph-color); }
 .home-content h4 span { color: var(--accent-color); font-weight: 600; }
