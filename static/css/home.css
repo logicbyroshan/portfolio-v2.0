@@ -225,6 +225,61 @@ p { font-size: 16px; color: var(--paragraph-color); margin: 0; }
 }
 .about-section .service-text h4 { font-size: 18px; font-weight: 600; color: var(--title-color); margin-bottom: 8px; }
 .about-section .text-reverse { text-align: right; }
+
+/* Clickable Skill Cards */
+.service-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.clickable-skill {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.clickable-skill:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0, 169, 255, 0.15);
+}
+
+.clickable-skill:hover .icon-wrapper {
+    background-color: var(--accent-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+.clickable-skill .icon-wrapper {
+    transition: all 0.3s ease;
+}
+
+.view-details {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    color: var(--accent-color);
+    font-weight: 500;
+    margin-top: 8px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.clickable-skill:hover .view-details {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.view-details i {
+    transition: transform 0.3s ease;
+}
+
+.clickable-skill:hover .view-details i {
+    transform: translateX(3px);
+}
 .about-image-wrapper { position: relative; max-width: 300px; width: 100%; height: 380px; border-radius: 10px; overflow: hidden; border: 3px solid var(--card-border); flex-shrink: 0; }
 .about-image-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.4s ease-in-out; }
 .about-image-wrapper .about-img-hover { opacity: 0; }

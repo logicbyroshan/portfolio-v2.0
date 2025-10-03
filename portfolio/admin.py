@@ -10,7 +10,6 @@ from .models import (
     Experience,
     FAQ,
     Skill,
-    SkillTechnologyDetail,
     Achievement,
     Resume,
     VideoResume,
@@ -78,11 +77,6 @@ class ProjectImageInline(admin.TabularInline):
     extra = 1
 
 
-class SkillTechnologyDetailInline(admin.TabularInline):
-    model = SkillTechnologyDetail
-    extra = 1
-
-
 # =========================================================================
 # REGULAR MODEL ADMIN CONFIGURATIONS
 # =========================================================================
@@ -91,6 +85,8 @@ class SkillTechnologyDetailInline(admin.TabularInline):
 @admin.register(Technology)
 class TechnologyAdmin(admin.ModelAdmin):
     search_fields = ("name",)
+    list_display = ("name", "category")
+    list_filter = ("category",)
 
 
 @admin.register(Category)
@@ -125,9 +121,18 @@ class FAQAdmin(admin.ModelAdmin):
 
 @admin.register(Skill)
 class SkillAdmin(admin.ModelAdmin):
-    inlines = [SkillTechnologyDetailInline]
-    list_display = ("title", "icon")
+    list_display = (
+        "title",
+        "proficiency_level",
+        "years_of_experience",
+        "is_featured",
+        "order",
+    )
+    list_filter = ("proficiency_level", "is_featured")
     search_fields = ("title", "summary")
+    filter_horizontal = ("technologies",)
+    list_editable = ("order", "is_featured")
+    prepopulated_fields = {"slug": ("title",)}
 
 
 @admin.register(NewsletterSubscriber)

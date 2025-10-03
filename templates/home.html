@@ -131,10 +131,16 @@
         <div class="about-content card">
             <div class="services-column">
                 {% for service in services_col1 %}
-                <div class="service-box box-reverse" data-animation="fade-in-right" data-animation-delay="{{ service.animation_delay }}">
-                    <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
-                    <div class="service-text text-reverse"><h4>{{ service.title }}</h4><p>{{ service.summary|safe }}</p></div>
-                </div>
+                <a href="{% url 'portfolio:skill_detail' slug=service.slug %}" class="service-link">
+                    <div class="service-box box-reverse clickable-skill" data-animation="fade-in-right" data-animation-delay="{{ service.animation_delay }}">
+                        <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
+                        <div class="service-text text-reverse">
+                            <h4>{{ service.title }}</h4>
+                            <p>{{ service.summary|safe }}</p>
+                            <span class="view-details">View Details <i class="fa-solid fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </a>
                 {% endfor %}
             </div>
             <div class="about-image-wrapper" data-animation="zoom-in">
@@ -143,10 +149,16 @@
             </div>
             <div class="services-column">
                 {% for service in services_col2 %}
-                <div class="service-box" data-animation="fade-in-left" data-animation-delay="{{ service.animation_delay }}">
-                    <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
-                    <div class="service-text"><h4>{{ service.title }}</h4><p>{{ service.summary|safe }}</p></div>
-                </div>
+                <a href="{% url 'portfolio:skill_detail' slug=service.slug %}" class="service-link">
+                    <div class="service-box clickable-skill" data-animation="fade-in-left" data-animation-delay="{{ service.animation_delay }}">
+                        <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
+                        <div class="service-text">
+                            <h4>{{ service.title }}</h4>
+                            <p>{{ service.summary|safe }}</p>
+                            <span class="view-details">View Details <i class="fa-solid fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </a>
                 {% endfor %}
             </div>
         </div>

@@ -300,30 +300,60 @@ class Skill(models.Model):
     slug = models.SlugField(max_length=100, unique=True, editable=False)
     icon = models.CharField(max_length=50)
     summary = models.TextField()
+    learning_journey = HTMLField(
+        blank=True, help_text="Detailed learning journey and experience with this skill"
+    )
     order = models.PositiveIntegerField(default=0)
-    technologies = models.ManyToManyField(Technology, through="SkillTechnologyDetail")
+    technologies = models.ManyToManyField(Technology, blank=True)
+
+    # New fields for skill detail page
+    proficiency_level = models.CharField(
+        max_length=20,
+        choices=[
+            ("beginner", "Beginner"),
+            ("intermediate", "Intermediate"),
+            ("advanced", "Advanced"),
+            ("expert", "Expert"),
+        ],
+        default="intermediate",
+    )
+    years_of_experience = models.PositiveIntegerField(
+        default=1, help_text="Years of experience with this skill"
+    )
+    is_featured = models.BooleanField(
+        default=False, help_text="Display this skill prominently on the home page"
+    )
 
     class Meta:
-        ordering = ["title"]
+        ordering = ["order", "title"]
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
+        if not self.slug:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+            while type(self).objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
 
+    @property
+    def related_projects_count(self):
+        """Get count of projects using technologies from this skill"""
+        return (
+            Project.objects.filter(technologies__in=self.technologies.all())
+            .distinct()
+            .count()
+        )
 
-class SkillTechnologyDetail(models.Model):
-    skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
-    technology = models.ForeignKey(Technology, on_delete=models.CASCADE)
-    learning_journey = HTMLField()
-
-    class Meta:
-        unique_together = ("skill", "technology")
-
-    def __str__(self):
-        return f"{self.technology.name} in {self.skill.title}"
+    @property
+    def technology_list(self):
+        """Get comma-separated list of technology names"""
+        return ", ".join([tech.name for tech in self.technologies.all()])
 
 
 class FAQ(models.Model):
@@ -476,11 +506,6 @@ class Testimonial(models.Model):
 
     def __str__(self):
         return f"Testimonial by {self.author_name}"
-
-
-# =========================================================================
-# RESOURCES PAGE MODELS
-# =========================================================================
 
 
 # =========================================================================
