@@ -83,64 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // File attachment functionality
-    const attachBtn = modal.querySelector('#attach-file-btn');
-    const fileInput = modal.querySelector('#ai-file-input');
-    const fileDisplayContainer = modal.querySelector('#file-display-container');
 
-    if (attachBtn && fileInput) {
-        attachBtn.addEventListener('click', function() {
-            fileInput.click();
-        });
-
-        fileInput.addEventListener('change', function() {
-            displaySelectedFiles();
-        });
-    }
-
-    function displaySelectedFiles() {
-        if (!fileDisplayContainer) return;
-        
-        fileDisplayContainer.innerHTML = '';
-        const files = fileInput.files;
-
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            const fileItem = document.createElement('div');
-            fileItem.className = 'file-display-item';
-            
-            fileItem.innerHTML = `
-                <i class="fas fa-file"></i>
-                <span>${file.name}</span>
-                <span class="remove-file" data-index="${i}">&times;</span>
-            `;
-            
-            fileDisplayContainer.appendChild(fileItem);
-        }
-
-        // Add event listeners for file removal
-        const removeButtons = fileDisplayContainer.querySelectorAll('.remove-file');
-        removeButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                removeFile(index);
-            });
-        });
-    }
-
-    function removeFile(index) {
-        const dt = new DataTransfer();
-        const files = fileInput.files;
-
-        for (let i = 0; i < files.length; i++) {
-            if (i !== index) {
-                dt.items.add(files[i]);
-            }
-        }
-
-        fileInput.files = dt.files;
-        displaySelectedFiles();
-    }
 
     // Form submission handling
     const aiForm = modal.querySelector('#ai-form');

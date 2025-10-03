@@ -132,7 +132,7 @@
             <div class="services-column">
                 {% for service in services_col1 %}
                 <a href="{% url 'portfolio:skill_detail' slug=service.slug %}" class="service-link">
-                    <div class="service-box box-reverse clickable-skill" data-animation="fade-in-right" data-animation-delay="{{ service.animation_delay }}">
+                    <div class="service-box box-reverse clickable-skill">
                         <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
                         <div class="service-text text-reverse">
                             <h4>{{ service.title }}</h4>
@@ -150,7 +150,7 @@
             <div class="services-column">
                 {% for service in services_col2 %}
                 <a href="{% url 'portfolio:skill_detail' slug=service.slug %}" class="service-link">
-                    <div class="service-box clickable-skill" data-animation="fade-in-left" data-animation-delay="{{ service.animation_delay }}">
+                    <div class="service-box clickable-skill">
                         <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
                         <div class="service-text">
                             <h4>{{ service.title }}</h4>

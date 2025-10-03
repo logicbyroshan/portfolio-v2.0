@@ -138,26 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Contact form is now handled by contact_form.js with toast notifications
 
-    // 6. On-Scroll Animation Functionality
-    const animatedElements = document.querySelectorAll('[data-animation]');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const delay = parseInt(entry.target.dataset.animationDelay) || 0;
-                setTimeout(() => {
-                    entry.target.classList.add('is-visible');
-                }, delay);
-                observer.unobserve(entry.target);
-            }
-        });
-    }, {
-        threshold: 0.1
-    });
-
-    animatedElements.forEach(el => {
-        observer.observe(el);
-    });
+    // Animation system is now handled by animations.js
+    // No need for duplicate animation code here
 
     // 7. Particles.js Initialization
     if (document.getElementById('particles-js')) {

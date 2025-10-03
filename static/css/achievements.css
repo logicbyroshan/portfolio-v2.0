@@ -82,17 +82,18 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 .ach-content h3 {
     color: var(--title-color);
-    font-size: 18px;
-    margin-bottom: 6px;
-    line-height: 1.3;
+    font-size: 22px;
+    margin-bottom: 0;
+    line-height: 1.2;
 }
 .ach-content .issuer {
     font-size: 13px;
     color: var(--paragraph-color);
-    margin-bottom: 12px;
+    margin-bottom: 0;
 }
 .ach-content .issuer strong {
     color: var(--title-color);
@@ -100,12 +101,14 @@
 }
 .ach-content p:last-of-type {
     font-size: 14px;
-    line-height: 1.4;
+    line-height: 1.6;
     color: var(--paragraph-color);
+    margin: 0;
 }
 .ach-footer {
     padding: 0 20px 20px;
     margin-top: auto;
+    padding-top: 10px;
 }
 .credential-link {
     display: inline-flex;

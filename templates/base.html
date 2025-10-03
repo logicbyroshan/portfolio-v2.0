@@ -24,6 +24,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@400;500;600;700&family=Rozha+One&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animations.css' %}">
     <link rel="stylesheet" href="{% static 'css/ai_query.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
     {% block extra_css %}{% endblock %}
@@ -34,6 +35,7 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     
     <!-- Deferred JS at the end of head for faster rendering -->
+    <script src="{% static 'js/animations.js' %}" defer></script>
     <script src="{% static 'js/base.js' %}" defer></script>
     <script src="{% static 'js/ai_modal.js' %}" defer></script>
     {% block extra_js %}{% endblock %} {# extra_js block moved to after base scripts #}
@@ -187,10 +189,10 @@
                 <div class="footer-col-links">
                     <h4>Resources</h4>
                     <ul>
-                        <li><a href="{% url 'blog:blog_list' %}">ALL ARTICLES</a></li>
-                        <li><a href="{% url 'portfolio:project_list' %}">ALL PROJECTS</a></li>
-                        <li><a href="{% url 'portfolio:experience_list' %}">ALL EXPERIENCES</a></li>
-                        <li><a href="{% url 'portfolio:achievements_list' %}">ALL ACHIEVEMENTS</a></li>
+                        <li><a href="{% url 'blog:blog_list' %}">ARTICLES</a></li>
+                        <li><a href="{% url 'portfolio:project_list' %}">PROJECTS</a></li>
+                        <li><a href="{% url 'portfolio:experience_list' %}">EXPERIENCES</a></li>
+                        <li><a href="{% url 'portfolio:achievements_list' %}">ACHIEVEMENTS</a></li>
                     </ul>
                 </div>
 
@@ -198,9 +200,9 @@
                 <div class="footer-col-links">
                     <h4>Connect</h4>
                     <ul>
-                        <li><a href="{% url 'roshan:my_playlist' %}">MY PLAYLIST</a></li>
-                        <li><a href="{% url 'roshan:resources' %}">MY RESOURCES</a></li>
-                        <li><a href="https://risetogethr.tech" target="_blank" rel="noopener noreferrer">MY COMMUNITY</a></li>
+                        <li><a href="{% url 'roshan:my_playlist' %}">PLAYLIST</a></li>
+                        <li><a href="{% url 'roshan:resources' %}">RESOURCES</a></li>
+                        <li><a href="https://risetogethr.tech" target="_blank" rel="noopener noreferrer">COMMUNITY</a></li>
                         <li><a href="{% url 'portfolio:code_together' %}">CODE TOGETHER</a></li>
                     </ul>
                 </div>
