@@ -22,8 +22,8 @@
     --code-font: 'Inconsolata', monospace;
 
     --bg-gradient-start: #000000;
-    --bg-gradient-mid: #101010;
-    --bg-gradient-end: #050505;
+    --bg-gradient-mid: #000713;
+    --bg-gradient-end: #00050e;
     
     --accent-color: #00A9FF;
     --accent-color-hover: #0087cc;
@@ -32,7 +32,7 @@
     --paragraph-color: #B3B3B3;
 
     --card-bg: #0A0A0A;
-    --card-border: #1A1A1A;
+    --card-border: #232323;
     --card-border-hover: var(--accent-color);
     --card-shadow: rgba(0, 169, 255, 0.15);
 }

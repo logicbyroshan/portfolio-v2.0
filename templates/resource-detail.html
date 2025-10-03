@@ -94,7 +94,7 @@
                 <ul>
                     {% for category in resource.categories.all %}
                         <li style="margin: 12px 0;">
-                            <a href="{% url 'portfolio:resource_list' %}?category={{ category.slug }}">
+                            <a href="{% url 'roshan:resources' %}?category={{ category.slug }}">
                                 <i class="{{ category.icon }}"></i> {{ category.name }}
                             </a>
                         </li>
@@ -109,7 +109,7 @@
                 {% for related in related_resources %}
                     <div class="related-resource-item">
                         <h5>
-                            <a href="{% url 'portfolio:resource_detail' slug=related.slug %}">
+                            <a href="{% url 'roshan:resource_detail' slug=related.slug %}">
                                 {{ related.title }}
                             </a>
                         </h5>
@@ -123,7 +123,7 @@
     
     <!-- Back to Resources -->
     <div style="text-align: center;">
-        <a href="{% url 'portfolio:resource_list' %}" class="back-link">
+        <a href="{% url 'roshan:resources' %}" class="back-link">
             <i class="fas fa-arrow-left"></i> Back to All Resources
         </a>
     </div>

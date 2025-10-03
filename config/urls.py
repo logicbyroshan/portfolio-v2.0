@@ -4,27 +4,38 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
-from music.views import admin_spotify_callback
-from portfolio.sitemaps import StaticViewSitemap, BlogSitemap, ProjectSitemap
+from roshan.views import admin_spotify_callback
+from portfolio.sitemaps import StaticViewSitemap, ProjectSitemap
+from blog.sitemaps import BlogSitemap
 
 # Sitemap configuration
 sitemaps = {
-    'static': StaticViewSitemap,
-    'blogs': BlogSitemap,
-    'projects': ProjectSitemap,
+    "static": StaticViewSitemap,
+    "blogs": BlogSitemap,
+    "projects": ProjectSitemap,
 }
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('portfolio.urls')),
-    path('ai/', include('ai.urls')),
-    path('auth/', include('auth_app.urls')),
-    path('music/', include('music.urls')),
-    path('callback/', admin_spotify_callback, name='spotify_callback'),  # Admin callback for Spotify app config
-    
+    path("admin/", admin.site.urls),
+    path("", include("portfolio.urls")),
+    path("blogs/", include("blog.urls")),
+    path("ai/", include("ai.urls")),
+    path("auth/", include("auth_app.urls")),
+    path("", include("roshan.urls")),  # Include roshan app URLs at root level
+    path(
+        "callback/", admin_spotify_callback, name="spotify_callback"
+    ),  # Admin callback for Spotify app config
     # SEO URLs
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
-    path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
+    path(
+        "sitemap.xml",
+        sitemap,
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
+    ),
+    path(
+        "robots.txt",
+        TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
+    ),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

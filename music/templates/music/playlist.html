@@ -25,7 +25,7 @@
         {% if playlists.items %}
             {% for playlist in playlists.items %}
             <div class="playlist-card card" data-animation="zoom-in">
-                <a href="{% url 'playlist_detail' playlist.id %}" class="playlist-image">
+                <a href="{% url 'roshan:playlist_detail' playlist.id %}" class="playlist-image">
                     <img src="{{ playlist.images.0.url }}" alt="{{ playlist.name }} playlist cover" loading="lazy">
                     <div class="play-overlay">
                         <i class="fa-solid fa-play"></i>
@@ -38,7 +38,7 @@
                     {% endif %}
                 </div>
                 <div class="playlist-footer">
-                    <a href="{% url 'playlist_detail' playlist.id %}" class="outline-btn">
+                    <a href="{% url 'roshan:playlist_detail' playlist.id %}" class="outline-btn">
                         <i class="fa-solid fa-headphones-simple"></i> Listen
                     </a>
                     <a href="{{ playlist.external_urls.spotify }}" class="outline-btn" target="_blank" rel="noopener noreferrer">

@@ -15,7 +15,6 @@
 
 /* Override main container for experience detail pages to reduce excessive spacing */
 .experience-detail-page .main-container {
-    padding-top: 120px; /* Reduced from 185px for detail pages */
     gap: 40px; /* Reduced from 150px for tighter spacing */
 }
 

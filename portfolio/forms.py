@@ -1,5 +1,5 @@
 from django import forms
-from .models import ContactSubmission, NewsletterSubscriber, CollaborationProposal, Resource, ResourceCategory
+from .models import ContactSubmission, NewsletterSubscriber, CollaborationProposal
 
 class ContactForm(forms.ModelForm):
     class Meta:
@@ -57,82 +57,6 @@ class CollaborationProposalForm(forms.ModelForm):
         }
 
 
-class ResourceSubmissionForm(forms.ModelForm):
-    """
-    Form for submitting new resource suggestions.
-    """
-    class Meta:
-        model = Resource
-        fields = [
-            'title', 'description', 'resource_type', 'link', 
-            'author', 'categories', 'technologies'
-        ]
-        widgets = {
-            'title': forms.TextInput(attrs={
-                'placeholder': 'Resource Title',
-                'class': 'form-input'
-            }),
-            'description': forms.Textarea(attrs={
-                'placeholder': 'Brief description of what makes this resource valuable...',
-                'class': 'form-textarea',
-                'rows': 4
-            }),
-            'resource_type': forms.Select(attrs={
-                'class': 'form-select'
-            }),
-            'link': forms.URLInput(attrs={
-                'placeholder': 'https://example.com/resource',
-                'class': 'form-input'
-            }),
-            'author': forms.TextInput(attrs={
-                'placeholder': 'Resource Author/Creator (optional)',
-                'class': 'form-input'
-            }),
-            'categories': forms.CheckboxSelectMultiple(attrs={
-                'class': 'form-checkbox-group'
-            }),
-            'technologies': forms.CheckboxSelectMultiple(attrs={
-                'class': 'form-checkbox-group'
-            }),
-        }
-        labels = {
-            'title': 'Resource Title',
-            'description': 'Description',
-            'resource_type': 'Resource Type',
-            'link': 'Resource URL',
-            'author': 'Author/Creator',
-            'categories': 'Categories',
-            'technologies': 'Related Technologies',
-        }
 
 
-class ResourceFilterForm(forms.Form):
-    """
-    Form for filtering resources on the resources page.
-    """
-    category = forms.ModelChoiceField(
-        queryset=ResourceCategory.objects.all(),
-        required=False,
-        empty_label="All Categories",
-        widget=forms.Select(attrs={
-            'class': 'form-select',
-            'onchange': 'this.form.submit()'
-        })
-    )
-    
-    resource_type = forms.ChoiceField(
-        choices=[('', 'All Types')] + list(Resource.ResourceType.choices),
-        required=False,
-        widget=forms.Select(attrs={
-            'class': 'form-select',
-            'onchange': 'this.form.submit()'
-        })
-    )
-    
-    search = forms.CharField(
-        required=False,
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Search resources...',
-            'class': 'form-input'
-        })
-    )
+

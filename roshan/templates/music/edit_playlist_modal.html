@@ -1,0 +1,143 @@
+<!-- Edit Playlist Modal Content -->
+<div class="modal-header">
+    <h3>Edit "{{ playlist.name }}"</h3>
+    <button type="button" class="close-modal" data-dismiss="modal">
+        <i class="fa-solid fa-times"></i>
+    </button>
+</div>
+
+<form id="edit-playlist-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="{{ form.name.id_for_label }}">Playlist Name *</label>
+            {{ form.name }}
+            <div class="error-message" id="name-error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">Description</label>
+            {{ form.description }}
+            <div class="error-message" id="description-error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.cover_image.id_for_label }}">Cover Image</label>
+            {% if playlist.cover_image %}
+            <div class="current-image">
+                <img src="{{ playlist.cover_image.url }}" alt="Current cover" style="max-width: 100px; max-height: 100px; border-radius: 6px; margin-bottom: 0.5rem;">
+                <p class="form-text">Current cover image</p>
+            </div>
+            {% endif %}
+            {{ form.cover_image }}
+            <small class="form-text">Upload a new cover image (optional)</small>
+            <div class="error-message" id="cover_image-error"></div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-check-container">
+                {{ form.is_public }}
+                <label for="{{ form.is_public.id_for_label }}" class="form-check-label">
+                    Make playlist public
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-check-container">
+                {{ form.is_featured }}
+                <label for="{{ form.is_featured.id_for_label }}" class="form-check-label">
+                    Feature this playlist
+                </label>
+            </div>
+        </div>
+
+        <div class="playlist-stats">
+            <div class="stat-item">
+                <strong>Tracks:</strong> {{ playlist.track_count }}
+            </div>
+            <div class="stat-item">
+                <strong>Total Duration:</strong> {{ playlist.total_duration }}
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="outline-btn" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="filled-btn">
+            <i class="fa-solid fa-save"></i> Save Changes
+        </button>
+    </div>
+</form>
+
+<script>
+document.getElementById('edit-playlist-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    
+    // Show loading state
+    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+    submitBtn.disabled = true;
+    
+    // Clear previous errors
+    document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+    
+    fetch('{% url "roshan:edit_manual_playlist" playlist.id %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Close modal and refresh page
+            document.querySelector('.modal-overlay').remove();
+            location.reload();
+        } else {
+            // Show errors
+            for (const [field, errors] of Object.entries(data.errors)) {
+                const errorDiv = document.getElementById(field + '-error');
+                if (errorDiv) {
+                    errorDiv.textContent = errors.join(', ');
+                }
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while updating the playlist.');
+    })
+    .finally(() => {
+        // Restore button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+});
+</script>
+
+<style>
+.current-image {
+    margin-bottom: 1rem;
+}
+
+.playlist-stats {
+    background: rgba(0, 169, 255, 0.1);
+    border-radius: 6px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.stat-item {
+    margin-bottom: 0.5rem;
+    color: var(--paragraph-color);
+}
+
+.stat-item:last-child {
+    margin-bottom: 0;
+}
+</style>

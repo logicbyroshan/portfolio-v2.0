@@ -12,7 +12,7 @@
 /* Profile Section */
 .profile-section {
     display: flex;
-    align-items: center;
+    align-items: start;
     gap: 50px;
     width: 100%;
 }

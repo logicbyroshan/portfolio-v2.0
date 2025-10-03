@@ -18,7 +18,6 @@
 
 /* Override main container for detail pages to reduce excessive spacing */
 .project-detail-page .main-container {
-    padding-top: 120px; /* Reduced from 185px for detail pages */
     gap: 40px; /* Reduced from 150px for tighter spacing */
 }
 

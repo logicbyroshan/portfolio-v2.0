@@ -1,0 +1,183 @@
+<!-- Add Track Modal Content -->
+<div class="modal-header">
+    <h3>Add Track to "{{ playlist.name }}"</h3>
+    <button type="button" class="close-modal" data-dismiss="modal">
+        <i class="fa-solid fa-times"></i>
+    </button>
+</div>
+
+<form id="add-track-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="modal-body">
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="{{ form.name.id_for_label }}">Track Name *</label>
+                {{ form.name }}
+                <div class="error-message" id="name-error"></div>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="{{ form.track_number.id_for_label }}">Track #</label>
+                {{ form.track_number }}
+                <div class="error-message" id="track_number-error"></div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="{{ form.artist.id_for_label }}">Artist *</label>
+                {{ form.artist }}
+                <div class="error-message" id="artist-error"></div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="{{ form.album.id_for_label }}">Album</label>
+                {{ form.album }}
+                <div class="error-message" id="album-error"></div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>Duration</label>
+                <div class="duration-inputs">
+                    {{ form.duration_minutes }}
+                    <span>min</span>
+                    {{ form.duration_seconds }}
+                    <span>sec</span>
+                </div>
+                <div class="error-message" id="duration-error"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.audio_file.id_for_label }}">Audio File</label>
+            {{ form.audio_file }}
+            <small class="form-text">Upload an audio file (MP3, WAV, etc.)</small>
+            <div class="error-message" id="audio_file-error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.youtube_url.id_for_label }}">YouTube URL</label>
+            {{ form.youtube_url }}
+            <small class="form-text">Alternative: YouTube link for the track</small>
+            <div class="error-message" id="youtube_url-error"></div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="{{ form.spotify_url.id_for_label }}">Spotify URL</label>
+                {{ form.spotify_url }}
+                <div class="error-message" id="spotify_url-error"></div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="{{ form.apple_music_url.id_for_label }}">Apple Music URL</label>
+                {{ form.apple_music_url }}
+                <div class="error-message" id="apple_music_url-error"></div>
+            </div>
+        </div>
+
+        <div class="form-note">
+            <i class="fa-solid fa-info-circle"></i>
+            <strong>Note:</strong> Please provide either an audio file or a YouTube URL for playback functionality.
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="outline-btn" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="filled-btn">
+            <i class="fa-solid fa-plus"></i> Add Track
+        </button>
+    </div>
+</form>
+
+<script>
+document.getElementById('add-track-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    
+    // Show loading state
+    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Adding...';
+    submitBtn.disabled = true;
+    
+    // Clear previous errors
+    document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+    
+    fetch('{% url "roshan:add_track_to_playlist" playlist.id %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Close modal and refresh page
+            document.querySelector('.modal-overlay').remove();
+            location.reload();
+        } else {
+            // Show errors
+            for (const [field, errors] of Object.entries(data.errors)) {
+                const errorDiv = document.getElementById(field + '-error');
+                if (errorDiv) {
+                    errorDiv.textContent = errors.join(', ');
+                }
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while adding the track.');
+    })
+    .finally(() => {
+        // Restore button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+});
+</script>
+
+<style>
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.col-md-4 { flex: 0 0 33.33%; }
+.col-md-6 { flex: 0 0 50%; }
+.col-md-8 { flex: 0 0 66.67%; }
+
+.duration-inputs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.duration-inputs input {
+    width: 60px;
+}
+
+.duration-inputs span {
+    font-size: 0.9rem;
+    color: var(--paragraph-color);
+}
+
+.form-note {
+    background: rgba(0, 169, 255, 0.1);
+    border-left: 3px solid var(--accent-color);
+    padding: 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+}
+
+.form-note i {
+    color: var(--accent-color);
+    margin-right: 0.5rem;
+}
+</style>
