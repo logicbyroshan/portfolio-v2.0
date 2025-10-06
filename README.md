@@ -182,22 +182,6 @@ _(Full list available in `requirements.txt`.)_
 
 ---
 
-## 📊 GitHub Stats
-
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=logicbyroshan&repo=portfolio-v2.0&theme=radical" />
-</p>
-
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=logicbyroshan&show_icons=true&theme=radical" />
-</p>
-
-<p align="center">
-  <img src="https://streak-stats.demolab.com?user=logicbyroshan&theme=radical" />
-</p>
-
----
-
 ## 🤝 Contributing
 Contributions are welcome!  
 
