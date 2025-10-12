@@ -1,9 +1,14 @@
+<div align="center">
+  <img src="./screenshots/Portfolio Thumb.jpg" alt="Portfolio Cover" width="100%" style="border-radius: 10px; margin-bottom: 20px;"/>
+</div>
+
 <h1 align="center">🌐 DevMitra — Intelligent Portfolio Website</h1>
 <p align="center">
   <b>A next-gen portfolio platform built with Django, MySQL, APIs, and creativity — to showcase projects, skills, experiences, and more in an interactive and intelligent way.</b>
 </p>
 <p align="center">
-  🌍 <b>Live Demo:</b> <a href="https://roshandamor.me" target="_blank">https://roshandamor.me</a>
+  🌍 <b>Live Demo:</b> <a href="https://roshandamor.me" target="_blank">https://roshandamor.me</a> | 
+  📖 <b>Setup Guide:</b> <a href="./SETUP.md">SETUP.md</a>
 </p>
 
 <p align="center">
@@ -24,6 +29,33 @@
   </a>
 </p>
 
+## 📸 Screenshots
+
+<div align="center">
+  <table>
+    <tr>
+      <td width="50%">
+        <img src="./screenshots/Hero.png" alt="Hero Section" style="border-radius: 8px;"/>
+        <p align="center"><b>Hero Section</b></p>
+      </td>
+      <td width="50%">
+        <img src="./screenshots/Projects.png" alt="Projects Section" style="border-radius: 8px;"/>
+        <p align="center"><b>Projects Section</b></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="50%">
+        <img src="./screenshots/Skills.png" alt="Skills Section" style="border-radius: 8px;"/>
+        <p align="center"><b>Skills Section</b></p>
+      </td>
+      <td width="50%">
+        <img src="./screenshots/Contacts.png" alt="Contact Section" style="border-radius: 8px;"/>
+        <p align="center"><b>Contact Section</b></p>
+      </td>
+    </tr>
+  </table>
+</div>
+
 ---
 
 ## ✨ About DevMitra
@@ -38,16 +70,17 @@ I built DevMitra to document my work, share my learnings, and provide visitors w
 ## 🚀 Features
 
 ### ✅ Current Features
-- 🖥 **Responsive UI** — Fully mobile-friendly, smooth animations, dark/light mode with transitions.  
-- 📂 **Projects & Experience** — Detail pages with filtering, sorting, and pagination.  
-- ✍️ **Blogs** — Commenting, liking, newsletter subscription, and email notifications.  
-- 🎵 **Music Playlists** — Integrated with **Spotify API**, includes music player.  
-- 🏆 **Skills & Achievements** — Showcase with external links and downloads.  
-- 📚 **Resources Section** — Useful materials, some downloadable.  
-- 🤖 **AI Chatbot** — Built using **Gemini API**, answers in context of my portfolio.  
-- ✉️ **Working Contact & Notifications** — Contact messages stored + emailed to me, with delivery confirmation sent to user.  
-- 📄 **Resume Popups** — PDF preview and YouTube video resume embedded.  
-- 🔒 **Authentication** — Signup, login, password reset with email support.  
+- 🖥 **Responsive UI** — Fully mobile-friendly, smooth animations, optimized CSS architecture
+- 📂 **Projects & Experience** — Detail pages with filtering, sorting, and pagination  
+- ✍️ **Blog System** — Dedicated blog app with commenting, categories, and rich content
+- 🎵 **Music Integration** — Spotify API integration with playlist management
+- 🏆 **Skills & Achievements** — Interactive showcase with detailed skill pages
+- 📚 **Resources Hub** — Personal resources and downloadable materials (roshan app)
+- 🤖 **AI Assistant** — Gemini API powered chatbot for portfolio queries
+- ✉️ **Smart Notifications** — Email system with contact forms and confirmations
+- 📄 **Resume Features** — PDF preview and video resume integration
+- 🔒 **Authentication System** — Complete user management with secure login/signup
+- 🎨 **Centralized CSS** — Consolidated animations, components, and responsive design  
 
 ### 🔮 Upcoming Features
 - ✅ **ToDo App** (integrated mini-app).  
@@ -69,33 +102,45 @@ PORTFOLIO/
 ├── .github/            # GitHub workflows / CI
 ├── .vscode/            # VS Code workspace settings
 ├── ai/                 # AI assistant integration (Gemini API)
-├── auth_app/           # Authentication app (signup, login, reset password)
-├── config/             # Django project configuration
-├── logs/               # Logs for debugging
-├── media/              # Media uploads
-├── music/              # Music playlists + Spotify integration
-├── notifications/      # Notifications & email system
-├── portfolio/          # Main app: projects, blogs, skills, resources
+├── auth_app/           # Authentication system (signup, login, password reset)
+├── blog/               # Blog application (articles, comments, categories)
+├── config/             # Django project configuration & settings
+├── logs/               # Application logs for debugging
+├── media/              # User uploaded media files
+├── music/              # Music playlists & Spotify API integration
+├── notifications/      # Email notifications & messaging system
+├── portfolio/          # Main portfolio app (projects, skills, experience)
+├── roshan/             # Personal resources & additional content
+├── screenshots/        # Project screenshots for documentation
 ├── static/             # Static files (CSS, JS, Images)
-├── templates/          # HTML templates
-├── venv/               # Virtual environment
-├── .env                # Environment variables
-├── .gitignore          # Git ignore file
-├── db.sqlite3          # Default SQLite DB (for dev)
-├── manage.py           # Django CLI entry point
+├── templates/          # HTML templates & base layouts
+├── .env                # Environment variables (not in repo)
+├── .gitignore          # Git ignore rules
+├── db.sqlite3          # SQLite database (development)
+├── manage.py           # Django management commands
 ├── requirements.txt    # Python dependencies
-└── README.md           # Project documentation
+├── README.md           # Project documentation
+└── SETUP.md            # Detailed setup instructions
 ```
 
 ---
 
-## ⚙️ Installation & Setup
+## 🚀 Quick Start
 
-### 1️⃣ Clone the Repository
+Want to set up this project locally? Check out the detailed setup guide: **[SETUP.md](./SETUP.md)**
+
+### Quick Setup Commands
 ```bash
 git clone https://github.com/logicbyroshan/portfolio-v2.0.git
 cd portfolio-v2.0
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
 ```
+
+🌐 **Access at:** http://127.0.0.1:8000/
 
 ### 2️⃣ Create & Activate Virtual Environment
 ```bash
@@ -182,31 +227,27 @@ _(Full list available in `requirements.txt`.)_
 
 ---
 
-## 📊 GitHub Stats
+## 🎯 Recent Improvements
 
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=logicbyroshan&repo=portfolio-v2.0&theme=radical" />
-</p>
-
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=logicbyroshan&show_icons=true&theme=radical" />
-</p>
-
-<p align="center">
-  <img src="https://streak-stats.demolab.com?user=logicbyroshan&theme=radical" />
-</p>
-
----
+- ✅ **CSS Architecture Overhaul** — Consolidated 300+ lines of duplicate CSS into centralized components
+- ✅ **Responsive Optimization** — Enhanced mobile experience with better spacing and typography
+- ✅ **Blog System** — Completely separated blog functionality into dedicated Django app
+- ✅ **Animation System** — Unified data-animation system across all pages
+- ✅ **Component Consolidation** — Breadcrumbs, page headers, and grid layouts centralized in base.css
+- ✅ **Performance Boost** — Reduced CSS bloat and improved maintainability
 
 ## 🤝 Contributing
-Contributions are welcome!  
 
-Steps:
-1. Fork the repo  
-2. Create a new branch (`feature-branch`)  
-3. Commit your changes  
-4. Push to your fork  
-5. Open a PR  
+Contributions are welcome! Whether it's bug fixes, new features, or improvements to the documentation.
+
+**How to contribute:**
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature-name`)
+3. Make your changes
+4. Test thoroughly
+5. Commit your changes (`git commit -m 'Add feature'`)
+6. Push to the branch (`git push origin feature-name`)
+7. Open a Pull Request  
 
 ---
 
