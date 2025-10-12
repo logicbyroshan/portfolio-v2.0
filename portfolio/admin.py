@@ -15,9 +15,6 @@ from .models import (
     VideoResume,
     NewsletterSubscriber,
     ContactSubmission,
-    CodeTogetherConfiguration,
-    CollaborationProposal,
-    Testimonial,
 )
 
 # =========================================================================
@@ -30,14 +27,14 @@ class SiteConfigurationAdmin(admin.ModelAdmin):
     """Admin for the Site Configuration object."""
 
     fieldsets = (
-        ("Hero Section", {"fields": ("hero_greeting", "hero_name", "hero_tagline")}),
+        ("Hero Section", {"fields": ("hero_name",)}),
         (
             "Hero Stats",
             {
                 "fields": (
-                    "hero_projects_stat",
-                    "hero_internships_stat",
-                    "hero_articles_stat",
+                    "hero_leetcode_rating",
+                    "hero_opensource_contributions",
+                    "hero_hackathons_count",
                 )
             },
         ),
@@ -99,10 +96,22 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     inlines = [ProjectImageInline]
-    list_display = ("title", "created_date")
+    list_display = ("title", "created_date", "has_youtube_video")
     list_filter = ("categories", "technologies")
     search_fields = ("title", "summary")
     filter_horizontal = ("technologies", "categories")
+    fieldsets = (
+        ("Basic Information", {"fields": ("title", "summary", "content")}),
+        ("Media", {"fields": ("cover_image", "youtube_url")}),
+        ("Categorization", {"fields": ("technologies", "categories")}),
+        ("Links", {"fields": ("github_url", "live_url")}),
+    )
+
+    def has_youtube_video(self, obj):
+        return bool(obj.youtube_url)
+
+    has_youtube_video.boolean = True
+    has_youtube_video.short_description = "Has Video"
 
 
 @admin.register(Experience)
@@ -123,15 +132,16 @@ class FAQAdmin(admin.ModelAdmin):
 class SkillAdmin(admin.ModelAdmin):
     list_display = (
         "title",
+        "category",
         "proficiency_level",
         "years_of_experience",
         "is_featured",
         "order",
     )
-    list_filter = ("proficiency_level", "is_featured")
-    search_fields = ("title", "summary")
+    list_filter = ("category", "proficiency_level", "is_featured")
+    search_fields = ("title",)
     filter_horizontal = ("technologies",)
-    list_editable = ("order", "is_featured")
+    list_editable = ("order", "is_featured", "category")
     prepopulated_fields = {"slug": ("title",)}
 
 
@@ -172,77 +182,3 @@ class AchievementAdmin(admin.ModelAdmin):
     list_display = ("title", "issuing_organization", "category", "date_issued")
     list_filter = ("category", "date_issued")
     search_fields = ("title", "issuing_organization", "summary")
-
-
-@admin.register(CodeTogetherConfiguration)
-class CodeTogetherConfigurationAdmin(admin.ModelAdmin):
-    """Admin for the Code Together Configuration object."""
-
-    fieldsets = (
-        ("Page Header", {"fields": ("page_title", "intro_paragraph")}),
-        ("Interests Section", {"fields": ("interests_content",)}),
-    )
-
-    def has_add_permission(self, request):
-        """Only allow adding if no instance exists."""
-        return not CodeTogetherConfiguration.objects.exists()
-
-    def has_delete_permission(self, request, obj=None):
-        """Prevent deletion to maintain singleton pattern."""
-        return False
-
-
-@admin.register(CollaborationProposal)
-class CollaborationProposalAdmin(admin.ModelAdmin):
-    """Admin for collaboration proposals."""
-
-    list_display = ("full_name", "email", "status", "submitted_date", "reviewed_date")
-    list_filter = ("status", "submitted_date")
-    search_fields = ("full_name", "email", "github_id", "linkedin_id")
-    readonly_fields = ("submitted_date",)
-
-    fieldsets = (
-        (
-            "Proposal Information",
-            {"fields": ("full_name", "email", "github_id", "linkedin_id", "proposal")},
-        ),
-        (
-            "Status & Management",
-            {"fields": ("status", "submitted_date", "reviewed_date", "admin_notes")},
-        ),
-    )
-
-    def mark_as_reviewing(self, request, queryset):
-        queryset.update(status="reviewing")
-
-    def mark_as_accepted(self, request, queryset):
-        queryset.update(status="accepted")
-
-    def mark_as_declined(self, request, queryset):
-        queryset.update(status="declined")
-
-    actions = ["mark_as_reviewing", "mark_as_accepted", "mark_as_declined"]
-
-
-@admin.register(Testimonial)
-class TestimonialAdmin(admin.ModelAdmin):
-    """Admin for testimonials."""
-
-    list_display = (
-        "author_name",
-        "author_role",
-        "is_featured",
-        "order",
-        "created_date",
-    )
-    list_filter = ("is_featured", "created_date")
-    search_fields = ("author_name", "author_role", "quote")
-
-    fieldsets = (
-        (
-            "Author Information",
-            {"fields": ("author_name", "author_role", "author_image")},
-        ),
-        ("Testimonial Content", {"fields": ("quote",)}),
-        ("Display Settings", {"fields": ("is_featured", "order")}),
-    )

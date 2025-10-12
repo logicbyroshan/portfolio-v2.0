@@ -84,11 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const likeCountSpan = likeBtn.querySelector('.like-count');
             
             try {
-                // Get CSRF token
-                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
-                                 document.querySelector('meta[name="csrf-token"]')?.content;
+                // Get CSRF token from cookie
+                const csrfToken = getCookie('csrftoken');
                 
-                const response = await fetch(`/blog/comment/${commentId}/like/`, {
+                const response = await fetch(`/blogs/comment/${commentId}/like/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

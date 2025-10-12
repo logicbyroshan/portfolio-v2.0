@@ -127,11 +127,8 @@
 }
 
 .ai-intro-text h3 {
-    color: var(--title-color);
     font-size: 18px;
-    font-weight: 600;
-    margin: 0 0 8px 0;
-    font-family: var(--heading-font);
+    margin: 0 0 8px 0; /* Inherits from base.css heading styles */
 }
 
 .ai-intro-text p {
@@ -251,9 +248,7 @@
 .ai-modal-title h3 {
     color: var(--title-color);
     font-size: 20px;
-    font-weight: 600;
-    margin: 0;
-    font-family: var(--heading-font);
+    margin: 0; /* Inherits from base.css heading styles */
 }
 
 .ai-modal-close {
@@ -282,11 +277,8 @@
 }
 
 .ai-modal-title h3 {
-    color: var(--title-color);
     font-size: 18px;
-    font-weight: 600;
-    margin: 0;
-    font-family: var(--heading-font);
+    margin: 0; /* Inherits from base.css heading styles */
 }
 
 .ai-modal-close {
@@ -485,6 +477,31 @@
     line-height: 1.5; /* Increased from 1.4 */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin: 4px 0; /* Added margin for extra breathing room */
+}
+
+/* WhatsApp-style message formatting */
+.message-bubble strong {
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+.message-bubble em {
+    font-style: italic;
+    opacity: 0.9;
+}
+
+.message-bubble br {
+    line-height: 1.8;
+}
+
+/* Emoji and special character spacing */
+.message-bubble {
+    word-spacing: 2px;
+}
+
+/* Bullet points styling */
+.ai-message .message-bubble {
+    white-space: pre-line; /* Preserve line breaks */
 }
 
 /* Input Form Area */
@@ -709,22 +726,6 @@
     .ai-intro-content {
         flex-direction: column;
         gap: 12px;
-    }
-    
-    /* Hero Actions Mobile */
-    .hero-actions {
-        margin-top: 25px;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-    }
-    
-    .hero-actions .ai-chat-btn {
-        padding: 16px 20px !important;
-        font-size: 18px !important;
-        justify-content: center;
-        border-radius: 12px !important;
-        min-height: 48px !important;
     }
     
     .ai-avatar-small {

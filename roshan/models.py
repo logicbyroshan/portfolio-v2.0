@@ -46,6 +46,59 @@ class AboutMeConfiguration(models.Model):
         help_text="Detailed description with HTML support",
     )
 
+    # --- Personal Information ---
+    birthday = models.DateField(
+        blank=True,
+        null=True,
+        help_text="Your birthday (used to calculate age automatically)",
+    )
+    location = models.CharField(
+        max_length=100,
+        blank=True,
+        default="Bhopal, India",
+        help_text="Your current location/address",
+    )
+    open_to_work = models.BooleanField(
+        default=True, help_text="Display 'Open to Work' status badge"
+    )
+
+    # --- Social Media Links ---
+    github_url = models.URLField(
+        blank=True,
+        default="https://github.com/logicbyroshan",
+        help_text="GitHub profile URL",
+    )
+    linkedin_url = models.URLField(
+        blank=True,
+        default="https://www.linkedin.com/in/logicbyroshan",
+        help_text="LinkedIn profile URL",
+    )
+    twitter_url = models.URLField(
+        blank=True,
+        default="https://x.com/logicbyroshan",
+        help_text="Twitter/X profile URL",
+    )
+    youtube_url = models.URLField(
+        blank=True,
+        default="https://www.youtube.com/@logicbyroshan",
+        help_text="YouTube channel URL",
+    )
+    instagram_url = models.URLField(
+        blank=True,
+        default="https://www.instagram.com/logicbyroshan",
+        help_text="Instagram profile URL",
+    )
+    website_url = models.URLField(
+        blank=True,
+        default="https://www.roshandamor.me",
+        help_text="Personal website URL",
+    )
+
+    # --- Contact Information ---
+    email = models.EmailField(
+        blank=True, default="contact@roshandamor.me", help_text="Contact email address"
+    )
+
     # --- Meta Information ---
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -56,6 +109,20 @@ class AboutMeConfiguration(models.Model):
 
     def __str__(self):
         return "About Me Page Configuration"
+
+    @property
+    def age(self):
+        """Calculate age from birthday."""
+        if self.birthday:
+            from datetime import date
+
+            today = date.today()
+            return (
+                today.year
+                - self.birthday.year
+                - ((today.month, today.day) < (self.birthday.month, self.birthday.day))
+            )
+        return None
 
     def save(self, *args, **kwargs):
         """Ensure only one instance exists."""

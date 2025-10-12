@@ -8,10 +8,7 @@
     align-items: center;
     gap: 40px; /* Increased back to 40px */
 }
-.page-header { width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-.page-header h1 { font-family: var(--heading-font); font-size: 50px; color: var(--title-color); line-height: 1.1; letter-spacing: 2px; }
-.page-header h1 span { color: var(--accent-color); }
-.page-header p { font-size: 18px; color: var(--paragraph-color); max-width: 800px; margin: 0 auto; }
+
 .page-toolbar { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 15px; background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; }
 .categories-scroller { display: flex; align-items: center; gap: 10px; overflow: hidden; flex-grow: 1; }
 .categories-scroller .scroll-btn { background: transparent; border: 1px solid var(--card-border); color: var(--paragraph-color); border-radius: 50%; width: 32px; height: 32px; cursor: pointer; transition: all 0.3s ease; flex-shrink: 0; }
@@ -130,14 +127,11 @@
 .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Animations */
-[data-animation] { opacity: 0; transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
-[data-animation].is-visible { opacity: 1; transform: none; }
-[data-animation="fade-in-up"] { transform: translateY(40px); }
-[data-animation="zoom-in"] { transform: scale(0.95); }
+
 
 /* Responsive */
 @media (max-width: 768px) {
-    .page-header h1 { font-size: 40px; }
+    /* Typography inherits from base.css responsive styles */
     .achievements-container { gap: 35px; } /* Increased from 25px */
     .page-toolbar { flex-direction: column; align-items: stretch; }
     .sort-dropdown { width: 100%; }

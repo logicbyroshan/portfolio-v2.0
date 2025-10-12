@@ -5,7 +5,13 @@ from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
 from roshan.views import admin_spotify_callback
-from portfolio.sitemaps import StaticViewSitemap, ProjectSitemap
+from portfolio.sitemaps import (
+    StaticViewSitemap,
+    ProjectSitemap,
+    SkillSitemap,
+    ExperienceSitemap,
+    AchievementSitemap,
+)
 from blog.sitemaps import BlogSitemap
 
 # Sitemap configuration
@@ -13,6 +19,9 @@ sitemaps = {
     "static": StaticViewSitemap,
     "blogs": BlogSitemap,
     "projects": ProjectSitemap,
+    "skills": SkillSitemap,
+    "experiences": ExperienceSitemap,
+    "achievements": AchievementSitemap,
 }
 
 urlpatterns = [

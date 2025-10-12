@@ -27,7 +27,32 @@ class AboutMeConfigurationAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Page Header", {"fields": ("page_title", "intro_paragraph")}),
         ("Profile Section", {"fields": ("profile_image", "detailed_description")}),
+        (
+            "Personal Information",
+            {"fields": ("birthday", "location", "open_to_work", "email")},
+        ),
+        (
+            "Social Media",
+            {
+                "fields": (
+                    "github_url",
+                    "linkedin_url",
+                    "twitter_url",
+                    "youtube_url",
+                    "instagram_url",
+                    "website_url",
+                )
+            },
+        ),
     )
+
+    readonly_fields = ("created_at", "updated_at")
+
+    def get_fieldsets(self, request, obj=None):
+        fieldsets = super().get_fieldsets(request, obj)
+        if obj:  # If editing existing object, show timestamps
+            fieldsets += (("Timestamps", {"fields": ("created_at", "updated_at")}),)
+        return fieldsets
 
     def has_add_permission(self, request):
         """Only allow adding if no instance exists."""

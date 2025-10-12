@@ -2,14 +2,12 @@ from django.urls import path
 from .views import (
     # Page Views
     HomeView,
-    SkillListView,
     ProjectListView,
     ProjectDetailView,
     ExperienceListView,
     ExperienceDetailView,
     SkillDetailView,
     AchievementListView,
-    CodeTogetherView,
     # Form/API Views
     ContactSubmissionView,
     NewsletterSubscribeHomeView,
@@ -24,8 +22,6 @@ app_name = "portfolio"
 urlpatterns = [
     # Home Page
     path("", HomeView.as_view(), name="home"),
-    # Code Together Page
-    path("code-together/", CodeTogetherView.as_view(), name="code_together"),
     # Project Pages
     path("projects/", ProjectListView.as_view(), name="project_list"),
     path("projects/<slug:slug>/", ProjectDetailView.as_view(), name="project_detail"),
@@ -40,7 +36,6 @@ urlpatterns = [
         "experience/<int:pk>/", ExperienceDetailView.as_view(), name="experience_detail"
     ),
     # Skill Detail Page
-    path("skills/", SkillListView.as_view(), name="skill_list"),
     path("skills/<slug:slug>/", SkillDetailView.as_view(), name="skill_detail"),
     # Form Submission URLs
     path("contact-submit/", ContactSubmissionView.as_view(), name="contact_submit"),

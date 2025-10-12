@@ -48,31 +48,7 @@
 /* ==========================================================================
    2. Breadcrumb Navigation
    ========================================================================== */
-.breadcrumb {
-    width: 100%;
-    margin-bottom: 15px; /* Reduced from 30px to 15px for tighter spacing */
-}
-.breadcrumb ul {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 5px;
-    padding: 0;
-}
-.breadcrumb ul li {
-    font-size: 14px;
-    color: var(--paragraph-color);
-}
-.breadcrumb ul li:not(:last-child)::after {
-    content: "›";
-    margin-left: 10px;
-    color: var(--paragraph-color);
-}
-.breadcrumb ul li.active {
-    font-weight: 600;
-    color: var(--title-color);
-}
+
 
 /* ==========================================================================
    3. Header & Content
@@ -83,11 +59,8 @@
     gap: 10px;
 }
 .project-title {
-    font-family: var(--heading-font);
     font-size: 48px;
-    color: var(--title-color);
-    line-height: 1.2;
-    letter-spacing: 1px;
+    letter-spacing: 1px; /* Inherits from base.css h1, custom letter-spacing */
 }
 .project-description {
     font-size: 18px;
@@ -133,6 +106,26 @@
     position: absolute;
     top: 0;
     left: 0;
+}
+
+/* YouTube Video Slides */
+.slide.video-slide {
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slide .youtube-video-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.slide .youtube-video-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
 }
 .slider-btn {
     position: absolute;
@@ -267,12 +260,10 @@
     line-height: 1.8;
 }
 .project-content-body h2 {
-    font-family: var(--heading-font);
     font-size: 32px;
-    color: var(--title-color);
     border-bottom: 1px solid var(--card-border);
     padding-bottom: 10px;
-    margin-top: 20px;
+    margin-top: 20px; /* Inherits from base.css h2 */
 }
 .project-content-body h3 {
     font-weight: 600;
@@ -323,16 +314,7 @@
 /* ==========================================================================
    7. On-Scroll Animations
    ========================================================================== */
-[data-animation] {
-    opacity: 0;
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-[data-animation].is-visible {
-    opacity: 1;
-    transform: none;
-}
-[data-animation="fade-in-up"] { transform: translateY(40px); }
-[data-animation="zoom-in"] { transform: scale(0.9); }
+
 
 
 /* ==========================================================================
@@ -388,9 +370,7 @@
         width: 10px;
         height: 10px;
     }
-    .breadcrumb {
-        margin-bottom: 20px;
-    }
+
     .detail-main-content {
         gap: 25px;
         width: 100%;
@@ -458,9 +438,7 @@
     .project-content-body code {
         font-size: 14px;
     }
-    .breadcrumb ul li {
-        font-size: 13px;
-    }
+
     .project-info-list a {
         padding: 12px;
         justify-content: center;
@@ -471,7 +449,7 @@
    6. Comments Section
    ========================================================================== */
 .comments-section { display: flex; flex-direction: column; gap: 20px; margin-top: 40px; }
-.comments-section h2 { font-family: var(--heading-font); font-size: 32px; }
+.comments-section h2 { font-size: 32px; } /* Inherits from base.css h2 */
 .comment-form { display: flex; gap: 15px; align-items: flex-start; padding: 20px; }
 .comment-avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; overflow: hidden; }
 .comment-avatar img { width: 100%; height: 100%; }

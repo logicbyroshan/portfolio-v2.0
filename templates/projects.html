@@ -115,12 +115,26 @@ Projects Portfolio - Full Stack & AI Applications by Roshan Damor
         <div class="project-grid" id="project-card-container">
             {% for project in projects %}
             <div class="project-card card clickable-card" data-animation="zoom-in" data-url="{% url 'portfolio:project_detail' slug=project.slug %}">
-                <div class="project-image">
-                    <img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ project.title|urlencode }}{% endif %}" alt="{{ project.title }}">
+                <div class="project-media">
+                    {% if project.youtube_video_id %}
+                        <div class="youtube-video-container">
+                            <iframe 
+                                src="https://www.youtube.com/embed/{{ project.youtube_video_id }}?rel=0&modestbranding=1&showinfo=0" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen
+                                loading="lazy"
+                                title="{{ project.title }} - YouTube Video">
+                            </iframe>
+                        </div>
+                    {% elif project.cover_image %}
+                        <img src="{{ project.cover_image.url }}" alt="{{ project.title }}" class="project-image">
+                    {% else %}
+                        <img src="https://placehold.co/1920x1080/010409/eaeaea?text={{ project.title|urlencode }}" alt="{{ project.title }}" class="project-image placeholder">
+                    {% endif %}
                 </div>
                 <div class="project-content">
                     <h3>{{ project.title }}</h3>
-                    <p>{{ project.summary|truncatewords:20|safe }}</p>
                     <div class="skills">
                         {% for tech in project.technologies.all|slice:":5" %}
                         <span class="teg">{{ tech.name }}</span>

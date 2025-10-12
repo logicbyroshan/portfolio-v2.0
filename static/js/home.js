@@ -1,113 +1,7 @@
 // home.js
-
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 1. Hero Section Typing Effect
-    const skillTextElement = document.getElementById('skill-text');
-    if (skillTextElement) {
-        // MODIFIED: Load skills dynamically with a fallback
-        let skillsToType = ["Web Developer", "AI Enthusiast", "Python Programmer", "Creative Coder"]; // Default skills if DB is empty
-        
-        try {
-            const skillsDataElement = document.getElementById('skills-data');
-            if (skillsDataElement) {
-                const skillsFromDB = JSON.parse(skillsDataElement.textContent);
-                // Use skills from DB only if the array is not empty
-                if (skillsFromDB && skillsFromDB.length > 0) {
-                    skillsToType = skillsFromDB;
-                }
-            }
-        } catch (e) {
-            console.error("Could not parse skills data from Django. Using default skills.", e);
-        }
-        // END OF MODIFICATION
-
-        let skillIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-        const typingSpeed = 150;
-        const deletingSpeed = 100;
-        const delayBetweenWords = 2000;
-
-        function type() {
-            const currentSkill = skillsToType[skillIndex];
-            
-            if (isDeleting) {
-                skillTextElement.textContent = currentSkill.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                skillTextElement.textContent = currentSkill.substring(0, charIndex + 1);
-                charIndex++;
-            }
-
-            if (!isDeleting && charIndex === currentSkill.length) {
-                setTimeout(() => { isDeleting = true; type(); }, delayBetweenWords);
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                skillIndex = (skillIndex + 1) % skillsToType.length;
-                setTimeout(type, 500);
-            } else {
-                setTimeout(type, isDeleting ? deletingSpeed : typingSpeed);
-            }
-        }
-        setTimeout(type, 500);
-    }
-
-    // 2. FAQ Accordion Functionality
-    const faqCards = document.querySelectorAll('.faq-card');
-    faqCards.forEach(card => {
-        card.addEventListener('click', () => {
-            const isActive = card.classList.contains('active');
-            if (!isActive) {
-                card.classList.add('active');
-            } else {
-                card.classList.remove('active');
-            }
-        });
-    });
-
-    // 2.1. FAQ Show More Functionality
-    const faqShowMoreBtn = document.getElementById('faq-show-more-btn');
-    const faqContainer = document.getElementById('faq-container');
-    const hiddenFaqs = document.querySelectorAll('.faq-hidden');
-    
-    if (faqShowMoreBtn && hiddenFaqs.length > 0) {
-        let isShowing = false;
-        
-        faqShowMoreBtn.addEventListener('click', () => {
-            isShowing = !isShowing;
-            
-            if (isShowing) {
-                // Show hidden FAQs
-                faqContainer.classList.add('faq-showing');
-                faqShowMoreBtn.classList.add('showing');
-                faqShowMoreBtn.innerHTML = '<i class="fas fa-chevron-up"></i> Show Less FAQs';
-                
-                // Re-initialize accordion for new FAQs
-                const newFaqCards = document.querySelectorAll('.faq-hidden');
-                newFaqCards.forEach(card => {
-                    card.addEventListener('click', () => {
-                        const isActive = card.classList.contains('active');
-                        if (!isActive) {
-                            card.classList.add('active');
-                        } else {
-                            card.classList.remove('active');
-                        }
-                    });
-                });
-            } else {
-                // Hide FAQs
-                faqContainer.classList.remove('faq-showing');
-                faqShowMoreBtn.classList.remove('showing');
-                faqShowMoreBtn.innerHTML = '<i class="fas fa-chevron-down"></i> Show More FAQs';
-                
-                // Close any open hidden FAQs
-                hiddenFaqs.forEach(faq => {
-                    faq.classList.remove('active');
-                });
-            }
-        });
-    }
+    // Typing effect removed - now using static text
 
 
     // 3. Clickable Cards (UPDATED)
@@ -135,8 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if(successMsg) successMsg.style.display = 'block';
         });
     }
-
-    // Contact form is now handled by contact_form.js with toast notifications
 
     // Animation system is now handled by animations.js
     // No need for duplicate animation code here

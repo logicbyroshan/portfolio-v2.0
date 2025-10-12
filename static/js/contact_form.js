@@ -1,5 +1,22 @@
 // Contact Form JavaScript with Toast Notifications
 document.addEventListener('DOMContentLoaded', () => {
+    // Urgent Toggle Functionality
+    const urgentToggle = document.getElementById('urgent-toggle');
+    const urgentWarning = document.getElementById('urgent-warning');
+    const urgentHiddenInput = document.getElementById('urgent-hidden-input');
+
+    if (urgentToggle && urgentWarning && urgentHiddenInput) {
+        urgentToggle.addEventListener('change', function() {
+            if (this.checked) {
+                urgentWarning.classList.add('show');
+                urgentHiddenInput.value = 'true';
+            } else {
+                urgentWarning.classList.remove('show');
+                urgentHiddenInput.value = 'false';
+            }
+        });
+    }
+
     const contactForm = document.getElementById('contact-form');
     
     if (contactForm) {

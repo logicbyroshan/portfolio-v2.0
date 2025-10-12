@@ -155,6 +155,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function formatAIMessage(message) {
+        // Convert markdown-like formatting to HTML (WhatsApp style)
+        let formatted = message;
+        
+        // Convert **bold** to <strong>
+        formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // Convert *italic* to <em>
+        formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        
+        // Convert bullet points • to proper HTML
+        formatted = formatted.replace(/^• (.*$)/gim, '• $1<br>');
+        
+        // Convert line breaks to <br>
+        formatted = formatted.replace(/\n/g, '<br>');
+        
+        // Convert multiple spaces to single space but preserve intentional formatting
+        formatted = formatted.replace(/  +/g, ' ');
+        
+        return formatted;
+    }
+
     function addMessageToChat(type, message) {
         const messagesContainer = modal.querySelector('#ai-chat-messages');
         if (!messagesContainer) return;
@@ -167,11 +189,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="message-bubble">${message}</div>
             `;
         } else {
+            const formattedMessage = formatAIMessage(message);
             messageDiv.innerHTML = `
                 <div class="ai-avatar">
                     <i class="fas fa-robot"></i>
                 </div>
-                <div class="message-bubble">${message}</div>
+                <div class="message-bubble">${formattedMessage}</div>
             `;
         }
         

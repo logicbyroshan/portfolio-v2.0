@@ -88,9 +88,8 @@
     <section class="hero-section portfolio-container">
         <div class="home-container">
             <div class="home-content" data-animation="fade-in-up">
-                <p>👋 {{ config.hero_greeting|default:"HIII, IT'S ME" }}</p>
-                <h1>{{ config.hero_name|default:"Roshan Damor" }}</h1>
-                <h4>I am a <span id="skill-text">{{ config.hero_tagline|default:"Web Developer" }}</span></h4>
+                <p>👋 HII It's Me</p>
+                <h1>Roshan Damor <br>a <span>Full Stack Developer</span></h1>
                 <p>🙏 GREETINGS, ALL DIGITAL EXPLORERS! I AM ROSHAN, A PASSIONATE AND INNOVATIVE DEVELOPER <b><i>"BUILDING AI-POWERED SOLUTIONS & SCALABLE WEB APPS — SDE & AI ENGINEER"</i></b> </p>
                 <!-- Hero Action Buttons -->
                 <div class="hero-actions">
@@ -108,69 +107,55 @@
                 <img src="{% static 'images/hero.png' %}" alt="Roshan Damor - Hero Image">
                 <!-- DYNAMIC: Stats from SiteConfiguration model -->
                 <div class="hero-stat-card stat-1 card" data-animation="fade-in" data-animation-delay="200">
-                    <i class="fa-solid fa-briefcase stat-icon"></i>
-                    <div class="stat-text"><div class="stat-number">{{ config.hero_projects_stat|default:"25+" }}</div><div class="stat-label">Projects</div></div>
+                    <i class="fa-solid fa-trophy stat-icon"></i>
+                    <div class="stat-text"><div class="stat-number">{{ config.hero_hackathons_count|default:"12+" }}</div><div class="stat-label">Hackathons</div></div>
                 </div>
                 <div class="hero-stat-card stat-2 card" data-animation="fade-in" data-animation-delay="400">
-                    <i class="fa-solid fa-user-graduate stat-icon"></i>
-                    <div class="stat-text"><div class="stat-number">{{ config.hero_internships_stat|default:"3+" }}</div><div class="stat-label">Internships</div></div>
+                    <i class="fa-solid fa-code stat-icon"></i>
+                    <div class="stat-text"><div class="stat-number">{{ config.hero_leetcode_rating|default:"1800+" }}</div><div class="stat-label">LeetCode Rating</div></div>
                 </div>
                 <div class="hero-stat-card stat-3 card" data-animation="fade-in" data-animation-delay="600">
-                    <i class="fa-solid fa-pen-nib stat-icon"></i>
-                    <div class="stat-text"><div class="stat-number">{{ config.hero_articles_stat|default:"15+" }}</div><div class="stat-label">Articles</div></div>
+                    <i class="fa-brands fa-github stat-icon"></i>
+                    <div class="stat-text"><div class="stat-number">{{ config.hero_opensource_contributions|default:"50+" }}</div><div class="stat-label">Open Source</div></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ========================= 2. ABOUT ME SECTION ========================= -->
-    <section id="about" class="about-section portfolio-container" data-animation="fade-in">
+    <!-- ========================= 2. SKILLS SECTION ========================= -->
+    <section id="skills" class="skills-section portfolio-container" data-animation="fade-in">
         <div class="section-title">
-            <h2>About <span>Me</span></h2>
+            <h2>My Tech <span>Skills</span></h2>
         </div>
-        <div class="about-content card">
-            <div class="services-column">
-                {% for service in services_col1 %}
-                <a href="{% url 'portfolio:skill_detail' slug=service.slug %}" class="service-link">
-                    <div class="service-box box-reverse clickable-skill">
-                        <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
-                        <div class="service-text text-reverse">
-                            <h4>{{ service.title }}</h4>
-                            <p>{{ service.summary|safe }}</p>
-                            <span class="view-details">View Details <i class="fa-solid fa-arrow-right"></i></span>
-                        </div>
+        <div class="skills-grid">
+            {% for category in skill_categories %}
+            <a href="{% url 'portfolio:skill_detail' slug=category.main_skill.slug %}" class="skill-category-card" data-animation="fade-in-up">
+                <div class="skill-card-header">
+                    <div class="skill-category-icon">
+                        <i class="{{ category.main_skill.icon }}"></i>
                     </div>
-                </a>
-                {% endfor %}
-            </div>
-            <div class="about-image-wrapper" data-animation="zoom-in">
-                <img src="{% static 'images/about.png' %}" alt="A portrait photo of Roshan Damor" class="about-img-default">
-                <img src="{% static 'images/nee.png' %}" alt="A different portrait photo of Roshan Damor" class="about-img-hover">
-            </div>
-            <div class="services-column">
-                {% for service in services_col2 %}
-                <a href="{% url 'portfolio:skill_detail' slug=service.slug %}" class="service-link">
-                    <div class="service-box clickable-skill">
-                        <div class="icon-wrapper"><i class="{{ service.icon }}"></i></div>
-                        <div class="service-text">
-                            <h4>{{ service.title }}</h4>
-                            <p>{{ service.summary|safe }}</p>
-                            <span class="view-details">View Details <i class="fa-solid fa-arrow-right"></i></span>
-                        </div>
-                    </div>
-                </a>
-                {% endfor %}
-            </div>
+                    <h3>{{ category.name }}</h3>
+                </div>
+                <div class="skill-technologies">
+                    {% for tech in category.technologies %}
+                    <span class="tech-tag">
+                        <i class="{{ tech.icon }}"></i>
+                        {{ tech.name }}
+                    </span>
+                    {% endfor %}
+                </div>
+                <div class="skill-card-footer">
+                    <span class="skills-count">{{ category.skills_count }} skill{{ category.skills_count|pluralize }}</span>
+                </div>
+            </a>
+            {% endfor %}
         </div>
     </section>
 
     <!-- ========================= 3. EXPERIENCE SECTION ========================= -->
     <section id="experience" class="experience-section portfolio-container" data-animation="fade-in">
-        <div class="portfolio-header">
-            <div class="head">
-                <h2>Where I've <span>Worked</span></h2>
-                <a href="{% url 'portfolio:experience_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a>
-            </div>
+        <div class="section-title">
+            <h2>My Work <span>Experiences</span></h2>
         </div>
         <div class="experience-grid">
             {% for exp in experiences %}
@@ -179,7 +164,7 @@
                 <div class="exp-img"><img src="{% if exp.company_logo %}{{ exp.company_logo.url }}{% else %}https://placehold.co/80x80/010409/eaeaea?text={{ exp.company_name|slice:':2' }}{% endif %}" alt="{{ exp.company_name }} Logo"></div>
                 <div class="exp-details">
                     <div class="exp-header">
-                        <h3>{{ exp.role }} @ {{ exp.company_name }}</h3>
+                        <h3>{{ exp.role }} @ <i>{{ exp.company_name }}</i></h3>
                         <span>{{ exp.start_date|date:"M Y" }} - {% if exp.end_date %}{{ exp.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
                     </div>
                     <p>{{ exp.summary|truncatewords:40|safe }}</p>
@@ -192,18 +177,32 @@
 
     <!-- ========================= 4. PROJECTS SECTION ========================= -->
     <section class="projects-section portfolio-container">
-        <header class="portfolio-header" data-animation="fade-in-up">
-            <div class="head"><h2>Things I've <span>Crafted</span></h2><a href="{% url 'portfolio:project_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a></div>
-        </header>
+        <div class="section-title" data-animation="fade-in-up">
+            <h2>My Featured <span>Projects</span></h2>
+        </div>
         <div class="cards-container">
             {% for project in projects %}
             <div class="project-card card clickable-card" data-animation="fade-in-up" data-url="{% url 'portfolio:project_detail' slug=project.slug %}">
-                <div class="project-image">
-                    <img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ project.title|urlencode }}{% endif %}" alt="{{ project.title }}">
+                <div class="project-media">
+                    {% if project.youtube_video_id %}
+                        <div class="youtube-video-container">
+                            <iframe 
+                                src="https://www.youtube.com/embed/{{ project.youtube_video_id }}?rel=0&modestbranding=1&showinfo=0" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen
+                                loading="lazy"
+                                title="{{ project.title }} - YouTube Video">
+                            </iframe>
+                        </div>
+                    {% elif project.cover_image %}
+                        <img src="{{ project.cover_image.url }}" alt="{{ project.title }}" class="project-image">
+                    {% else %}
+                        <img src="https://placehold.co/1920x1080/010409/eaeaea?text={{ project.title|urlencode }}" alt="{{ project.title }}" class="project-image placeholder">
+                    {% endif %}
                 </div>
                 <div class="project-content">
                     <h3>{{ project.title }}</h3>
-                    <p>{{ project.summary|truncatewords:20|safe }}</p>
                     <div class="skills">
                         {% for tech in project.technologies.all|slice:":5" %}
                         <span class="teg">{{ tech.name }}</span>
@@ -230,61 +229,11 @@
         </div>
     </section>
 
-    <!-- ========================= 5. CALL TO ACTION SECTION ========================= -->
-    <section class="cta-section portfolio-container" data-animation="fade-in">
-        <div class="cta-container card">
-            <div class="cta-left-content">
-                <h2><i class="fa-solid fa-briefcase"></i> <span>Hire</span> Me for Your Next Project</h2>
-            </div>
-            <div class="cta-right-content">
-                <a href="#contact" class="filled-btn">Get in Touch</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========================= 6. ACHIEVEMENTS SECTION ========================= -->
-    <section class="achievement-section portfolio-container" data-animation="fade-in">
-        <header class="portfolio-header" data-animation="fade-in-up">
-            <div class="head">
-                <h2>Recent I've <span>Achieved</span></h2>
-                <a href="{% url 'portfolio:achievements_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a>
-            </div>
-        </header>
-        <div class="cards-container">
-            {% for ach in achievements %}
-            <div class="achievement-card card clickable-card{% if ach.image %} has-image{% endif %}"
-                data-animation="zoom-in"
-                {% if ach.credential_url %}data-url="{{ ach.credential_url }}" onclick="window.open(this.dataset.url, '_blank'); event.stopPropagation();"{% endif %}>
-                <div class="card-banner">{{ ach.category.name }}</div>
-                {% if ach.image %}
-                <div class="ach-image">
-                    <img src="{{ ach.image.url }}" alt="{{ ach.title }} Preview">
-                </div>
-                {% endif %}
-                <div class="ach-content">
-                    <h3>{{ ach.title }}</h3>
-                    <p class="issuer">
-                        Issued by <strong>{{ ach.issuing_organization }}</strong> on {{ ach.date_issued|date:"M d, Y" }}
-                    </p>
-                    <p>{{ ach.summary|truncatewords:20|sanitize_html }}</p>
-                </div>
-                {% if ach.credential_url %}
-                <div class="ach-footer">
-                    <a href="{{ ach.credential_url }}" class="credential-link" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();">
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i> View Credential
-                    </a>
-                </div>
-                {% endif %}
-            </div>
-            {% endfor %}
-        </div>
-    </section>
-
-    <!-- ========================= 7. BLOGS SECTION ========================= -->
+    <!-- ========================= 5. BLOGS SECTION ========================= -->
     <section class="blogs-section portfolio-container">
-        <header class="portfolio-header" data-animation="fade-in-up">
-            <div class="head"><h2>Latest I've <span>Written</span></h2><a href="{% url 'blog:blog_list' %}" class="awesome">View All <i class="fa-solid fa-arrow-right"></i></a></div>
-        </header>
+        <div class="section-title" data-animation="fade-in-up">
+            <h2>Latest I've <span>Written</span></h2>
+        </div>
         <div class="cards-container">
             {% for blog in blogs %}
             <div class="blog-card card clickable-card" data-animation="fade-in-up"
@@ -310,12 +259,12 @@
         </div>
     </section>
 
-    <!-- ========================= 8. NEWSLETTER CTA SECTION (NEW) ========================= -->
+    <!-- ========================= 6. NEWSLETTER CTA SECTION (NEW) ========================= -->
     <section id="newsletter" class="cta-section portfolio-container portfolio" data-animation="fade-in">
         <header></header> {# This header is empty, consider removing if not needed for styling #}
         <div class="cta-container card">
             <div class="cta-left-content">
-                <h2><i class="fa-solid fa-paper-plane"></i> Get <span>Updates</span> of Blogs & Projects</h2>
+                <h2><i class="fa-solid fa-paper-plane"></i> Subscribe for <span>Updates</span></h2>
             </div>
             <div class="cta-right-content">
                 <!-- Message Display Area -->
@@ -336,36 +285,7 @@
         </div>
     </section>
 
-    <!-- ========================= 9. FAQ SECTION ========================= -->
-    <section class="faq-section portfolio-container">
-        <header class="portfolio-header" data-animation="fade-in-up">
-            <div class="head"><h2>Got Some <span>Questions?</span></h2></div>
-        </header>
-        <div class="card-container" id="faq-container">
-            {% for faq in faqs %}
-            <div class="faq-card card {% if forloop.counter > 4 %}faq-hidden{% endif %}" data-animation="fade-in-up"> {# Changed condition from 5 to 4 to hide items from 5th onwards, showing first 4 by default #}
-                <div class="faq-question">
-                    <span>{{ faq.question }}</span>
-                    <i class="fa-solid fa-plus faq-icon"></i>
-                </div>
-                <div class="faq-answer">
-                    <p>{{ faq.answer|safe }}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        <!-- Show More Button (only visible if more than 4 FAQs) --> {# Updated comment #}
-        {% if faqs|length > 4 %}
-        <div class="faq-show-more-container" data-animation="fade-in-up">
-            <button class="outline-btn" id="faq-show-more-btn">
-                <i class="fas fa-chevron-down"></i>
-                Show More FAQs
-            </button>
-        </div>
-        {% endif %}
-    </section>
-
-    <!-- ========================= 10. CONTACT SECTION ========================= -->
+    <!-- ========================= 7. CONTACT SECTION ========================= -->
     <section id="contact" class="contact-section portfolio-container" data-animation="fade-in">
         <div class="section-title"><h2>Let's Get <span>Connected!</span></h2></div>
         <div class="contact-wrapper card">
@@ -377,10 +297,28 @@
                         <li><i class="fa-solid fa-envelope"></i><span>{% if config.email %}<a href="mailto:{{ config.email }}">{{ config.email }}</a>{% else %}Not provided{% endif %}</span></li> {# Added mailto: link #}
                         <li><i class="fa-solid fa-location-dot"></i><span>{% if config.location %}{{ config.location }}{% else %}Not provided{% endif %}</span></li>
                     </ul>
+                    
+                    <!-- Urgent Toggle Section -->
+                    <div class="urgent-toggle-section">
+                        <div class="urgent-toggle-wrapper">
+                            <label class="toggle-switch" for="urgent-toggle">
+                                <input type="checkbox" id="urgent-toggle" name="is_urgent">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <div class="toggle-label">
+                                <span class="toggle-text">Urgent Response</span>
+                                <i class="fa-solid fa-exclamation-triangle urgent-icon"></i>
+                            </div>
+                        </div>
+                        <div class="urgent-warning" id="urgent-warning">
+                            <p><i class="fa-solid fa-warning"></i> <strong>Warning:</strong> Use only for genuinely urgent matters. Misuse of this feature may result in your email being blocked from accessing this website.</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="right-contact-form">
                     <form id="contact-form" method="post" action="{% url 'portfolio:contact_submit' %}">
                         {% csrf_token %}
+                        <input type="hidden" name="is_urgent" id="urgent-hidden-input" value="false">
                         <div class="form-group-row"><div class="form-group"><label for="name">Your Name</label><input type="text" name="name" id="name" autocomplete="name" required></div><div class="form-group"><label for="email">Your Email</label><input type="email" name="email" id="email" autocomplete="email" required></div></div> {# Added autocomplete attributes #}
                         <div class="form-group"><label for="subject">Your Subject</label><input type="text" name="subject" id="subject" autocomplete="on"></div> {# Added autocomplete attribute #}
                         <div class="form-group"><label for="contact-message">Your Message</label><textarea name="message" id="contact-message" rows="4" required></textarea></div>
@@ -400,7 +338,7 @@
                     <div class="ai-avatar">
                         <i class="fas fa-robot"></i>
                     </div>
-                    <h3>Chat with AI Assistant</h3>
+                    <h3>Chat with Rexi AI</h3>
                 </div>
                 <button type="button" class="ai-modal-close" id="close-ai-modal" aria-label="Close AI chat modal"> {# Added aria-label #}
                     <i class="fas fa-times"></i>
@@ -409,7 +347,6 @@
             
             <div class="ai-chat-interface">
                 <div class="ai-chat-messages" id="ai-chat-messages">
-                    <!-- Chat messages will be dynamically inserted here -->
                 </div>
                 <!-- Input form -->
                 <form id="ai-form" class="ai-query-form" action="{% url 'ai:submit_ai_query' %}" method="POST" enctype="multipart/form-data">
@@ -431,5 +368,4 @@
         </div>
     </div>
 
-    {{ skills_for_js|json_script:"skills-data" }}
 {% endblock %}

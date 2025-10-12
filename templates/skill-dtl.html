@@ -28,7 +28,7 @@
         <nav class="breadcrumb" aria-label="Breadcrumb" data-animation="fade-in-up">
             <ul>
                 <li><a href="{% url 'portfolio:home' %}">Home</a></li>
-                <li><a href="{% url 'portfolio:skill_list' %}">Skills</a></li>
+                <li><a href="/#skills">Skills</a></li>
                 <li class="active" aria-current="page">{{ skill.title }}</li>
             </ul>
         </nav>
@@ -42,7 +42,7 @@
                     </div>
                     <div class="skill-info">
                         <h1 class="skill-title" data-animation="fade-in-up" data-animation-delay="100">{{ skill.title }}</h1>
-                        <p class="skill-summary" data-animation="fade-in-up" data-animation-delay="200">{{ skill.summary|safe }}</p>
+                        <p class="skill-category" data-animation="fade-in-up" data-animation-delay="200">{{ skill.get_category_display }}</p>
                         
                         <div class="skill-badges" data-animation="fade-in-up" data-animation-delay="300">
                             <span class="skill-badge proficiency-{{ skill.proficiency_level }}">

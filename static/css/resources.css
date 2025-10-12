@@ -2,8 +2,8 @@
 
 /* Page Layout & Toolbar (Consistent with other pages) */
 .resources-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 40px; }
-.page-header { width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-.page-header h1 { font-family: var(--heading-font); font-size: 50px; color: var(--title-color); }
+
+/* .page-header h1 inherits from base.css h1 */
 .page-header h1 span { color: var(--accent-color); }
 .page-header p { font-size: 18px; color: var(--paragraph-color); max-width: 800px; }
 .page-toolbar { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 15px; background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; }
@@ -71,27 +71,10 @@
 .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Animations */
-[data-animation] {
-    opacity: 1;
-    transform: translateY(20px); /* safe default */
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
 
-[data-animation].is-visible {
-    opacity: 1 !important;
-    transform: none !important;
-}
-
-[data-animation="fade-in-up"] {
-    transform: translateY(40px);
-}
-
-[data-animation="zoom-in"] {
-    transform: scale(0.95);
-}
 
 
 /* Responsive */
 @media (max-width: 768px) {
-    .page-header h1 { font-size: 40px; }
+    /* Typography inherits from base.css responsive styles */
 }

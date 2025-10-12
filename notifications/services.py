@@ -7,54 +7,68 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class EmailNotificationService:
     """
     Service class to handle email notifications for contact submissions
     """
-    
+
     def __init__(self):
         self.settings = NotificationSettings.get_settings()
-    
+
     def send_admin_notification(self, contact_submission, notification):
         """
         Send notification email to admin about new contact submission
         """
+        print(f"   📧 send_admin_notification() called")
+        print(
+            f"      Admin notifications enabled: {self.settings.admin_notification_enabled}"
+        )
+
         if not self.settings.admin_notification_enabled:
             logger.info("Admin notifications are disabled")
+            print(f"      ⚠️  Admin notifications are DISABLED in settings")
             return False
-        
+
         try:
             # Get email template or use default
-            template = self._get_template('admin_notification')
-            
+            template = self._get_template("admin_notification")
+
             if template:
                 subject = template.subject
                 html_content = template.html_content
                 text_content = template.text_content
+                print(f"      Using custom template: {template.name}")
             else:
                 # Default template
                 subject = f"New Contact Form Submission from {contact_submission.name}"
                 html_content = self._get_default_admin_html_template()
                 text_content = self._get_default_admin_text_template()
-            
+                print(f"      Using default template")
+
             # Prepare template context
             context = {
-                'contact_name': contact_submission.name,
-                'contact_email': contact_submission.email,
-                'contact_subject': contact_submission.subject or 'No subject provided',
-                'contact_message': contact_submission.message,
-                'submission_date': contact_submission.submitted_date,
-                'site_name': getattr(settings, 'SITE_NAME', 'Portfolio Website'),
-                'site_url': getattr(settings, 'SITE_URL', 'http://localhost:8000'),
+                "contact_name": contact_submission.name,
+                "contact_email": contact_submission.email,
+                "contact_subject": contact_submission.subject or "No subject provided",
+                "contact_message": contact_submission.message,
+                "submission_date": contact_submission.submitted_date,
+                "site_name": getattr(settings, "SITE_NAME", "Portfolio Website"),
+                "site_url": getattr(settings, "SITE_URL", "http://localhost:8000"),
             }
-            
+
             # Render templates with context
             rendered_html = self._render_template_string(html_content, context)
             rendered_text = self._render_template_string(text_content, context)
             rendered_subject = self._render_template_string(subject, context)
-            
+
+            print(f"      From: {self.settings.from_email}")
+            print(f"      To: {self.settings.admin_email}")
+            print(f"      Subject: {rendered_subject}")
+
             # Send email
             from django.core.mail import EmailMultiAlternatives
+
             email = EmailMultiAlternatives(
                 subject=rendered_subject,
                 body=rendered_text,
@@ -63,61 +77,82 @@ class EmailNotificationService:
             )
             email.attach_alternative(rendered_html, "text/html")
             email.send(fail_silently=False)
-            
+
             notification.mark_admin_email_sent()
-            logger.info(f"Admin notification sent for contact submission {contact_submission.id}")
+            logger.info(
+                f"Admin notification sent for contact submission {contact_submission.id}"
+            )
+            print(f"      ✅ Admin email sent successfully")
             return True
-            
+
         except Exception as e:
             error_msg = str(e)
             logger.error(f"Failed to send admin notification: {error_msg}")
+            print(f"      ❌ Failed to send admin email: {error_msg}")
+            import traceback
+
+            traceback.print_exc()
             try:
                 notification.mark_admin_email_sent(error=error_msg)
             except Exception as inner_e:
                 logger.error(f"Failed to mark admin email as failed: {str(inner_e)}")
             return False
-    
+
     def send_thankyou_notification(self, contact_submission, notification):
         """
         Send thank you email to user who submitted contact form
         """
+        print(f"   📧 send_thankyou_notification() called")
+        print(
+            f"      Thank you notifications enabled: {self.settings.thankyou_notification_enabled}"
+        )
+
         if not self.settings.thankyou_notification_enabled:
             logger.info("Thank you notifications are disabled")
+            print(f"      ⚠️  Thank you notifications are DISABLED in settings")
             return False
-        
+
         try:
             # Get email template or use default
-            template = self._get_template('user_thankyou')
-            
+            template = self._get_template("user_thankyou")
+
             if template:
                 subject = template.subject
                 html_content = template.html_content
                 text_content = template.text_content
+                print(f"      Using custom template: {template.name}")
             else:
                 # Default template
                 subject = "Thank you for contacting us!"
                 html_content = self._get_default_thankyou_html_template()
                 text_content = self._get_default_thankyou_text_template()
-            
+                print(f"      Using default template")
+
             # Prepare template context
             context = {
-                'user_name': contact_submission.name,
-                'user_email': contact_submission.email,
-                'contact_subject': contact_submission.subject or 'your inquiry',
-                'submission_date': contact_submission.submitted_date,
-                'site_name': getattr(settings, 'SITE_NAME', 'Roshan Damor Portfolio'),
-                'site_url': getattr(settings, 'SITE_URL', 'http://localhost:8000'),
-                'admin_name': 'Roshan Damor',
-                'reply_email': self.settings.reply_to_email,
+                "user_name": contact_submission.name,
+                "user_email": contact_submission.email,
+                "contact_subject": contact_submission.subject or "your inquiry",
+                "submission_date": contact_submission.submitted_date,
+                "site_name": getattr(settings, "SITE_NAME", "Roshan Damor Portfolio"),
+                "site_url": getattr(settings, "SITE_URL", "http://localhost:8000"),
+                "admin_name": "Roshan Damor",
+                "reply_email": self.settings.reply_to_email,
             }
-            
+
             # Render templates with context
             rendered_html = self._render_template_string(html_content, context)
             rendered_text = self._render_template_string(text_content, context)
             rendered_subject = self._render_template_string(subject, context)
-            
+
+            print(f"      From: {self.settings.from_email}")
+            print(f"      To: {contact_submission.email}")
+            print(f"      Reply-To: {self.settings.reply_to_email}")
+            print(f"      Subject: {rendered_subject}")
+
             # Send email
             from django.core.mail import EmailMultiAlternatives
+
             email = EmailMultiAlternatives(
                 subject=rendered_subject,
                 body=rendered_text,
@@ -127,34 +162,41 @@ class EmailNotificationService:
             )
             email.attach_alternative(rendered_html, "text/html")
             email.send(fail_silently=False)
-            
+
             notification.mark_thankyou_email_sent()
-            logger.info(f"Thank you notification sent for contact submission {contact_submission.id}")
+            logger.info(
+                f"Thank you notification sent for contact submission {contact_submission.id}"
+            )
+            print(f"      ✅ Thank you email sent successfully")
             return True
-            
+
         except Exception as e:
             error_msg = str(e)
             logger.error(f"Failed to send thank you notification: {error_msg}")
+            print(f"      ❌ Failed to send thank you email: {error_msg}")
+            import traceback
+
+            traceback.print_exc()
             try:
                 notification.mark_thankyou_email_sent(error=error_msg)
             except Exception as inner_e:
                 logger.error(f"Failed to mark thankyou email as failed: {str(inner_e)}")
             return False
-    
+
     def _get_template(self, template_type):
         """Get active email template by type"""
         try:
             return EmailTemplate.objects.filter(
-                template_type=template_type,
-                is_active=True
+                template_type=template_type, is_active=True
             ).first()
         except EmailTemplate.DoesNotExist:
             return None
-    
+
     def _render_template_string(self, template_string, context):
         """Render template string with context variables"""
         try:
             from django.template import Template, Context
+
             template = Template(template_string)
             return template.render(Context(context))
         except Exception as e:
@@ -162,11 +204,11 @@ class EmailNotificationService:
             # Return template with basic string replacement as fallback
             result = template_string
             for key, value in context.items():
-                result = result.replace(f'{{{{ {key} }}}}', str(value))
+                result = result.replace(f"{{{{ {key} }}}}", str(value))
                 # Also handle with spaces around variable name
-                result = result.replace(f'{{{{  {key}  }}}}', str(value))
+                result = result.replace(f"{{{{  {key}  }}}}", str(value))
             return result
-    
+
     def _get_default_admin_html_template(self):
         """Default HTML template for admin notification"""
         return """
@@ -222,7 +264,7 @@ class EmailNotificationService:
         </body>
         </html>
         """
-    
+
     def _get_default_admin_text_template(self):
         """Default text template for admin notification"""
         return """
@@ -240,7 +282,7 @@ class EmailNotificationService:
         This notification was sent from {{ site_name }}
         {{ site_url }}
         """
-    
+
     def _get_default_thankyou_html_template(self):
         """Default HTML template for thank you email"""
         return """
@@ -307,7 +349,7 @@ class EmailNotificationService:
         </body>
         </html>
         """
-    
+
     def _get_default_thankyou_text_template(self):
         """Default text template for thank you email"""
         return """

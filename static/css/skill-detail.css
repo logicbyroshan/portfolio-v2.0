@@ -56,44 +56,7 @@
    2. Breadcrumb Navigation
    ========================================================================== */
 
-.breadcrumb {
-    width: 100%;
-    margin-bottom: 15px;
-}
 
-.breadcrumb ul {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 5px;
-    padding: 0;
-}
-
-.breadcrumb ul li {
-    font-size: 14px;
-    color: var(--paragraph-color);
-}
-
-.breadcrumb ul li:not(:last-child)::after {
-    content: "›";
-    margin-left: 10px;
-}
-
-.breadcrumb ul li.active {
-    font-weight: 600;
-    color: var(--title-color);
-}
-
-.breadcrumb ul li a {
-    color: var(--paragraph-color);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.breadcrumb ul li a:hover {
-    color: var(--accent-color);
-}
 
 
 /* ==========================================================================
@@ -126,11 +89,8 @@
 }
 
 .skill-title {
-    font-family: var(--heading-font);
     font-size: 48px;
-    color: var(--title-color);
-    line-height: 1.2;
-    margin: 0 0 15px 0;
+    margin: 0 0 15px 0; /* Inherits from base.css h1 */
 }
 
 .skill-summary {
@@ -192,10 +152,8 @@
    ========================================================================== */
 
 .technologies-section h2 {
-    font-family: var(--heading-font);
     font-size: 32px;
-    color: var(--title-color);
-    margin-bottom: 25px;
+    margin-bottom: 25px; /* Inherits from base.css h2 */
 }
 
 .technology-grid {
@@ -260,10 +218,8 @@
    ========================================================================== */
 
 .learning-journey-section h2 {
-    font-family: var(--heading-font);
     font-size: 32px;
-    color: var(--title-color);
-    margin-bottom: 25px;
+    margin-bottom: 25px; /* Inherits from base.css h2 */
 }
 
 .learning-content {
@@ -461,31 +417,7 @@
    7. On-Scroll Animations
    ========================================================================== */
 
-[data-animation] {
-    opacity: 0;
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
 
-[data-animation].is-visible {
-    opacity: 1;
-    transform: none;
-}
-
-[data-animation="fade-in-up"] {
-    transform: translateY(40px);
-}
-
-[data-animation="fade-in-left"] {
-    transform: translateX(-40px);
-}
-
-[data-animation="fade-in-right"] {
-    transform: translateX(40px);
-}
-
-[data-animation="zoom-in"] {
-    transform: scale(0.9);
-}
 
 
 /* ==========================================================================
@@ -512,9 +444,7 @@
         gap: 20px;
     }
     
-    .skill-title {
-        font-size: 36px;
-    }
+    /* .skill-title inherits from base.css responsive h1 styles */
     
     .technology-grid {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -537,9 +467,7 @@
         gap: 25px;
     }
     
-    .breadcrumb {
-        margin-bottom: 20px;
-    }
+
 
     .skill-icon {
         width: 60px;
@@ -548,13 +476,10 @@
     }
     
     .skill-title {
-        font-size: 38px;
         line-height: 1.25;
     }
     
-    .skill-summary {
-        font-size: 17px;
-    }
+    /* .skill-summary inherits from base.css paragraph styles */
     
     .technologies-section h2,
     .learning-journey-section h2 {

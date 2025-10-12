@@ -101,13 +101,91 @@
 <div class="about-page-container">
     <!-- ======================= Profile Section ======================= -->
     <section class="profile-section">
-        <div class="profile-image-wrapper" data-animation="zoom-in">
-            {% if config.profile_image %}
-                <img src="{{ config.profile_image.url }}" alt="Photo of Roshan Damor">
-            {% else %}
-                <img src="https://placehold.co/400x400/010409/eaeaea?text=Roshan" alt="Placeholder photo">
-            {% endif %}
+        <div class="profile-left-column">
+            <div class="profile-image-wrapper" data-animation="zoom-in">
+                {% if config.profile_image %}
+                    <img src="{{ config.profile_image.url }}" alt="Photo of Roshan Damor">
+                {% else %}
+                    <img src="https://placehold.co/400x400/010409/eaeaea?text=Roshan" alt="Placeholder photo">
+                {% endif %}
+            </div>
+
+            <!-- Profile Info Card -->
+            <div class="profile-info-card" data-animation="fade-in-up">
+                <!-- Personal Info -->
+                <div class="profile-details">
+                    {% if config.open_to_work %}
+                    <div class="profile-badge">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Open to Work</span>
+                    </div>
+                    {% endif %}
+
+                    {% if config.location %}
+                    <div class="profile-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ config.location }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if config.website_url %}
+                    <div class="profile-website">
+                        <i class="fas fa-link"></i>
+                        <a href="{{ config.website_url }}" target="_blank" rel="noopener">{{ config.website_url|cut:"https://"|cut:"http://"|cut:"www." }}</a>
+                    </div>
+                    {% endif %}
+
+                    {% if config.birthday and config.age %}
+                    <div class="profile-birthday">
+                        <i class="fas fa-birthday-cake"></i>
+                        <span>{{ config.age }} years old</span>
+                    </div>
+                    {% endif %}
+
+                    {% if config.email %}
+                    <div class="profile-email">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:{{ config.email }}">{{ config.email }}</a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Social Links -->
+                <div class="profile-social">
+                    {% if config.github_url %}
+                    <a href="{{ config.github_url }}" target="_blank" rel="noopener" title="GitHub">
+                        <i class="fab fa-github"></i>
+                        <span class="sr-only">GitHub</span>
+                    </a>
+                    {% endif %}
+                    {% if config.linkedin_url %}
+                    <a href="{{ config.linkedin_url }}" target="_blank" rel="noopener" title="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                        <span class="sr-only">LinkedIn</span>
+                    </a>
+                    {% endif %}
+                    {% if config.twitter_url %}
+                    <a href="{{ config.twitter_url }}" target="_blank" rel="noopener" title="Twitter">
+                        <i class="fab fa-x-twitter"></i>
+                        <span class="sr-only">Twitter</span>
+                    </a>
+                    {% endif %}
+                    {% if config.youtube_url %}
+                    <a href="{{ config.youtube_url }}" target="_blank" rel="noopener" title="YouTube">
+                        <i class="fab fa-youtube"></i>
+                        <span class="sr-only">YouTube</span>
+                    </a>
+                    {% endif %}
+                    {% if config.instagram_url %}
+                    <a href="{{ config.instagram_url }}" target="_blank" rel="noopener" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                        <span class="sr-only">Instagram</span>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
+
         <div class="profile-content" data-animation="fade-in-up">
             <header class="page-header">
                 <h1>{{ config.page_title|safe|default:"A Bit More <span>About Me</span>" }}</h1>
@@ -131,15 +209,7 @@
                 <a href="{% url 'roshan:my_playlist' %}" class="outline-btn">Listen Now</a>
             </div>
 
-            <!-- Card 2: Community -->
-            <div class="action-card card" data-animation="fade-in-up" data-animation-delay="400">
-                <i class="fa-solid fa-users action-icon"></i>
-                <h3>Join My Community</h3>
-                <p>Let's connect, share ideas, and build amazing things together on Discord or Slack.</p>
-                <a href="https://risetogethr.tech" target="_blank" rel="noopener noreferrer" class="outline-btn">Join Community</a>
-            </div>
-
-            <!-- Card 3: Resources -->
+            <!-- Card 2: Resources -->
             <div class="action-card card" data-animation="fade-in-up" data-animation-delay="600">
                 <i class="fa-solid fa-book-open action-icon"></i>
                 <h3>View My Resources</h3>
@@ -147,31 +217,43 @@
                 <a href="{% url 'roshan:resources' %}" class="outline-btn">Explore Resources</a>
             </div>
 
-            <!-- Card 4: Achievements -->
+            <!-- Card 3: Achievements -->
             <div class="action-card card" data-animation="fade-in-up" data-animation-delay="800">
                 <i class="fa-solid fa-trophy action-icon"></i>
                 <h3>My Achievements</h3>
                 <p>Explore my certifications, awards, and milestones that showcase my journey and growth as a developer.</p>
                 <a href="{% url 'portfolio:achievements_list' %}" class="outline-btn">View Achievements</a>
             </div>
-
-            <!-- Card 5: Skills -->
-            <div class="action-card card" data-animation="fade-in-up" data-animation-delay="1000">
-                <i class="fa-solid fa-code action-icon"></i>
-                <h3>Explore My Skills</h3>
-                <p>Discover my technical expertise, programming languages, frameworks, and tools that I use to build amazing
-                    projects.</p>
-                <a href="{% url 'portfolio:skill_list' %}" class="outline-btn">Explore Skills</a>
-            </div>
-
-            <!-- Card 6: Code Together -->
-            <div class="action-card card" data-animation="fade-in-up" data-animation-delay="1200">
-                <i class="fa-solid fa-handshake action-icon"></i>
-                <h3>Let's Code Together</h3>
-                <p>Ready to collaborate on a project? Let's work together to build something amazing and innovative.</p>
-                <a href="{% url 'portfolio:code_together' %}" class="outline-btn">Start Collaboration</a>
-            </div>
         </div>
+    </section>
+
+    <!-- ========================= FAQ SECTION ========================= -->
+    <section class="faq-section portfolio-container">
+        <div class="section-title" data-animation="fade-in-up">
+            <h2>Got Some <span>Questions?</span></h2>
+        </div>
+        <div class="card-container" id="faq-container">
+            {% for faq in faqs %}
+            <div class="faq-card card {% if forloop.counter > 4 %}faq-hidden{% endif %}" data-animation="fade-in-up">
+                <div class="faq-question">
+                    <span>{{ faq.question }}</span>
+                    <i class="fa-solid fa-plus faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>{{ faq.answer|safe }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Show More Button (only visible if more than 4 FAQs) -->
+        {% if faqs|length > 4 %}
+        <div class="faq-show-more-container" data-animation="fade-in-up">
+            <button class="outline-btn" id="faq-show-more-btn">
+                <i class="fas fa-chevron-down"></i>
+                Show More FAQs
+            </button>
+        </div>
+        {% endif %}
     </section>
 </div>
 {% endblock %}

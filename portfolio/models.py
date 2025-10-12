@@ -25,14 +25,14 @@ def sanitize_html(value):
 
 class SiteConfiguration(models.Model):
     # --- Hero Section ---
-    hero_greeting = models.CharField(max_length=100, default="HIII, IT'S ME")
+    # hero_greeting removed - now using static "HII It's Me" text
     hero_name = models.CharField(max_length=100, default="Roshan Damor")
-    hero_tagline = models.CharField(max_length=200, default="I am a Web Developer")
+    # hero_tagline removed - now using static "Full Stack AI Developer" text
 
     # --- Hero Stats ---
-    hero_projects_stat = models.CharField(max_length=10, default="25+")
-    hero_internships_stat = models.CharField(max_length=10, default="3+")
-    hero_articles_stat = models.CharField(max_length=10, default="15+")
+    hero_leetcode_rating = models.CharField(max_length=10, default="1800+")
+    hero_opensource_contributions = models.CharField(max_length=10, default="50+")
+    hero_hackathons_count = models.CharField(max_length=10, default="12+")
 
     # --- Social Media Links ---
     twitter_url = models.URLField(blank=True, default="https://x.com/logicbyroshan")
@@ -125,7 +125,10 @@ class Project(models.Model):
     content = HTMLField(
         help_text="The main detailed content for the project detail page."
     )
-    cover_image = models.ImageField(upload_to="project_covers/")
+    cover_image = models.ImageField(upload_to="project_covers/", blank=True, null=True)
+    youtube_url = models.URLField(
+        blank=True, null=True, help_text="YouTube video URL for project demonstration"
+    )
     technologies = models.ManyToManyField(Technology, related_name="projects")
     categories = models.ManyToManyField(
         Category, limit_choices_to={"category_type": Category.CategoryType.PROJECT}
@@ -155,6 +158,34 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def youtube_video_id(self):
+        """Extract YouTube video ID from the URL"""
+        if not self.youtube_url:
+            return None
+
+        import re
+
+        # Handle different YouTube URL formats
+        patterns = [
+            r"(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)",
+            r"youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]+)",
+        ]
+
+        for pattern in patterns:
+            match = re.search(pattern, self.youtube_url)
+            if match:
+                return match.group(1)
+        return None
+
+    @property
+    def youtube_thumbnail_url(self):
+        """Get YouTube video thumbnail URL"""
+        video_id = self.youtube_video_id
+        if video_id:
+            return f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg"
+        return None
 
 
 class ProjectImage(models.Model):
@@ -282,6 +313,9 @@ class ContactSubmission(models.Model):
     email = models.EmailField()
     subject = models.CharField(max_length=200, blank=True)
     message = models.TextField()
+    is_urgent = models.BooleanField(
+        default=False, help_text="Mark as urgent for priority response"
+    )
     submitted_date = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
 
@@ -296,10 +330,22 @@ class ContactSubmission(models.Model):
 
 # --- SKILL MODELS (enhanced with categories) ---
 class Skill(models.Model):
+    SKILL_CATEGORIES = [
+        ("languages_frameworks", "Languages & Frameworks"),
+        ("backend_database", "Backend & Database"),
+        ("tools_platforms", "Tools & Platforms"),
+        ("soft_skills", "Soft Skills"),
+    ]
+
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True, editable=False)
+    category = models.CharField(
+        max_length=50,
+        choices=SKILL_CATEGORIES,
+        default="languages_frameworks",
+        help_text="Category for organizing skills on home page",
+    )
     icon = models.CharField(max_length=50)
-    summary = models.TextField()
     learning_journey = HTMLField(
         blank=True, help_text="Detailed learning journey and experience with this skill"
     )
@@ -402,106 +448,6 @@ class Achievement(models.Model):
 
     def __str__(self):
         return f"{self.title} from {self.issuing_organization}"
-
-
-# =========================================================================
-# CODE TOGETHER PAGE MODELS
-# =========================================================================
-
-
-class CodeTogetherConfiguration(models.Model):
-
-    # --- Page Header ---
-    page_title = models.CharField(
-        max_length=255, default="Let's Build <span>Together</span>"
-    )
-    intro_paragraph = models.TextField(
-        default="I'm always excited to collaborate on innovative projects. Here's a look at what I'm passionate about building."
-    )
-    interests_content = HTMLField(
-        help_text="Content describing your collaboration interests with HTML support"
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = "Code Together Configuration"
-        verbose_name_plural = "Code Together Configuration"
-
-    def __str__(self):
-        return "Code Together Page Configuration"
-
-    def save(self, *args, **kwargs):
-        """Ensure only one instance exists."""
-        if not self.pk and CodeTogetherConfiguration.objects.exists():
-            # Update existing instance instead of creating new one
-            existing = CodeTogetherConfiguration.objects.first()
-            self.pk = existing.pk
-        super().save(*args, **kwargs)
-
-
-class CollaborationProposal(models.Model):
-
-    # --- Personal Information ---
-    full_name = models.CharField(max_length=100)
-    email = models.EmailField()
-    github_id = models.CharField(
-        max_length=100, blank=True, help_text="GitHub username (optional)"
-    )
-    linkedin_id = models.CharField(
-        max_length=100,
-        blank=True,
-        help_text="LinkedIn profile URL or username (optional)",
-    )
-    proposal = HTMLField(
-        help_text="Detailed project proposal or collaboration idea with HTML support"
-    )  # Changed to HTMLField
-    status_choices = [
-        ("pending", "Pending Review"),
-        ("reviewing", "Under Review"),
-        ("accepted", "Accepted"),
-        ("declined", "Declined"),
-        ("completed", "Completed"),
-    ]
-    status = models.CharField(max_length=20, choices=status_choices, default="pending")
-    submitted_date = models.DateTimeField(auto_now_add=True)
-    reviewed_date = models.DateTimeField(blank=True, null=True)
-    admin_notes = HTMLField(blank=True, help_text="Internal notes for admin use")
-
-    class Meta:
-        ordering = ["-submitted_date"]
-        verbose_name = "Collaboration Proposal"
-        verbose_name_plural = "Collaboration Proposals"
-
-    def __str__(self):
-        return f"Proposal from {self.full_name} - {self.get_status_display()}"
-
-
-class Testimonial(models.Model):
-    author_name = models.CharField(max_length=100)
-    author_role = models.CharField(
-        max_length=200, help_text="e.g., 'Project Manager @ TechCorp'"
-    )
-    author_image = models.ImageField(
-        upload_to="testimonials/",
-        blank=True,
-        null=True,
-        help_text="Author's profile picture (optional)",
-    )
-    quote = HTMLField(
-        help_text="The testimonial quote with HTML support"
-    )  # Changed to HTMLField
-    is_featured = models.BooleanField(
-        default=True, help_text="Display this testimonial on the Code Together page"
-    )
-    order = models.PositiveIntegerField(
-        default=0, help_text="Display order (lower numbers appear first)"
-    )
-    created_date = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ["order", "-created_date"]
-        verbose_name = "Testimonial"
         verbose_name_plural = "Testimonials"
 
     def __str__(self):

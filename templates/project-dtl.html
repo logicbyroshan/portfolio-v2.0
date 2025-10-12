@@ -116,21 +116,40 @@
             <!-- Image Slider -->
             <div class="hero-image-slider" id="project-slider" data-animation="zoom-in" data-animation-delay="400">
                 <div class="slider-wrapper">
+                    {% if project.youtube_video_id %}
+                    <!-- YouTube Video Slide -->
+                    <div class="slide video-slide">
+                        <div class="youtube-video-container">
+                            <iframe 
+                                src="https://www.youtube.com/embed/{{ project.youtube_video_id }}?autoplay=1&rel=0&modestbranding=1&showinfo=0" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen
+                                title="{{ project.title }} - YouTube Video">
+                            </iframe>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
                     <!-- DYNAMIC: Loop through related project images -->
                     {% for p_image in project.images.all %}
                     <div class="slide"><img src="{{ p_image.image.url }}" alt="{{ p_image.caption|default:project.title }}"></div>
                     {% empty %}
-                    <!-- Fallback if no slider images are uploaded -->
-                    <div class="slide"><img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/800x600/010409/eaeaea?text={{ project.title|urlencode }}{% endif %}" alt="{{ project.title }}"></div>
+                    {% if not project.youtube_video_id %}
+                    <!-- Fallback if no slider images are uploaded and no YouTube video -->
+                    <div class="slide"><img src="{% if project.cover_image %}{{ project.cover_image.url }}{% else %}https://placehold.co/1920x1080/010409/eaeaea?text={{ project.title|urlencode }}{% endif %}" alt="{{ project.title }}"></div>
+                    {% endif %}
                     {% endfor %}
                 </div>
-                {% if project.images.all|length > 1 %}
+                {% with total_slides=project.images.all|length %}
+                {% if project.youtube_video_id and total_slides > 0 or total_slides > 1 %}
                 <div class="image-counter">
-                    <span id="current-slide">1</span> / <span id="total-slides">{{ project.images.all|length }}</span>
+                    <span id="current-slide">1</span> / <span id="total-slides">{% if project.youtube_video_id %}{{ total_slides|add:1 }}{% else %}{{ total_slides }}{% endif %}</span>
                 </div>
                 <button class="slider-btn prev" id="prev-slide" aria-label="Previous Slide"><i class="fa-solid fa-chevron-left"></i></button>
                 <button class="slider-btn next" id="next-slide" aria-label="Next Slide"><i class="fa-solid fa-chevron-right"></i></button>
                 {% endif %}
+                {% endwith %}
             </div>
             
             <!-- DYNAMIC: Main Content Body from TinyMCE, marked as 'safe' to render HTML -->
