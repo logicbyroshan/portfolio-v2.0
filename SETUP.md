@@ -59,6 +59,10 @@ EMAIL_USE_TLS=True
 EMAIL_HOST_USER=your_email@gmail.com
 EMAIL_HOST_PASSWORD=your_app_password
 
+# Push Notifications (Optional - for urgent contact messages)
+FCM_SERVER_KEY=your_firebase_cloud_messaging_server_key
+FCM_DEVICE_TOKEN=your_fcm_device_token
+
 # Spotify API (Optional - for music section)
 SPOTIPY_CLIENT_ID=your_spotify_client_id
 SPOTIPY_CLIENT_SECRET=your_spotify_client_secret
@@ -126,6 +130,18 @@ python manage.py runserver
 1. Visit [Google AI Studio](https://aistudio.google.com/)
 2. Create an API key
 3. Add it to your `.env` file as `GEMINI_API_KEY`
+
+### Firebase Cloud Messaging (Push Notifications)
+
+1. Go to [Firebase Console](https://console.firebase.google.com/)
+2. Create a new project or select existing one
+3. Navigate to Project Settings → Cloud Messaging
+4. Copy the Server Key (Legacy) and add it to `.env` as `FCM_SERVER_KEY`
+5. Install your mobile app with FCM and get the device token
+6. Add the device token to `.env` as `FCM_DEVICE_TOKEN`
+7. Enable push notifications in Django Admin → Notification Settings
+
+**Note:** Push notifications are triggered only for messages marked as "Urgent" in the contact form.
 
 ## 📦 Database Options
 

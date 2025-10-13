@@ -78,6 +78,7 @@ I built DevMitra to document my work, share my learnings, and provide visitors w
 - 📚 **Resources Hub** — Personal resources and downloadable materials (roshan app)
 - 🤖 **AI Assistant** — Gemini API powered chatbot for portfolio queries
 - ✉️ **Smart Notifications** — Email system with contact forms and confirmations
+- 📱 **Push Notifications** — FCM-based priority alerts for urgent contact messages
 - 📄 **Resume Features** — PDF preview and video resume integration
 - 🔒 **Authentication System** — Complete user management with secure login/signup
 - 🎨 **Centralized CSS** — Consolidated animations, components, and responsive design  
