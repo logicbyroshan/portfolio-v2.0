@@ -37,6 +37,10 @@ SPOTIFY_REDIRECT_URI = os.getenv(
 )
 TINYMCE_API_KEY = os.getenv("TINYMCE_API_KEY", "")
 
+# Push Notification Configuration
+FCM_SERVER_KEY = os.getenv("FCM_SERVER_KEY", "")
+FCM_DEVICE_TOKEN = os.getenv("FCM_DEVICE_TOKEN", "")
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",

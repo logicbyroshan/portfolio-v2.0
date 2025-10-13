@@ -12,6 +12,8 @@ class ContactNotificationAdmin(admin.ModelAdmin):
         'status',
         'admin_email_sent',
         'thankyou_email_sent',
+        'push_notification_sent',
+        'is_urgent',
         'created_at'
     ]
     
@@ -19,6 +21,8 @@ class ContactNotificationAdmin(admin.ModelAdmin):
         'status',
         'admin_email_sent',
         'thankyou_email_sent',
+        'push_notification_sent',
+        'contact_submission__is_urgent',
         'created_at',
     ]
     
@@ -34,6 +38,7 @@ class ContactNotificationAdmin(admin.ModelAdmin):
         'updated_at',
         'admin_email_sent_at',
         'thankyou_email_sent_at',
+        'push_notification_sent_at',
     ]
     
     ordering = ['-created_at']
@@ -49,6 +54,12 @@ class ContactNotificationAdmin(admin.ModelAdmin):
         """Display contact submission email"""
         return obj.contact_submission.email
     contact_email.short_description = 'Contact Email'
+    
+    def is_urgent(self, obj):
+        """Display if message is urgent"""
+        return obj.contact_submission.is_urgent
+    is_urgent.short_description = 'Urgent'
+    is_urgent.boolean = True
     
     def has_add_permission(self, request):
         """Disable manual creation of notifications"""
@@ -123,7 +134,15 @@ class NotificationSettingsAdmin(admin.ModelAdmin):
             'fields': [
                 'admin_notification_enabled',
                 'thankyou_notification_enabled',
+                'push_notification_enabled',
             ]
+        }),
+        ('Push Notification Settings', {
+            'fields': [
+                'fcm_server_key',
+                'fcm_device_token',
+            ],
+            'description': 'Configure Firebase Cloud Messaging for push notifications on urgent messages',
         }),
         ('Timestamps', {
             'fields': [

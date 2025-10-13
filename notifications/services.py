@@ -4,6 +4,8 @@ from django.conf import settings
 from django.utils import timezone
 from .models import NotificationSettings, EmailTemplate
 import logging
+import requests
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +43,10 @@ class EmailNotificationService:
                 print(f"      Using custom template: {template.name}")
             else:
                 # Default template
-                subject = f"New Contact Form Submission from {contact_submission.name}"
+                if contact_submission.is_urgent:
+                    subject = f"🚨 URGENT: New Priority Message from {contact_submission.name}"
+                else:
+                    subject = f"New Contact Form Submission from {contact_submission.name}"
                 html_content = self._get_default_admin_html_template()
                 text_content = self._get_default_admin_text_template()
                 print(f"      Using default template")
@@ -53,6 +58,7 @@ class EmailNotificationService:
                 "contact_subject": contact_submission.subject or "No subject provided",
                 "contact_message": contact_submission.message,
                 "submission_date": contact_submission.submitted_date,
+                "is_urgent": contact_submission.is_urgent,
                 "site_name": getattr(settings, "SITE_NAME", "Portfolio Website"),
                 "site_url": getattr(settings, "SITE_URL", "http://localhost:8000"),
             }
@@ -222,43 +228,58 @@ class EmailNotificationService:
                 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background-color: #0f172a; color: #e2e8f0; }
                 .container { max-width: 600px; margin: 0 auto; background: #1e293b; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.3); border: 1px solid #334155; }
                 .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; text-align: center; }
+                .header.urgent { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
                 .header h1 { margin: 0; font-size: 24px; font-weight: 600; }
                 .header p { margin: 10px 0 0 0; opacity: 0.9; }
+                .urgent-banner { background: #7f1d1d; border-left: 4px solid #ef4444; padding: 15px; margin: 0; color: #fca5a5; font-weight: 600; text-align: center; }
                 .content { padding: 30px; }
                 .field { margin-bottom: 20px; padding: 15px; background: rgba(15, 23, 42, 0.5); border-radius: 5px; border-left: 4px solid #10b981; }
+                .field.urgent-field { border-left-color: #ef4444; }
                 .field-label { font-weight: 600; color: #10b981; margin-bottom: 5px; font-size: 14px; text-transform: uppercase; }
+                .urgent-field .field-label { color: #ef4444; }
                 .field-value { color: #cbd5e1; line-height: 1.5; }
                 .footer { background: #0f172a; padding: 20px; text-align: center; font-size: 14px; color: #64748b; border-top: 1px solid #334155; }
             </style>
         </head>
         <body>
             <div class="container">
-                <div class="header">
-                    <h1>📬 New Contact Message!</h1>
-                    <p>Someone wants to connect with you</p>
+                {% if is_urgent %}
+                <div class="urgent-banner">
+                    ⚠️ URGENT: Please respond within 24 hours
+                </div>
+                {% endif %}
+                <div class="header{% if is_urgent %} urgent{% endif %}">
+                    <h1>{% if is_urgent %}🚨 URGENT MESSAGE!{% else %}📬 New Contact Message!{% endif %}</h1>
+                    <p>{% if is_urgent %}Priority response required{% else %}Someone wants to connect with you{% endif %}</p>
                 </div>
                 <div class="content">
-                    <div class="field">
+                    <div class="field{% if is_urgent %} urgent-field{% endif %}">
                         <div class="field-label">👤 From:</div>
                         <div class="field-value">{{ contact_name }} ({{ contact_email }})</div>
                     </div>
-                    <div class="field">
+                    <div class="field{% if is_urgent %} urgent-field{% endif %}">
                         <div class="field-label">📋 Subject:</div>
                         <div class="field-value">{{ contact_subject }}</div>
                     </div>
-                    <div class="field">
+                    <div class="field{% if is_urgent %} urgent-field{% endif %}">
                         <div class="field-label">💬 Message:</div>
                         <div class="field-value" style="white-space: pre-line;">{{ contact_message }}</div>
                     </div>
-                    <div class="field">
+                    <div class="field{% if is_urgent %} urgent-field{% endif %}">
                         <div class="field-label">⏰ Submitted:</div>
                         <div class="field-value">{{ submission_date }}</div>
                     </div>
+                    {% if is_urgent %}
+                    <div class="field urgent-field">
+                        <div class="field-label">🚨 Priority Level:</div>
+                        <div class="field-value" style="color: #fca5a5; font-weight: bold;">URGENT - Response expected within 24 hours</div>
+                    </div>
+                    {% endif %}
                 </div>
                 <div class="footer">
-                    <p style="color: #10b981; font-weight: 600;">🚀 Portfolio Contact System</p>
+                    <p style="color: {% if is_urgent %}#ef4444{% else %}#10b981{% endif %}; font-weight: 600;">🚀 Portfolio Contact System</p>
                     <p>This notification was sent from {{ site_name }}</p>
-                    <p><a href="{{ site_url }}" style="color: #10b981;">Visit Website</a></p>
+                    <p><a href="{{ site_url }}" style="color: {% if is_urgent %}#ef4444{% else %}#10b981{% endif %};">Visit Website</a></p>
                 </div>
             </div>
         </body>
@@ -268,11 +289,14 @@ class EmailNotificationService:
     def _get_default_admin_text_template(self):
         """Default text template for admin notification"""
         return """
-        📬 NEW CONTACT MESSAGE!
+        {% if is_urgent %}🚨 URGENT MESSAGE - RESPONSE REQUIRED WITHIN 24 HOURS!{% else %}📬 NEW CONTACT MESSAGE!{% endif %}
+        
+        {% if is_urgent %}⚠️  PRIORITY LEVEL: URGENT{% endif %}
         
         👤 From: {{ contact_name }} ({{ contact_email }})
         📋 Subject: {{ contact_subject }}
         ⏰ Submitted: {{ submission_date }}
+        {% if is_urgent %}🚨 Status: URGENT - Response expected within 24 hours{% endif %}
         
         💬 Message:
         {{ contact_message }}
@@ -381,3 +405,158 @@ class EmailNotificationService:
         This email was sent automatically from my portfolio contact form.
         For urgent matters, reach me directly at: {{ reply_email }}
         """
+
+
+class PushNotificationService:
+    """
+    Service class to handle push notifications via Firebase Cloud Messaging (FCM)
+    """
+
+    def __init__(self):
+        self.settings = NotificationSettings.get_settings()
+        self.fcm_url = "https://fcm.googleapis.com/fcm/send"
+
+    def send_priority_notification(self, contact_submission, notification):
+        """
+        Send push notification for urgent/priority contact submissions
+        
+        Args:
+            contact_submission: ContactSubmission instance
+            notification: ContactNotification instance
+            
+        Returns:
+            bool: True if notification sent successfully, False otherwise
+        """
+        print(f"   📱 send_priority_notification() called")
+        print(
+            f"      Push notifications enabled: {self.settings.push_notification_enabled}"
+        )
+        print(f"      Message is urgent: {contact_submission.is_urgent}")
+
+        # Only send push notification if it's an urgent message and push notifications are enabled
+        if not contact_submission.is_urgent:
+            logger.info(
+                f"Message {contact_submission.id} is not marked as urgent, skipping push notification"
+            )
+            print(f"      ⚠️  Message not marked as urgent, skipping push notification")
+            return False
+
+        if not self.settings.push_notification_enabled:
+            logger.info("Push notifications are disabled")
+            print(f"      ⚠️  Push notifications are DISABLED in settings")
+            return False
+
+        if not self.settings.fcm_server_key:
+            logger.warning("FCM server key not configured")
+            print(f"      ⚠️  FCM server key not configured")
+            return False
+
+        if not self.settings.fcm_device_token:
+            logger.warning("FCM device token not configured")
+            print(f"      ⚠️  FCM device token not configured")
+            return False
+
+        try:
+            # Prepare notification payload
+            notification_title = "📩 Priority Message Received!"
+            notification_body = (
+                f"From: {contact_submission.name}\n"
+                f"Subject: {contact_submission.subject or 'No subject'}\n"
+                f"Please respond within 24 hours."
+            )
+
+            # FCM payload structure
+            payload = {
+                "to": self.settings.fcm_device_token,
+                "priority": "high",
+                "notification": {
+                    "title": notification_title,
+                    "body": notification_body,
+                    "sound": "default",
+                    "badge": "1",
+                    "click_action": "FLUTTER_NOTIFICATION_CLICK",
+                },
+                "data": {
+                    "contact_id": str(contact_submission.id),
+                    "sender_name": contact_submission.name,
+                    "sender_email": contact_submission.email,
+                    "subject": contact_submission.subject or "",
+                    "message_snippet": contact_submission.message[:100] + "..."
+                    if len(contact_submission.message) > 100
+                    else contact_submission.message,
+                    "submitted_date": contact_submission.submitted_date.isoformat(),
+                    "is_urgent": "true",
+                    "type": "priority_contact",
+                },
+            }
+
+            # Headers for FCM request
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"key={self.settings.fcm_server_key}",
+            }
+
+            print(f"      Sending push notification to FCM...")
+            print(f"      Title: {notification_title}")
+            print(f"      Body: {notification_body}")
+
+            # Send POST request to FCM
+            response = requests.post(
+                self.fcm_url,
+                headers=headers,
+                data=json.dumps(payload),
+                timeout=10,
+            )
+
+            # Check response
+            if response.status_code == 200:
+                response_data = response.json()
+                if response_data.get("success", 0) > 0:
+                    notification.mark_push_notification_sent()
+                    logger.info(
+                        f"Push notification sent successfully for urgent message {contact_submission.id}"
+                    )
+                    print(f"      ✅ Push notification sent successfully")
+                    print(f"      FCM Response: {response_data}")
+                    return True
+                else:
+                    error_msg = response_data.get("results", [{}])[0].get(
+                        "error", "Unknown error"
+                    )
+                    logger.error(f"FCM returned error: {error_msg}")
+                    print(f"      ❌ FCM error: {error_msg}")
+                    notification.mark_push_notification_sent(error=error_msg)
+                    return False
+            else:
+                error_msg = f"FCM request failed with status {response.status_code}: {response.text}"
+                logger.error(error_msg)
+                print(f"      ❌ {error_msg}")
+                notification.mark_push_notification_sent(error=error_msg)
+                return False
+
+        except requests.exceptions.RequestException as e:
+            error_msg = f"Network error sending push notification: {str(e)}"
+            logger.error(error_msg)
+            print(f"      ❌ {error_msg}")
+            try:
+                notification.mark_push_notification_sent(error=error_msg)
+            except Exception as inner_e:
+                logger.error(
+                    f"Failed to mark push notification as failed: {str(inner_e)}"
+                )
+            return False
+        except Exception as e:
+            error_msg = f"Unexpected error sending push notification: {str(e)}"
+            logger.error(error_msg)
+            print(f"      ❌ {error_msg}")
+            import traceback
+
+            traceback.print_exc()
+            try:
+                notification.mark_push_notification_sent(error=error_msg)
+            except Exception as inner_e:
+                logger.error(
+                    f"Failed to mark push notification as failed: {str(inner_e)}"
+                )
+            return False
+

@@ -2,7 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from portfolio.models import ContactSubmission
 from .models import ContactNotification
-from .services import EmailNotificationService
+from .services import EmailNotificationService, PushNotificationService
 import logging
 
 logger = logging.getLogger(__name__)
@@ -22,6 +22,7 @@ def handle_contact_submission(sender, instance, created, **kwargs):
     print(f"   Name: {instance.name}")
     print(f"   Email: {instance.email}")
     print(f"   Subject: {instance.subject}")
+    print(f"   Is Urgent: {instance.is_urgent}")
     print("=" * 70)
 
     if created:  # Only process newly created submissions
@@ -58,6 +59,20 @@ def handle_contact_submission(sender, instance, created, **kwargs):
             print(
                 f"   Thank you email result: {'✅ SUCCESS' if thankyou_success else '❌ FAILED'}"
             )
+
+            # Send push notification if message is urgent
+            push_success = False
+            if instance.is_urgent:
+                print(f"🚨 URGENT MESSAGE DETECTED - Sending push notification...")
+                push_service = PushNotificationService()
+                push_success = push_service.send_priority_notification(
+                    instance, notification
+                )
+                print(
+                    f"   Push notification result: {'✅ SUCCESS' if push_success else '❌ FAILED'}"
+                )
+            else:
+                print(f"   ℹ️  Message not urgent - skipping push notification")
 
             # Update notification status based on email results
             if admin_success and thankyou_success:

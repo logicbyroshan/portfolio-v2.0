@@ -37,6 +37,11 @@ class ContactNotification(models.Model):
     thankyou_email_sent_at = models.DateTimeField(null=True, blank=True)
     thankyou_email_error = models.TextField(null=True, blank=True)
     
+    # Push notification tracking
+    push_notification_sent = models.BooleanField(default=False)
+    push_notification_sent_at = models.DateTimeField(null=True, blank=True)
+    push_notification_error = models.TextField(null=True, blank=True)
+    
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -79,6 +84,16 @@ class ContactNotification(models.Model):
                 self.contact_submission.save()
             else:
                 self.status = self.NotificationStatus.THANKYOU_SENT
+        self.save()
+    
+    def mark_push_notification_sent(self, error=None):
+        """Mark push notification as sent or failed"""
+        self.push_notification_sent = error is None
+        self.push_notification_sent_at = timezone.now()
+        if error:
+            self.push_notification_error = str(error)
+        else:
+            self.push_notification_error = None
         self.save()
 
 class EmailTemplate(models.Model):
@@ -147,6 +162,22 @@ class NotificationSettings(models.Model):
         help_text="Reply-to email address for user notifications"
     )
     
+    # Push notification settings
+    push_notification_enabled = models.BooleanField(
+        default=False,
+        help_text="Enable/disable push notifications for urgent messages"
+    )
+    fcm_server_key = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Firebase Cloud Messaging server key for push notifications"
+    )
+    fcm_device_token = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="FCM device token for admin's smartphone"
+    )
+    
     # Notification delays (in seconds)
     admin_notification_delay = models.PositiveIntegerField(
         default=0,
@@ -175,6 +206,9 @@ class NotificationSettings(models.Model):
             existing.auto_mark_as_read = self.auto_mark_as_read
             existing.from_email = self.from_email
             existing.reply_to_email = self.reply_to_email
+            existing.push_notification_enabled = self.push_notification_enabled
+            existing.fcm_server_key = self.fcm_server_key
+            existing.fcm_device_token = self.fcm_device_token
             existing.admin_notification_delay = self.admin_notification_delay
             existing.thankyou_notification_delay = self.thankyou_notification_delay
             existing.save()
