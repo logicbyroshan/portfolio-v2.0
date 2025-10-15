@@ -101,6 +101,25 @@
     white-space: nowrap;
     text-decoration: none;
 }
+
+.reading-badge{
+    background-color: #00aaffad;
+    border: 1px solid #00A9FF;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    width: 110px;
+    position: absolute;
+    top: 10%; 
+    left: 18%; 
+    transform: translate(-50%, -50%); 
+}
 .category-badge:hover, .category-badge.active {
     background-color: var(--accent-color);
     border-color: var(--accent-color);
@@ -183,6 +202,7 @@
     display: block;
     overflow: hidden;
     border-radius: 10px;
+    position: relative; 
 }
 .blog-image img {
     border-radius: 10px;
@@ -320,6 +340,10 @@
         width: 100%;
         justify-content: space-between;
     }
+
+     .reading-badge{
+        left: 22%;
+    }
 }
 @media (max-width: 576px) {
     .blog-grid {
@@ -327,4 +351,8 @@
     }
     .blogs-container { gap: 30px; } /* Increased from 20px */
     /* Typography inherits from base.css responsive styles */
+    .reading-badge{
+        left: 20%;
+    }
+
 }

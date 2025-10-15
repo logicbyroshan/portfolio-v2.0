@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.http import JsonResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
@@ -8,7 +9,16 @@ from django.views.decorators.http import require_POST
 
 from .models import Blog, Comment, CommentLike
 from portfolio.models import Category
+import math
 
+
+def calculate_reading_time(content):
+    """Estimate reading time in minutes based on word count."""
+    words = content.split()
+    word_count = len(words)
+    average_reading_speed = 200  # words per minute
+    reading_time = math.ceil(word_count / average_reading_speed)
+    return reading_time
 
 class BlogListView(ListView):
     """View for the main blog list page with filtering and pagination."""
@@ -39,6 +49,11 @@ class BlogListView(ListView):
         context["categories"] = Category.objects.filter(
             category_type=Category.CategoryType.BLOG
         )
+
+         # Add reading time for each blog
+        for blog in context["blogs"]:
+            blog.reading_time = calculate_reading_time(blog.content)
+
         return context
 
 
@@ -72,6 +87,7 @@ class BlogDetailView(DetailView):
             .distinct()
             .order_by("-created_date")[:2]
         )
+        
         return context
 
     def post(self, request, *args, **kwargs):

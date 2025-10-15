@@ -112,7 +112,7 @@
 }
 #sort-button {
     padding: 10px 16px;
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(90, 57, 57, 0.05);
     border: 1px solid var(--card-border);
     color: var(--paragraph-color);
     border-radius: 8px;
@@ -121,7 +121,6 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    white-space: nowrap !important;
     transition: all 0.3s ease;
 }
 #sort-button:hover {
