@@ -95,89 +95,349 @@ I built DevMitra to document my work, share my learnings, and provide visitors w
 
 ---
 
-## 📂 Project Structure
+## 📂 Complete Project Structure
 
 ```bash
-PORTFOLIO/
-├── .github/            # GitHub workflows / CI
-├── .vscode/            # VS Code workspace settings
-├── ai/                 # AI assistant integration (Gemini API)
-├── auth_app/           # Authentication system (signup, login, password reset)
-├── blog/               # Blog application (articles, comments, categories)
-├── config/             # Django project configuration & settings
-├── logs/               # Application logs for debugging
-├── media/              # User uploaded media files
-├── music/              # Music playlists & Spotify API integration
-├── notifications/      # Email notifications & messaging system
-├── portfolio/          # Main portfolio app (projects, skills, experience)
-├── roshan/             # Personal resources & additional content
-├── screenshots/        # Project screenshots for documentation
-├── static/             # Static files (CSS, JS, Images)
-├── templates/          # HTML templates & base layouts
-├── .env                # Environment variables (not in repo)
-├── .gitignore          # Git ignore rules
-├── db.sqlite3          # SQLite database (development)
-├── manage.py           # Django management commands
-├── requirements.txt    # Python dependencies
-├── README.md           # Project documentation
-└── SETUP.md            # Detailed setup instructions
+portfolio-v2.0/
+├── 📁 Root Files & Configuration
+│   ├── manage.py                    # Django management script
+│   ├── requirements.txt             # Python dependencies
+│   ├── db.sqlite3                   # SQLite database (auto-generated)
+│   ├── .env                         # Environment variables (create this)
+│   ├── .gitignore                   # Git ignore rules
+│   ├── README.md                    # Project documentation
+│   ├── SETUP.md                     # Detailed setup guide
+│   ├── CONTRIBUTING.md              # Contribution guidelines
+│   ├── CODE_QUALITY.md             # Code standards & best practices
+│   ├── SECURITY.md                 # Security policy & vulnerability reporting
+│   ├── deploye_key                 # SSH deploy key (if needed)
+│   └── deploye_key.pub             # SSH public key (if needed)
+│
+├── 📁 Django Apps
+│   ├── config/                      # Main Django project settings
+│   │   ├── __init__.py
+│   │   ├── settings.py              # Django configuration
+│   │   ├── urls.py                  # URL routing
+│   │   ├── wsgi.py                  # WSGI application
+│   │   └── asgi.py                  # ASGI application (async support)
+│   │
+│   ├── portfolio/                   # Main portfolio application
+│   │   ├── models.py                # Database models (Projects, Skills, etc.)
+│   │   ├── views.py                 # View logic
+│   │   ├── urls.py                  # URL patterns
+│   │   ├── admin.py                 # Django admin configuration
+│   │   ├── forms.py                 # Django forms
+│   │   ├── context_processors.py    # Context processors
+│   │   ├── sitemaps.py              # SEO sitemaps
+│   │   ├── migrations/              # Database migrations
+│   │   └── templatetags/            # Custom template tags
+│   │
+│   ├── blog/                        # Blog system
+│   │   ├── models.py                # Blog models (Post, Comment, Category)
+│   │   ├── views.py                 # Blog views
+│   │   ├── urls.py                  # Blog URL patterns
+│   │   ├── admin.py                 # Blog admin interface
+│   │   ├── sitemaps.py              # Blog SEO
+│   │   └── migrations/              # Blog database migrations
+│   │
+│   ├── ai/                          # AI Assistant (Gemini API)
+│   │   ├── models.py                # AI conversation models
+│   │   ├── views.py                 # AI API endpoints
+│   │   ├── llm_utils.py             # AI utility functions
+│   │   ├── utils.py                 # Helper functions
+│   │   ├── urls.py                  # AI URL patterns
+│   │   └── templates/ai/            # AI chat templates
+│   │
+│   ├── music/                       # Spotify Integration
+│   │   ├── models.py                # Music models (Playlist, Track)
+│   │   ├── views.py                 # Music views
+│   │   ├── spotify_service.py       # Spotify API service
+│   │   ├── urls.py                  # Music URL patterns
+│   │   ├── static/                  # Music app static files
+│   │   └── templates/music/         # Music templates
+│   │
+│   ├── auth_app/                    # Authentication System
+│   │   ├── models.py                # User models (if extended)
+│   │   ├── views.py                 # Auth views (login, signup, etc.)
+│   │   ├── urls.py                  # Auth URL patterns
+│   │   └── migrations/              # Auth migrations
+│   │
+│   ├── notifications/               # Email & Notification System
+│   │   ├── models.py                # Notification models
+│   │   ├── views.py                 # Notification views
+│   │   ├── services.py              # Email services
+│   │   ├── signals.py               # Django signals
+│   │   └── migrations/              # Notification migrations
+│   │
+│   └── roshan/                      # Personal Resources App
+│       ├── models.py                # Resource models
+│       ├── views.py                 # Resource views
+│       ├── forms.py                 # Resource forms
+│       ├── urls.py                  # Resource URL patterns
+│       ├── templates/               # Resource templates
+│       └── migrations/              # Resource migrations
+│
+├── 📁 Frontend Assets
+│   ├── static/                      # Static files (served in production)
+│   │   ├── css/                     # Compiled CSS files
+│   │   ├── js/                      # JavaScript files
+│   │   └── images/                  # Static images
+│   │
+│   ├── templates/                   # HTML Templates
+│   │   ├── base.html                # Base template
+│   │   ├── home.html                # Homepage
+│   │   ├── aboutme.html             # About page
+│   │   ├── projects.html            # Projects listing
+│   │   ├── project-dtl.html         # Project detail
+│   │   ├── blogs.html               # Blog listing
+│   │   ├── blog-dtl.html            # Blog detail
+│   │   ├── experience.html          # Experience page
+│   │   ├── experience-dtl.html      # Experience detail
+│   │   ├── achievements.html        # Achievements page
+│   │   ├── resources.html           # Resources page
+│   │   ├── resource-detail.html     # Resource detail
+│   │   ├── skill-dtl.html           # Skill detail
+│   │   ├── robots.txt               # SEO robots file
+│   │   ├── auth_app/                # Auth templates
+│   │   ├── emails/                  # Email templates
+│   │   └── legal/                   # Legal pages (privacy, terms)
+│   │
+│   └── media/                       # User uploaded files (auto-generated)
+│       ├── achievements/            # Achievement images
+│       ├── avatars/                 # User avatars
+│       ├── blog_covers/             # Blog cover images
+│       ├── project_covers/          # Project cover images
+│       ├── project_images/          # Project gallery images
+│       ├── resume/                  # Resume files (PDF, etc.)
+│       └── tech_icons/              # Technology icons
+│
+├── 📁 Development & Documentation
+│   ├── screenshots/                 # Project screenshots for README
+│   ├── logs/                        # Application logs (auto-generated)
+│   └── .vscode/                     # VS Code settings (optional)
+│
+└── 📁 Deployment & CI/CD
+    └── .github/                     # GitHub workflows (if using GitHub Actions)
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start & Detailed Setup
 
-Want to set up this project locally? Check out the detailed setup guide: **[SETUP.md](./SETUP.md)**
+> **⚠️ Important:** Follow these steps carefully to avoid common setup issues like "logs folder not found" and other errors.
 
-### Quick Setup Commands
+### 📋 Prerequisites
+- **Python 3.11+** ([Download](https://python.org/downloads/))
+- **Git** ([Download](https://git-scm.com/downloads))
+- **Code Editor** (VS Code recommended)
+
+For complete setup details with API configurations, see: **[SETUP.md](./SETUP.md)**
+
+### 🛠 Step-by-Step Setup
+
+#### 1️⃣ Clone the Repository
 ```bash
+# Clone the project
 git clone https://github.com/logicbyroshan/portfolio-v2.0.git
 cd portfolio-v2.0
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
+
+# Verify you're in the right directory
+ls  # Should show manage.py, requirements.txt, etc.
 ```
 
-🌐 **Access at:** http://127.0.0.1:8000/
-
-### 2️⃣ Create & Activate Virtual Environment
+#### 2️⃣ Create Required Directories (Fix Common Issues)
 ```bash
+# Create missing directories that might cause errors
+mkdir logs           # For application logs
+mkdir media         # For uploaded files (if not exists)
+mkdir static        # For static files (if not exists)
+
+# Create media subdirectories (Windows)
+mkdir media\achievements, media\avatars, media\blog_covers, media\project_covers, media\project_images, media\resume, media\tech_icons
+
+# Create media subdirectories (macOS/Linux)
+mkdir -p media/{achievements,avatars,blog_covers,project_covers,project_images,resume,tech_icons}
+```
+
+#### 3️⃣ Set Up Virtual Environment
+```bash
+# Create virtual environment
 python -m venv venv
-# Windows
-venv\Scriptsctivate
+
+# Activate virtual environment
+# Windows (PowerShell)
+venv\Scripts\Activate.ps1
+
+# Windows (Command Prompt)  
+venv\Scripts\activate.bat
+
 # macOS/Linux
 source venv/bin/activate
+
+# Verify activation (should show (venv) in prompt)
+which python  # Should point to venv/Scripts/python or venv/bin/python
 ```
 
-### 3️⃣ Install Dependencies
+#### 4️⃣ Install Dependencies
 ```bash
+# Upgrade pip first
+python -m pip install --upgrade pip
+
+# Install requirements
 pip install -r requirements.txt
+
+# Verify installation
+pip list  # Should show Django, etc.
 ```
 
-### 4️⃣ Configure Environment Variables
-Create a `.env` file:
+#### 5️⃣ Environment Configuration
+Create a `.env` file in the root directory:
+
+```bash
+# Create .env file
+# Windows
+echo. > .env
+
+# macOS/Linux
+touch .env
+```
+
+Add this content to `.env`:
 ```env
-SECRET_KEY=your_secret_key
+# Django Settings
+SECRET_KEY=django-insecure-your-very-long-secret-key-here-make-it-at-least-50-characters-long
 DEBUG=True
 ALLOWED_HOSTS=127.0.0.1,localhost
+
+# Database (SQLite is default, no setup needed)
+# For MySQL: DATABASE_URL=mysql://username:password@localhost:3306/portfolio_db
+
+# Email Configuration (for contact forms)
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
-EMAIL_HOST_USER=your_email
-EMAIL_HOST_PASSWORD=your_password
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=your_email@gmail.com
+EMAIL_HOST_PASSWORD=your_app_password
+
+# Optional API Keys (leave blank if not using)
+SPOTIPY_CLIENT_ID=your_spotify_client_id
+SPOTIPY_CLIENT_SECRET=your_spotify_client_secret
+GEMINI_API_KEY=your_gemini_api_key
+
+# Redis (Optional - for caching)
+REDIS_URL=redis://localhost:6379/0
 ```
 
-### 5️⃣ Run Migrations
+#### 6️⃣ Database Setup
 ```bash
+# Create initial migrations (if needed)
+python manage.py makemigrations
+
+# Apply migrations
 python manage.py migrate
+
+# Create superuser (optional - for admin access)
+python manage.py createsuperuser
 ```
 
-### 6️⃣ Start Development Server
+#### 7️⃣ Collect Static Files
 ```bash
-python manage.py runserver
+# Collect static files
+python manage.py collectstatic --noinput
 ```
-Access at: **http://127.0.0.1:8000/**
+
+#### 8️⃣ Test the Setup
+```bash
+# Run development server
+python manage.py runserver
+
+# Or specify port
+python manage.py runserver 8000
+```
+
+🌐 **Access the website at:** http://127.0.0.1:8000/
+
+### 🔧 Common Setup Issues & Solutions
+
+#### ❌ Issue: "logs folder not found"
+```bash
+# ✅ Solution: Create the logs directory
+mkdir logs
+```
+
+#### ❌ Issue: "No module named 'config'"
+```bash
+# ✅ Solution: Make sure you're in the project root directory
+pwd  # Should show .../portfolio-v2.0
+ls   # Should show manage.py
+```
+
+#### ❌ Issue: "Permission denied" on virtual environment (Windows)
+```bash
+# ✅ Solution: Enable script execution in PowerShell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# Then activate venv
+venv\Scripts\Activate.ps1
+```
+
+#### ❌ Issue: "Port already in use"
+```bash
+# ✅ Solution: Use a different port
+python manage.py runserver 8001
+
+# Or find and kill the process using port 8000
+# Windows
+netstat -ano | findstr :8000
+taskkill /PID <PID_NUMBER> /F
+
+# macOS/Linux  
+lsof -ti:8000 | xargs kill -9
+```
+
+#### ❌ Issue: Email configuration errors
+```bash
+# ✅ Solution: Generate Gmail App Password
+# 1. Enable 2-Factor Authentication on Gmail
+# 2. Go to Google Account Settings → Security → App Passwords
+# 3. Generate password for "Mail"
+# 4. Use this password in EMAIL_HOST_PASSWORD (not your regular password)
+```
+
+#### ❌ Issue: Static files not loading
+```bash
+# ✅ Solution: Collect static files again
+python manage.py collectstatic --clear --noinput
+
+# Ensure DEBUG=True in .env for development
+```
+
+### 🚀 Quick One-Liner Setup
+For experienced developers:
+
+**Windows:**
+```powershell
+git clone https://github.com/logicbyroshan/portfolio-v2.0.git; cd portfolio-v2.0; mkdir logs, media, static; python -m venv venv; venv\Scripts\Activate.ps1; pip install -r requirements.txt; python manage.py migrate; python manage.py runserver
+```
+
+**macOS/Linux:**
+```bash
+git clone https://github.com/logicbyroshan/portfolio-v2.0.git && cd portfolio-v2.0 && mkdir -p logs media static media/{achievements,avatars,blog_covers,project_covers,project_images,resume,tech_icons} && python -m venv venv && source venv/bin/activate && pip install -r requirements.txt && python manage.py migrate && python manage.py runserver
+```
+
+### ✅ Verify Your Setup
+After setup, you should be able to:
+- [ ] Access the homepage at http://127.0.0.1:8000/
+- [ ] Navigate through different sections (Projects, Blog, Experience, etc.)
+- [ ] Access admin panel at http://127.0.0.1:8000/admin/ (if superuser created)
+- [ ] See no error messages in terminal
+- [ ] View static files loading correctly (CSS, images, icons)
+
+### 🆘 Still Having Issues?
+1. **Check Python Version:** `python --version` (should be 3.11+)
+2. **Check Virtual Environment:** Your prompt should show `(venv)`
+3. **Check Dependencies:** `pip list` should show Django and other packages
+4. **Create an Issue:** If problems persist, create a GitHub issue with error details
 
 ---
 
@@ -238,16 +498,46 @@ _(Full list available in `requirements.txt`.)_
 
 ## 🤝 Contributing
 
-Contributions are welcome! Whether it's bug fixes, new features, or improvements to the documentation.
+We welcome contributions from developers of all skill levels! Whether you're fixing bugs, adding features, improving documentation, or enhancing security, your contributions make this project better.
 
-**How to contribute:**
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature-name`)
-3. Make your changes
-4. Test thoroughly
-5. Commit your changes (`git commit -m 'Add feature'`)
-6. Push to the branch (`git push origin feature-name`)
-7. Open a Pull Request  
+### 📚 Documentation
+Before contributing, please read our comprehensive guides:
+
+- **[Contributing Guidelines](./CONTRIBUTING.md)** - Complete guide to contributing
+- **[Code Quality Standards](./CODE_QUALITY.md)** - Coding standards and best practices  
+- **[Security Policy](./SECURITY.md)** - Security guidelines and vulnerability reporting
+- **[Setup Guide](./SETUP.md)** - Local development setup instructions
+
+### 🚀 Quick Start for Contributors
+1. **Fork & Clone**: Fork the repository and clone your fork
+2. **Setup Environment**: Follow the [SETUP.md](./SETUP.md) guide  
+3. **Choose an Issue**: Browse [open issues](https://github.com/logicbyroshan/portfolio-v2.0/issues) or create a new one
+4. **Follow Standards**: Adhere to our [code quality guidelines](./CODE_QUALITY.md)
+5. **Submit PR**: Create a pull request following our [contributing guidelines](./CONTRIBUTING.md)
+
+### 🎯 Areas We Need Help With
+- 🐛 Bug fixes and performance improvements
+- 📱 Mobile responsiveness enhancements  
+- ♿ Accessibility improvements
+- 🧪 Test coverage expansion
+- 📖 Documentation updates
+- 🔒 Security enhancements
+- 🎨 UI/UX improvements
+
+### 🏷️ Good First Issues
+Look for issues labeled `good first issue` - these are perfect for newcomers and first-time contributors.
+
+---
+
+## 🔒 Security
+
+Security is a top priority for this project. Please read our [Security Policy](./SECURITY.md) for:
+- Supported versions
+- How to report vulnerabilities  
+- Security best practices
+- Incident response procedures
+
+**Found a security issue?** Please report it responsibly by emailing security@roshandamor.me
 
 ---
 
