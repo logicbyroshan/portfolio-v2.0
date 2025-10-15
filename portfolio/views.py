@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.shortcuts import redirect
 
 # Import all models from your models.py
 from .models import (
@@ -92,6 +93,11 @@ class HomeView(TemplateView):
         from blog.models import Blog
 
         context["blogs"] = Blog.objects.order_by("-created_date")[:3]
+
+       # Add flags to indicate if sections have content
+        context["has_experience"] = Experience.objects.exists()
+        context["has_projects"] = Project.objects.exists()
+        context["has_blogs"] = Blog.objects.exists()
         # FAQ section moved to about page
 
         return context
