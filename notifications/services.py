@@ -1,0 +1,562 @@
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.conf import settings
+from django.utils import timezone
+from .models import NotificationSettings, EmailTemplate
+import logging
+import requests
+import json
+
+logger = logging.getLogger(__name__)
+
+
+class EmailNotificationService:
+    """
+    Service class to handle email notifications for contact submissions
+    """
+
+    def __init__(self):
+        self.settings = NotificationSettings.get_settings()
+
+    def send_admin_notification(self, contact_submission, notification):
+        """
+        Send notification email to admin about new contact submission
+        """
+        print(f"   📧 send_admin_notification() called")
+        print(
+            f"      Admin notifications enabled: {self.settings.admin_notification_enabled}"
+        )
+
+        if not self.settings.admin_notification_enabled:
+            logger.info("Admin notifications are disabled")
+            print(f"      ⚠️  Admin notifications are DISABLED in settings")
+            return False
+
+        try:
+            # Get email template or use default
+            template = self._get_template("admin_notification")
+
+            if template:
+                subject = template.subject
+                html_content = template.html_content
+                text_content = template.text_content
+                print(f"      Using custom template: {template.name}")
+            else:
+                # Default template
+                if contact_submission.is_urgent:
+                    subject = f"🚨 URGENT: New Priority Message from {contact_submission.name}"
+                else:
+                    subject = f"New Contact Form Submission from {contact_submission.name}"
+                html_content = self._get_default_admin_html_template()
+                text_content = self._get_default_admin_text_template()
+                print(f"      Using default template")
+
+            # Prepare template context
+            context = {
+                "contact_name": contact_submission.name,
+                "contact_email": contact_submission.email,
+                "contact_subject": contact_submission.subject or "No subject provided",
+                "contact_message": contact_submission.message,
+                "submission_date": contact_submission.submitted_date,
+                "is_urgent": contact_submission.is_urgent,
+                "site_name": getattr(settings, "SITE_NAME", "Portfolio Website"),
+                "site_url": getattr(settings, "SITE_URL", "http://localhost:8000"),
+            }
+
+            # Render templates with context
+            rendered_html = self._render_template_string(html_content, context)
+            rendered_text = self._render_template_string(text_content, context)
+            rendered_subject = self._render_template_string(subject, context)
+
+            print(f"      From: {self.settings.from_email}")
+            print(f"      To: {self.settings.admin_email}")
+            print(f"      Subject: {rendered_subject}")
+
+            # Send email
+            from django.core.mail import EmailMultiAlternatives
+
+            email = EmailMultiAlternatives(
+                subject=rendered_subject,
+                body=rendered_text,
+                from_email=self.settings.from_email,
+                to=[self.settings.admin_email],
+            )
+            email.attach_alternative(rendered_html, "text/html")
+            email.send(fail_silently=False)
+
+            notification.mark_admin_email_sent()
+            logger.info(
+                f"Admin notification sent for contact submission {contact_submission.id}"
+            )
+            print(f"      ✅ Admin email sent successfully")
+            return True
+
+        except Exception as e:
+            error_msg = str(e)
+            logger.error(f"Failed to send admin notification: {error_msg}")
+            print(f"      ❌ Failed to send admin email: {error_msg}")
+            import traceback
+
+            traceback.print_exc()
+            try:
+                notification.mark_admin_email_sent(error=error_msg)
+            except Exception as inner_e:
+                logger.error(f"Failed to mark admin email as failed: {str(inner_e)}")
+            return False
+
+    def send_thankyou_notification(self, contact_submission, notification):
+        """
+        Send thank you email to user who submitted contact form
+        """
+        print(f"   📧 send_thankyou_notification() called")
+        print(
+            f"      Thank you notifications enabled: {self.settings.thankyou_notification_enabled}"
+        )
+
+        if not self.settings.thankyou_notification_enabled:
+            logger.info("Thank you notifications are disabled")
+            print(f"      ⚠️  Thank you notifications are DISABLED in settings")
+            return False
+
+        try:
+            # Get email template or use default
+            template = self._get_template("user_thankyou")
+
+            if template:
+                subject = template.subject
+                html_content = template.html_content
+                text_content = template.text_content
+                print(f"      Using custom template: {template.name}")
+            else:
+                # Default template
+                subject = "Thank you for contacting us!"
+                html_content = self._get_default_thankyou_html_template()
+                text_content = self._get_default_thankyou_text_template()
+                print(f"      Using default template")
+
+            # Prepare template context
+            context = {
+                "user_name": contact_submission.name,
+                "user_email": contact_submission.email,
+                "contact_subject": contact_submission.subject or "your inquiry",
+                "submission_date": contact_submission.submitted_date,
+                "site_name": getattr(settings, "SITE_NAME", "Roshan Damor Portfolio"),
+                "site_url": getattr(settings, "SITE_URL", "http://localhost:8000"),
+                "admin_name": "Roshan Damor",
+                "reply_email": self.settings.reply_to_email,
+            }
+
+            # Render templates with context
+            rendered_html = self._render_template_string(html_content, context)
+            rendered_text = self._render_template_string(text_content, context)
+            rendered_subject = self._render_template_string(subject, context)
+
+            print(f"      From: {self.settings.from_email}")
+            print(f"      To: {contact_submission.email}")
+            print(f"      Reply-To: {self.settings.reply_to_email}")
+            print(f"      Subject: {rendered_subject}")
+
+            # Send email
+            from django.core.mail import EmailMultiAlternatives
+
+            email = EmailMultiAlternatives(
+                subject=rendered_subject,
+                body=rendered_text,
+                from_email=self.settings.from_email,
+                to=[contact_submission.email],
+                reply_to=[self.settings.reply_to_email],
+            )
+            email.attach_alternative(rendered_html, "text/html")
+            email.send(fail_silently=False)
+
+            notification.mark_thankyou_email_sent()
+            logger.info(
+                f"Thank you notification sent for contact submission {contact_submission.id}"
+            )
+            print(f"      ✅ Thank you email sent successfully")
+            return True
+
+        except Exception as e:
+            error_msg = str(e)
+            logger.error(f"Failed to send thank you notification: {error_msg}")
+            print(f"      ❌ Failed to send thank you email: {error_msg}")
+            import traceback
+
+            traceback.print_exc()
+            try:
+                notification.mark_thankyou_email_sent(error=error_msg)
+            except Exception as inner_e:
+                logger.error(f"Failed to mark thankyou email as failed: {str(inner_e)}")
+            return False
+
+    def _get_template(self, template_type):
+        """Get active email template by type"""
+        try:
+            return EmailTemplate.objects.filter(
+                template_type=template_type, is_active=True
+            ).first()
+        except EmailTemplate.DoesNotExist:
+            return None
+
+    def _render_template_string(self, template_string, context):
+        """Render template string with context variables"""
+        try:
+            from django.template import Template, Context
+
+            template = Template(template_string)
+            return template.render(Context(context))
+        except Exception as e:
+            logger.error(f"Template rendering error: {str(e)}")
+            # Return template with basic string replacement as fallback
+            result = template_string
+            for key, value in context.items():
+                result = result.replace(f"{{{{ {key} }}}}", str(value))
+                # Also handle with spaces around variable name
+                result = result.replace(f"{{{{  {key}  }}}}", str(value))
+            return result
+
+    def _get_default_admin_html_template(self):
+        """Default HTML template for admin notification"""
+        return """
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>New Contact Form Submission</title>
+            <style>
+                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background-color: #0f172a; color: #e2e8f0; }
+                .container { max-width: 600px; margin: 0 auto; background: #1e293b; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.3); border: 1px solid #334155; }
+                .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; text-align: center; }
+                .header.urgent { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+                .header h1 { margin: 0; font-size: 24px; font-weight: 600; }
+                .header p { margin: 10px 0 0 0; opacity: 0.9; }
+                .urgent-banner { background: #7f1d1d; border-left: 4px solid #ef4444; padding: 15px; margin: 0; color: #fca5a5; font-weight: 600; text-align: center; }
+                .content { padding: 30px; }
+                .field { margin-bottom: 20px; padding: 15px; background: rgba(15, 23, 42, 0.5); border-radius: 5px; border-left: 4px solid #10b981; }
+                .field.urgent-field { border-left-color: #ef4444; }
+                .field-label { font-weight: 600; color: #10b981; margin-bottom: 5px; font-size: 14px; text-transform: uppercase; }
+                .urgent-field .field-label { color: #ef4444; }
+                .field-value { color: #cbd5e1; line-height: 1.5; }
+                .footer { background: #0f172a; padding: 20px; text-align: center; font-size: 14px; color: #64748b; border-top: 1px solid #334155; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                {% if is_urgent %}
+                <div class="urgent-banner">
+                    ⚠️ URGENT: Please respond within 24 hours
+                </div>
+                {% endif %}
+                <div class="header{% if is_urgent %} urgent{% endif %}">
+                    <h1>{% if is_urgent %}🚨 URGENT MESSAGE!{% else %}📬 New Contact Message!{% endif %}</h1>
+                    <p>{% if is_urgent %}Priority response required{% else %}Someone wants to connect with you{% endif %}</p>
+                </div>
+                <div class="content">
+                    <div class="field{% if is_urgent %} urgent-field{% endif %}">
+                        <div class="field-label">👤 From:</div>
+                        <div class="field-value">{{ contact_name }} ({{ contact_email }})</div>
+                    </div>
+                    <div class="field{% if is_urgent %} urgent-field{% endif %}">
+                        <div class="field-label">📋 Subject:</div>
+                        <div class="field-value">{{ contact_subject }}</div>
+                    </div>
+                    <div class="field{% if is_urgent %} urgent-field{% endif %}">
+                        <div class="field-label">💬 Message:</div>
+                        <div class="field-value" style="white-space: pre-line;">{{ contact_message }}</div>
+                    </div>
+                    <div class="field{% if is_urgent %} urgent-field{% endif %}">
+                        <div class="field-label">⏰ Submitted:</div>
+                        <div class="field-value">{{ submission_date }}</div>
+                    </div>
+                    {% if is_urgent %}
+                    <div class="field urgent-field">
+                        <div class="field-label">🚨 Priority Level:</div>
+                        <div class="field-value" style="color: #fca5a5; font-weight: bold;">URGENT - Response expected within 24 hours</div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="footer">
+                    <p style="color: {% if is_urgent %}#ef4444{% else %}#10b981{% endif %}; font-weight: 600;">🚀 Portfolio Contact System</p>
+                    <p>This notification was sent from {{ site_name }}</p>
+                    <p><a href="{{ site_url }}" style="color: {% if is_urgent %}#ef4444{% else %}#10b981{% endif %};">Visit Website</a></p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+
+    def _get_default_admin_text_template(self):
+        """Default text template for admin notification"""
+        return """
+        {% if is_urgent %}🚨 URGENT MESSAGE - RESPONSE REQUIRED WITHIN 24 HOURS!{% else %}📬 NEW CONTACT MESSAGE!{% endif %}
+        
+        {% if is_urgent %}⚠️  PRIORITY LEVEL: URGENT{% endif %}
+        
+        👤 From: {{ contact_name }} ({{ contact_email }})
+        📋 Subject: {{ contact_subject }}
+        ⏰ Submitted: {{ submission_date }}
+        {% if is_urgent %}🚨 Status: URGENT - Response expected within 24 hours{% endif %}
+        
+        💬 Message:
+        {{ contact_message }}
+        
+        ---
+        🚀 Portfolio Contact System
+        This notification was sent from {{ site_name }}
+        {{ site_url }}
+        """
+
+    def _get_default_thankyou_html_template(self):
+        """Default HTML template for thank you email"""
+        return """
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Thank You for Your Message</title>
+            <style>
+                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background-color: #0f172a; color: #e2e8f0; }
+                .container { max-width: 600px; margin: 0 auto; background: #1e293b; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.3); border: 1px solid #334155; }
+                .header { background: linear-gradient(135deg, #00A9FF 0%, #0078D4 100%); color: white; padding: 30px; text-align: center; }
+                .header h1 { margin: 0; font-size: 24px; font-weight: 600; }
+                .header p { margin: 10px 0 0 0; opacity: 0.9; }
+                .content { padding: 30px; line-height: 1.6; color: #cbd5e1; }
+                .highlight { background: linear-gradient(135deg, rgba(0, 169, 255, 0.1), rgba(0, 120, 212, 0.1)); padding: 15px; border-radius: 5px; border-left: 4px solid #00A9FF; margin: 20px 0; }
+                .footer { background: #0f172a; padding: 20px; text-align: center; font-size: 14px; color: #64748b; border-top: 1px solid #334155; }
+                .button { display: inline-block; background: #00A9FF; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 10px 0; font-weight: 500; }
+                .personal-note { background: rgba(15, 23, 42, 0.5); border-left: 4px solid #00A9FF; border-radius: 0 8px 8px 0; padding: 20px; margin: 25px 0; font-style: italic; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>✨ Thank You for Reaching Out!</h1>
+                    <p>I've received your message and I'm excited to connect</p>
+                </div>
+                <div class="content">
+                    <p>Hi {{ user_name }},</p>
+                    
+                    <p>Thank you so much for taking the time to contact me through my portfolio! I've successfully received your message about "{{ contact_subject }}" and I truly appreciate you reaching out.</p>
+                    
+                    <div class="highlight">
+                        <strong>🚀 What happens next?</strong><br>
+                        • I personally review every message that comes through<br>
+                        • I'll get back to you within a few hours (usually much sooner!)<br>
+                        • You'll receive my response directly at {{ user_email }}<br>
+                        • I'm always excited to discuss new opportunities and collaborations
+                    </div>
+                    
+                    <div class="personal-note">
+                        <strong>Personal Note:</strong> I believe in building meaningful connections, and I'm looking forward to learning more about your project or opportunity. Whether it's about web development, AI solutions, or just a friendly chat about tech, I'm here for it!
+                    </div>
+                    
+                    <p>While you're waiting for my response, feel free to explore my latest projects and blog posts.</p>
+                    
+                    <p style="text-align: center;">
+                        <a href="{{ site_url }}" class="button">🌐 Explore My Portfolio</a>
+                    </p>
+                    
+                    <p>Thanks again for considering me for your project. I can't wait to hear more about what you're working on!</p>
+                    
+                    <p>Best regards,<br>
+                    <strong>{{ admin_name }}</strong><br>
+                    Full-Stack Developer & AI Enthusiast</p>
+                </div>
+                <div class="footer">
+                    <p>This email was sent automatically from my portfolio contact form.</p>
+                    <p>For urgent matters, reach me directly at: <a href="mailto:{{ reply_email }}" style="color: #00A9FF;">{{ reply_email }}</a></p>
+                    <p style="color: #00A9FF; font-weight: 600;">{{ site_name }}</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+
+    def _get_default_thankyou_text_template(self):
+        """Default text template for thank you email"""
+        return """
+        ✨ Thank You for Reaching Out!
+        
+        Hi {{ user_name }},
+        
+        Thank you so much for taking the time to contact me through my portfolio! I've successfully received your message about "{{ contact_subject }}" and I truly appreciate you reaching out.
+        
+        🚀 What happens next?
+        • I personally review every message that comes through
+        • I'll get back to you within a few hours (usually much sooner!)
+        • You'll receive my response directly at {{ user_email }}
+        • I'm always excited to discuss new opportunities and collaborations
+        
+        Personal Note: I believe in building meaningful connections, and I'm looking forward to learning more about your project or opportunity. Whether it's about web development, AI solutions, or just a friendly chat about tech, I'm here for it!
+        
+        While you're waiting for my response, feel free to explore my latest projects and blog posts.
+        
+        Visit my portfolio: {{ site_url }}
+        
+        Thanks again for considering me for your project. I can't wait to hear more about what you're working on!
+        
+        Best regards,
+        {{ admin_name }}
+        Full-Stack Developer & AI Enthusiast
+        
+        ---
+        This email was sent automatically from my portfolio contact form.
+        For urgent matters, reach me directly at: {{ reply_email }}
+        """
+
+
+class PushNotificationService:
+    """
+    Service class to handle push notifications via Firebase Cloud Messaging (FCM)
+    """
+
+    def __init__(self):
+        self.settings = NotificationSettings.get_settings()
+        self.fcm_url = "https://fcm.googleapis.com/fcm/send"
+
+    def send_priority_notification(self, contact_submission, notification):
+        """
+        Send push notification for urgent/priority contact submissions
+        
+        Args:
+            contact_submission: ContactSubmission instance
+            notification: ContactNotification instance
+            
+        Returns:
+            bool: True if notification sent successfully, False otherwise
+        """
+        print(f"   📱 send_priority_notification() called")
+        print(
+            f"      Push notifications enabled: {self.settings.push_notification_enabled}"
+        )
+        print(f"      Message is urgent: {contact_submission.is_urgent}")
+
+        # Only send push notification if it's an urgent message and push notifications are enabled
+        if not contact_submission.is_urgent:
+            logger.info(
+                f"Message {contact_submission.id} is not marked as urgent, skipping push notification"
+            )
+            print(f"      ⚠️  Message not marked as urgent, skipping push notification")
+            return False
+
+        if not self.settings.push_notification_enabled:
+            logger.info("Push notifications are disabled")
+            print(f"      ⚠️  Push notifications are DISABLED in settings")
+            return False
+
+        if not self.settings.fcm_server_key:
+            logger.warning("FCM server key not configured")
+            print(f"      ⚠️  FCM server key not configured")
+            return False
+
+        if not self.settings.fcm_device_token:
+            logger.warning("FCM device token not configured")
+            print(f"      ⚠️  FCM device token not configured")
+            return False
+
+        try:
+            # Prepare notification payload
+            notification_title = "📩 Priority Message Received!"
+            notification_body = (
+                f"From: {contact_submission.name}\n"
+                f"Subject: {contact_submission.subject or 'No subject'}\n"
+                f"Please respond within 24 hours."
+            )
+
+            # FCM payload structure
+            payload = {
+                "to": self.settings.fcm_device_token,
+                "priority": "high",
+                "notification": {
+                    "title": notification_title,
+                    "body": notification_body,
+                    "sound": "default",
+                    "badge": "1",
+                    "click_action": "FLUTTER_NOTIFICATION_CLICK",
+                },
+                "data": {
+                    "contact_id": str(contact_submission.id),
+                    "sender_name": contact_submission.name,
+                    "sender_email": contact_submission.email,
+                    "subject": contact_submission.subject or "",
+                    "message_snippet": contact_submission.message[:100] + "..."
+                    if len(contact_submission.message) > 100
+                    else contact_submission.message,
+                    "submitted_date": contact_submission.submitted_date.isoformat(),
+                    "is_urgent": "true",
+                    "type": "priority_contact",
+                },
+            }
+
+            # Headers for FCM request
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"key={self.settings.fcm_server_key}",
+            }
+
+            print(f"      Sending push notification to FCM...")
+            print(f"      Title: {notification_title}")
+            print(f"      Body: {notification_body}")
+
+            # Send POST request to FCM
+            response = requests.post(
+                self.fcm_url,
+                headers=headers,
+                data=json.dumps(payload),
+                timeout=10,
+            )
+
+            # Check response
+            if response.status_code == 200:
+                response_data = response.json()
+                if response_data.get("success", 0) > 0:
+                    notification.mark_push_notification_sent()
+                    logger.info(
+                        f"Push notification sent successfully for urgent message {contact_submission.id}"
+                    )
+                    print(f"      ✅ Push notification sent successfully")
+                    print(f"      FCM Response: {response_data}")
+                    return True
+                else:
+                    error_msg = response_data.get("results", [{}])[0].get(
+                        "error", "Unknown error"
+                    )
+                    logger.error(f"FCM returned error: {error_msg}")
+                    print(f"      ❌ FCM error: {error_msg}")
+                    notification.mark_push_notification_sent(error=error_msg)
+                    return False
+            else:
+                error_msg = f"FCM request failed with status {response.status_code}: {response.text}"
+                logger.error(error_msg)
+                print(f"      ❌ {error_msg}")
+                notification.mark_push_notification_sent(error=error_msg)
+                return False
+
+        except requests.exceptions.RequestException as e:
+            error_msg = f"Network error sending push notification: {str(e)}"
+            logger.error(error_msg)
+            print(f"      ❌ {error_msg}")
+            try:
+                notification.mark_push_notification_sent(error=error_msg)
+            except Exception as inner_e:
+                logger.error(
+                    f"Failed to mark push notification as failed: {str(inner_e)}"
+                )
+            return False
+        except Exception as e:
+            error_msg = f"Unexpected error sending push notification: {str(e)}"
+            logger.error(error_msg)
+            print(f"      ❌ {error_msg}")
+            import traceback
+
+            traceback.print_exc()
+            try:
+                notification.mark_push_notification_sent(error=error_msg)
+            except Exception as inner_e:
+                logger.error(
+                    f"Failed to mark push notification as failed: {str(inner_e)}"
+                )
+            return False
+

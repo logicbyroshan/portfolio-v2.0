@@ -1,7 +1,68 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}My Experience - Roshan Damor{% endblock %}
+{% block body_class %}experience-list-page{% endblock %}
+
+{% block title %}
+{% if request.GET.category %}
+{{ request.GET.category|title }} Experience - Roshan Damor
+{% else %}
+Professional Experience - Roshan Damor Portfolio
+{% endif %}
+{% endblock %}
+
+{% block extra_meta %}
+<!-- SEO Meta Tags -->
+<meta name="description"
+    content="Explore Roshan Damor's professional experience as a Full Stack Developer and AI Engineer. Detailed work history, roles, responsibilities, and achievements across multiple organizations and projects.">
+<meta name="keywords"
+    content="Roshan Damor experience, work experience, full-stack developer experience, AI engineer experience, professional history, software engineer roles, Python developer experience, Django projects">
+<meta name="author" content="Roshan Damor">
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+<!-- Open Graph Meta Tags -->
+<meta property="og:title" content="Professional Experience - Roshan Damor Portfolio">
+<meta property="og:description"
+    content="Detailed professional experience of Roshan Damor including roles as Full Stack Developer, AI Engineer, and software engineering positions across various organizations.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:image" content="{% static 'images/experience-og-image.jpg' %}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Roshan Damor's Professional Experience">
+<meta property="og:site_name" content="Roshan Damor - Portfolio">
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Professional Experience - Roshan Damor">
+<meta name="twitter:description"
+    content="Detailed professional experience including roles as Full Stack Developer, AI Engineer, and software engineering positions.">
+<meta name="twitter:image" content="{% static 'images/experience-og-image.jpg' %}">
+<meta name="twitter:image:alt" content="Roshan Damor's Experience">
+<meta name="twitter:site" content="@logicbyroshan">
+<meta name="twitter:creator" content="@logicbyroshan">
+
+<!-- Structured Data for Professional Experience -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Roshan Damor's Professional Experience",
+    "description": "Comprehensive work history and professional experience as a Full Stack Developer and AI Engineer",
+    "url": "{{ request.build_absolute_uri }}",
+    "author": {
+        "@type": "Person",
+        "name": "Roshan Damor",
+        "url": "{{ request.scheme }}://{{ request.get_host }}",
+        "sameAs": [
+            "https://github.com/logicbyroshan",
+            "https://linkedin.com/in/logicbyroshan",
+            "https://twitter.com/logicbyroshan"
+        ]
+    }
+}
+</script>
+{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/experience.css' %}">
@@ -10,7 +71,6 @@
 {% block extra_js %}
     <script src="{% static 'js/experience.js' %}" defer></script>
 {% endblock %}
-
 
 {% block content %}
     <div class="experience-container">
@@ -27,8 +87,10 @@
                 <div class="categories-list" id="categories-list">
                     <!-- DYNAMIC: Category links with active state check -->
                     <a href="{% url 'portfolio:experience_list' %}" class="category-badge {% if not request.GET.category or request.GET.category == 'all' %}active{% endif %}">All</a>
-                    {% for value, label in experience_types %}
-                        <a href="?category={{ value }}" class="category-badge {% if request.GET.category == value %}active{% endif %}">{{ label }}</a>
+                    {% for category in experience_types %}
+                        <a href="?category={{ category.id }}" class="category-badge {% if request.GET.category == category.id|stringformat:"s" %}active{% endif %}">
+                            {{ category.name }}
+                        </a>
                     {% endfor %}
                 </div>
                 <button class="scroll-btn" id="scroll-right" aria-label="Scroll right"><i class="fa-solid fa-chevron-right"></i></button>
@@ -45,11 +107,10 @@
 
         <!-- ======================= Experience Cards List ======================= -->
         <div class="card-container" id="experience-card-container">
-            <!-- DYNAMIC: Loop through paginated experience entries -->
             {% for exp in experiences %}
-            <a href="{% url 'portfolio:experience_detail' pk=exp.pk %}" class="exp-card card" data-animation="fade-in-up">
+            <div class="exp-card card clickable-card" data-animation="fade-in-up"
+                data-url="{% url 'portfolio:experience_detail' pk=exp.pk %}">
                 <div class="exp-img">
-                    <!-- NOTE: Add an 'image' field to your Experience model for company logos -->
                     <img src="https://placehold.co/80x80/010409/eaeaea?text={{ exp.company_name|slice:':2'|upper }}" alt="{{ exp.company_name }} Logo">
                 </div>
                 <div class="exp-details">
@@ -57,16 +118,14 @@
                         <h3>{{ exp.role }} @ {{ exp.company_name }}</h3>
                         <span>{{ exp.start_date|date:"M Y" }} - {% if exp.end_date %}{{ exp.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
                     </div>
-                    <p>{{ exp.summary }}</p>
+                    <p>{{ exp.summary|truncatewords:40|safe }}</p>
                     <div class="skills">
                         {% for tech in exp.technologies.all %}
                         <span class="teg">{{ tech.name }}</span>
                         {% endfor %}
                     </div>
                 </div>
-            </a>
-            {% empty %}
-                <p class="no-results-message">No experience entries found.</p>
+            </div>
             {% endfor %}
         </div>
 

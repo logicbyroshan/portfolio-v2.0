@@ -1,0 +1,106 @@
+<!-- Create Playlist Modal Content -->
+<div class="modal-header">
+    <h3>Create New Playlist</h3>
+    <button type="button" class="close-modal" data-dismiss="modal">
+        <i class="fa-solid fa-times"></i>
+    </button>
+</div>
+
+<form id="create-playlist-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="{{ form.name.id_for_label }}">Playlist Name *</label>
+            {{ form.name }}
+            <div class="error-message" id="name-error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">Description</label>
+            {{ form.description }}
+            <div class="error-message" id="description-error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.cover_image.id_for_label }}">Cover Image</label>
+            {{ form.cover_image }}
+            <small class="form-text">Upload a cover image for your playlist (optional)</small>
+            <div class="error-message" id="cover_image-error"></div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-check-container">
+                {{ form.is_public }}
+                <label for="{{ form.is_public.id_for_label }}" class="form-check-label">
+                    Make playlist public
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-check-container">
+                {{ form.is_featured }}
+                <label for="{{ form.is_featured.id_for_label }}" class="form-check-label">
+                    Feature this playlist
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="outline-btn" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="filled-btn">
+            <i class="fa-solid fa-plus"></i> Create Playlist
+        </button>
+    </div>
+</form>
+
+<script>
+document.getElementById('create-playlist-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    
+    // Show loading state
+    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating...';
+    submitBtn.disabled = true;
+    
+    // Clear previous errors
+    document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+    
+    fetch('{% url "roshan:create_manual_playlist" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Close modal and redirect
+            document.querySelector('.modal-overlay').remove();
+            window.location.href = data.redirect_url;
+        } else {
+            // Show errors
+            for (const [field, errors] of Object.entries(data.errors)) {
+                const errorDiv = document.getElementById(field + '-error');
+                if (errorDiv) {
+                    errorDiv.textContent = errors.join(', ');
+                }
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while creating the playlist.');
+    })
+    .finally(() => {
+        // Restore button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+});
+</script>

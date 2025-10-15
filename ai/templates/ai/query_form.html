@@ -1,0 +1,63 @@
+{% load static %}
+
+<!-- Compact AI Introduction Section -->
+<div class="ai-intro-container">
+    <div class="ai-intro-card">
+        <div class="ai-intro-content">
+            <div class="ai-avatar-small">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="ai-intro-text">
+                <h3>AI Assistant</h3>
+                <p>👋 Hi! I'm your AI assistant. Ask me anything about Roshan's skills, experience, or projects!</p>
+            </div>
+        </div>
+        <button type="button" class="ai-chat-btn" id="open-ai-modal">
+            <i class="fas fa-comments"></i>
+            <span>Ask AI</span>
+        </button>
+    </div>
+</div>
+
+<!-- AI Chat Modal -->
+<div class="ai-modal" id="ai-chat-modal">
+    <div class="ai-modal-overlay" id="ai-modal-overlay"></div>
+    <div class="ai-modal-container">
+        <button type="button" class="ai-modal-close" id="close-ai-modal">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="ai-chat-interface">
+            <!-- Chat messages area -->
+            <div class="ai-chat-messages" id="ai-chat-messages">
+                <div class="welcome-message">
+                    <div class="ai-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <p>👋 Hi! I'm your AI assistant. Ask me anything about Roshan's skills, experience, or projects!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Input form -->
+            <form id="ai-form" class="ai-query-form" action="{% url 'ai:submit_ai_query' %}" method="POST">
+                {% csrf_token %}
+                <div class="input-container">
+                    <button type="button" class="action-btn left-btn" title="AI Options">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <div class="textarea-container">
+                        <textarea name="question" placeholder="Ask anything about Roshan's skills, experience, or projects! (Ctrl+Enter to send)" rows="1" maxlength="1000"></textarea>
+                        <div class="char-count">
+                            <span id="char-counter">0</span>/1000
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn" title="Send Message (Ctrl+Enter)">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

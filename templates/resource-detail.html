@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ resource.title }} - Roshan Damor{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/resource-detail.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/resource-detail.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="resource-detail-container">
+    <!-- Resource Header -->
+    <header class="resource-header" data-animation="fade-in-up">
+        <h1>{{ resource.title }}</h1>
+        <p class="resource-description">{{ resource.description|safe }}</p>
+        
+        <div class="resource-meta">
+            <span class="meta-item">
+                <i class="fas fa-tag"></i> {{ resource.get_resource_type_display }}
+            </span>
+            {% if resource.author %}
+            <span class="meta-item">
+                <i class="fas fa-user"></i> {{ resource.author }}
+            </span>
+            {% endif %}
+            <span class="meta-item">
+                <i class="fas fa-calendar"></i> {{ resource.created_date|date:"M d, Y" }}
+            </span>
+            <span class="meta-item">
+                <span class="rating">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= resource.personal_rating %}
+                            <i class="fas fa-star"></i>
+                        {% else %}
+                            <i class="far fa-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </span>
+            </span>
+        </div>
+    </header>
+    
+    <!-- Resource Content -->
+    <div class="resource-content">
+        <div class="main-content" data-animation="fade-in-up" data-animation-delay="200">
+            
+            <!-- Video or PDF Embed -->
+            {% if resource.has_video_embed %}
+                <div class="video-container">
+                    {% if resource.embed_url %}
+                        <iframe class="video-embed" src="{{ resource.embed_url }}" frameborder="0" allowfullscreen title="{{ resource.title }} Video"></iframe>
+                    {% elif resource.custom_embed_code %}
+                        {{ resource.custom_embed_code|safe }}
+                    {% endif %}
+                </div>
+            {% elif resource.resource_type == 'PDF' and resource.link %}
+                <div class="pdf-container">
+                    <iframe class="pdf-preview" src="{{ resource.link }}#toolbar=0" title="{{ resource.title }} PDF"></iframe>
+                </div>
+            {% endif %}
+            
+            <!-- Main Details -->
+            <div class="resource-details">
+                {% if resource.link %}
+                    <a href="{{ resource.link }}" target="_blank" rel="noopener noreferrer" class="visit-resource-link">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span>Visit Resource</span>
+                    </a>
+                {% endif %}
+
+                <h3>About This Resource</h3>
+                <p>{{ resource.description|safe }}</p>
+                
+                {% if resource.technologies.all %}
+                <h4 style="margin-top: 30px;">Related Technologies</h4>
+                <div class="tech-tags">
+                    {% for tech in resource.technologies.all %}
+                        <span class="tech-tag">{{ tech.name }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            {% if resource.categories.all %}
+            <div class="sidebar-card" data-animation="fade-in-up" data-animation-delay="300">
+                <h4><i class="fas fa-folder"></i> Categories</h4>
+                <ul>
+                    {% for category in resource.categories.all %}
+                        <li style="margin: 12px 0;">
+                            <a href="{% url 'roshan:resources' %}?category={{ category.slug }}">
+                                <i class="{{ category.icon }}"></i> {{ category.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            {% if related_resources %}
+            <div class="sidebar-card" data-animation="fade-in-up" data-animation-delay="400">
+                <h4><i class="fas fa-link"></i> Related Resources</h4>
+                {% for related in related_resources %}
+                    <div class="related-resource-item">
+                        <h5>
+                            <a href="{% url 'roshan:resource_detail' slug=related.slug %}">
+                                {{ related.title }}
+                            </a>
+                        </h5>
+                        <p>{{ related.description|truncatewords:15 }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </aside>
+    </div>
+    
+    <!-- Back to Resources -->
+    <div style="text-align: center;">
+        <a href="{% url 'roshan:resources' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to All Resources
+        </a>
+    </div>
+</div>
+{% endblock %}

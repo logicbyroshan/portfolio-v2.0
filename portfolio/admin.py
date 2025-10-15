@@ -1,94 +1,184 @@
+import csv
+from django.http import HttpResponse
 from django.contrib import admin
 from .models import (
-    Technology, Category, Project, ProjectImage, Blog, Comment, 
-    Experience, FAQ, Skill, SkillTechnologyDetail
+    SiteConfiguration,
+    Technology,
+    Category,
+    Project,
+    ProjectImage,
+    Experience,
+    FAQ,
+    Skill,
+    Achievement,
+    Resume,
+    VideoResume,
+    NewsletterSubscriber,
+    ContactSubmission,
 )
 
 # =========================================================================
-# INLINES - For managing related models within a parent's admin page
+# MODEL ADMINS
 # =========================================================================
 
+
+@admin.register(SiteConfiguration)
+class SiteConfigurationAdmin(admin.ModelAdmin):
+    """Admin for the Site Configuration object."""
+
+    fieldsets = (
+        ("Hero Section", {"fields": ("hero_name",)}),
+        (
+            "Hero Stats",
+            {
+                "fields": (
+                    "hero_leetcode_rating",
+                    "hero_opensource_contributions",
+                    "hero_hackathons_count",
+                )
+            },
+        ),
+        (
+            "Social Media Links",
+            {
+                "fields": (
+                    "twitter_url",
+                    "github_url",
+                    "linkedin_url",
+                    "youtube_url",
+                    "instagram_url",
+                    "facebook_url",
+                )
+            },
+        ),
+        ("Contact Information", {"fields": ("email", "phone", "location")}),
+    )
+
+
+@admin.register(Resume)
+class ResumeAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(VideoResume)
+class VideoResumeAdmin(admin.ModelAdmin):
+    pass
+
+
+# =========================================================================
+# INLINES
+# =========================================================================
+# (These remain the same as before)
 class ProjectImageInline(admin.TabularInline):
-    """Allows adding multiple project images directly within the Project admin page."""
     model = ProjectImage
-    extra = 1  # Number of empty forms to display
-    verbose_name = "Project Image"
-    verbose_name_plural = "Project Images (for slider)"
-
-class CommentInline(admin.TabularInline):
-    """Allows managing comments directly within the Blog admin page."""
-    model = Comment
-    extra = 0
-    fields = ('author_name', 'body', 'is_approved', 'created_date')
-    readonly_fields = ('created_date',)
-
-class SkillTechnologyDetailInline(admin.TabularInline):
-    """Allows defining technology details directly within the Skill admin page."""
-    model = SkillTechnologyDetail
     extra = 1
-    verbose_name = "Technology Detail"
-    verbose_name_plural = "Technology Details"
 
 
 # =========================================================================
-# MODEL ADMIN CONFIGURATIONS
+# REGULAR MODEL ADMIN CONFIGURATIONS
 # =========================================================================
+
 
 @admin.register(Technology)
 class TechnologyAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
+    search_fields = ("name",)
+    list_display = ("name", "category")
+    list_filter = ("category",)
+
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug')
-    search_fields = ('name',)
-    # Slug is auto-generated, so no need for prepopulated_fields here
+    list_display = ("name", "category_type")
+    list_filter = ("category_type",)
+    search_fields = ("name",)
+
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     inlines = [ProjectImageInline]
-    list_display = ('title', 'created_date')
-    list_filter = ('categories', 'technologies')
-    search_fields = ('title', 'summary', 'content')
-    filter_horizontal = ('technologies', 'categories') # Better UX for ManyToMany
-    # Slug is auto-generated
+    list_display = ("title", "created_date", "has_youtube_video")
+    list_filter = ("categories", "technologies")
+    search_fields = ("title", "summary")
+    filter_horizontal = ("technologies", "categories")
+    fieldsets = (
+        ("Basic Information", {"fields": ("title", "summary", "content")}),
+        ("Media", {"fields": ("cover_image", "youtube_url")}),
+        ("Categorization", {"fields": ("technologies", "categories")}),
+        ("Links", {"fields": ("github_url", "live_url")}),
+    )
 
-@admin.register(Blog)
-class BlogAdmin(admin.ModelAdmin):
-    inlines = [CommentInline]
-    list_display = ('title', 'author_name', 'created_date')
-    list_filter = ('categories', 'created_date')
-    search_fields = ('title', 'summary', 'content')
-    filter_horizontal = ('categories',)
-    # Slug is auto-generated
+    def has_youtube_video(self, obj):
+        return bool(obj.youtube_url)
 
-@admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ('author_name', 'post', 'created_date', 'is_approved')
-    list_filter = ('is_approved', 'created_date')
-    search_fields = ('author_name', 'body', 'post__title')
-    actions = ['approve_comments']
+    has_youtube_video.boolean = True
+    has_youtube_video.short_description = "Has Video"
 
-    @admin.action(description='Mark selected comments as approved')
-    def approve_comments(self, request, queryset):
-        queryset.update(is_approved=True)
 
 @admin.register(Experience)
 class ExperienceAdmin(admin.ModelAdmin):
-    list_display = ('role', 'company_name', 'start_date', 'end_date', 'experience_type')
-    list_filter = ('experience_type', 'technologies')
-    search_fields = ('role', 'company_name', 'summary')
-    filter_horizontal = ('technologies',)
+    list_display = ("role", "company_name", "start_date", "end_date")
+    list_filter = ("experience_type",)
+    search_fields = ("role", "company_name")
+    filter_horizontal = ("technologies",)
+
 
 @admin.register(FAQ)
 class FAQAdmin(admin.ModelAdmin):
-    list_display = ('question', 'order')
-    list_editable = ('order',)
+    list_display = ("question", "order")
+    list_editable = ("order",)
+
 
 @admin.register(Skill)
 class SkillAdmin(admin.ModelAdmin):
-    inlines = [SkillTechnologyDetailInline]
-    list_display = ('title', 'icon')
-    search_fields = ('title', 'summary')
-    # Slug is auto-generated
+    list_display = (
+        "title",
+        "category",
+        "proficiency_level",
+        "years_of_experience",
+        "is_featured",
+        "order",
+    )
+    list_filter = ("category", "proficiency_level", "is_featured")
+    search_fields = ("title",)
+    filter_horizontal = ("technologies",)
+    list_editable = ("order", "is_featured", "category")
+    prepopulated_fields = {"slug": ("title",)}
+
+
+@admin.register(NewsletterSubscriber)
+class NewsletterSubscriberAdmin(admin.ModelAdmin):
+    list_display = ("email", "subscribed_date")
+    search_fields = ("email",)
+    actions = ["export_as_csv"]
+
+    @admin.action(description="Export selected subscribers as CSV")
+    def export_as_csv(self, request, queryset):
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = f"attachment; filename={meta}.csv"
+        writer = csv.writer(response)
+        writer.writerow(field_names)
+        for obj in queryset:
+            writer.writerow([getattr(obj, field) for field in field_names])
+        return response
+
+
+@admin.register(ContactSubmission)
+class ContactSubmissionAdmin(admin.ModelAdmin):
+    list_display = ("name", "email", "subject", "submitted_date", "is_read")
+    list_filter = ("is_read",)
+    search_fields = ("name", "email", "subject", "message")
+    readonly_fields = ("name", "email", "subject", "message", "submitted_date")
+    actions = ["mark_as_read"]
+
+    @admin.action(description="Mark selected submissions as read")
+    def mark_as_read(self, request, queryset):
+        queryset.update(is_read=True)
+
+
+@admin.register(Achievement)
+class AchievementAdmin(admin.ModelAdmin):
+    list_display = ("title", "issuing_organization", "category", "date_issued")
+    list_filter = ("category", "date_issued")
+    search_fields = ("title", "issuing_organization", "summary")

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Resources - Roshan Damor{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/resources.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/resources.js' %}" defer></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="resources-container">
+    <!-- Page Header -->
+    <header class="page-header" data-animation="fade-in-up">
+        <h1>My Curated <span>Resources</span></h1>
+        <p>A collection of valuable articles, tools, videos, and courses that have helped me in my development journey.</p>
+    </header>
+
+    <!-- Page Toolbar -->
+    <div class="page-toolbar" data-animation="fade-in-up" data-animation-delay="200">
+        <div class="categories-scroller">
+            <button class="scroll-btn" id="scroll-left" aria-label="Scroll left"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="categories-list" id="categories-list">
+                <a href="{% url 'roshan:resources' %}" class="category-badge {% if not request.GET.category or request.GET.category == 'all' %}active{% endif %}">All</a>
+                {% for value, label in resource_types %}
+                    <a href="?category={{ value }}" class="category-badge {% if request.GET.category == value %}active{% endif %}">{{ label }}</a>
+                {% endfor %}
+            </div>
+            <button class="scroll-btn" id="scroll-right" aria-label="Scroll right"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <!-- Resources Grid -->
+    <div class="resource-grid" id="resource-card-container">
+        {% if resources %}
+            {% for resource in resources %}
+            <a href="{% url 'roshan:resource_detail' slug=resource.slug %}" class="resource-card card" data-animation="zoom-in">
+                <div class="card-icon">
+                    {% if resource.resource_type == 'VID' %}<i class="fa-brands fa-youtube"></i>
+                    {% elif resource.resource_type == 'PDF' %}<i class="fa-solid fa-file-pdf"></i>
+                    {% elif resource.resource_type == 'TOL' %}<i class="fa-solid fa-screwdriver-wrench"></i>
+                    {% elif resource.resource_type == 'CRS' %}<i class="fa-solid fa-graduation-cap"></i>
+                    {% else %}<i class="fa-solid fa-newspaper"></i>
+                    {% endif %}
+                </div>
+                <div class="card-content">
+                    <h3>{{ resource.title }}</h3>
+                    <p>{{ resource.description|truncatewords:20|safe }}</p>
+                </div>
+                {% if resource.technologies.all %}
+                <div class="card-footer">
+                    {% for tech in resource.technologies.all %}
+                        <span class="teg">{{ tech.name }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </a>
+
+            {% endfor %}
+        {% else %}
+            <!-- FALLBACK DEMO CONTENT -->
+            <a href="#" class="resource-card card" data-animation="zoom-in">
+                <div class="card-icon"><i class="fa-brands fa-youtube"></i></div>
+                <div class="card-content">
+                    <h3>Demo Video: Django Crash Course</h3>
+                    <p>This is a sample video resource to show how the cards will look, even when no data is in the database.</p>
+                </div>
+                <div class="card-footer"><span class="teg">Django</span><span class="teg">Python</span></div>
+            </a>
+            <a href="#" class="resource-card card" data-animation="zoom-in">
+                <div class="card-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                <div class="card-content">
+                    <h3>Placeholder PDF: AI Cheat Sheet</h3>
+                    <p>A placeholder for a downloadable document resource, ensuring the page always looks complete and professional.</p>
+                </div>
+                <div class="card-footer"><span class="teg">AI</span></div>
+            </a>
+            <a href="#" class="resource-card card" data-animation="zoom-in">
+                <div class="card-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                <div class="card-content">
+                    <h3>Example Tool: Coolors.co</h3>
+                    <p>This demo card represents a useful tool or website for developers and designers, illustrating content variety.</p>
+                </div>
+                <div class="card-footer"><span class="teg">Design</span><span class="teg">CSS</span></div>
+            </a>
+        {% endif %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav class="pagination" aria-label="Resource pages">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="pagination-btn"><i class="fa-solid fa-arrow-left"></i></a>
+        {% else %}<button class="pagination-btn" disabled><i class="fa-solid fa-arrow-left"></i></button>{% endif %}
+        <div class="page-numbers">
+            {% for num in page_obj.paginator.page_range %}
+                <a href="?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="page-number {% if page_obj.number == num %}active{% endif %}">{{ num }}</a>
+            {% endfor %}
+        </div>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="pagination-btn"><i class="fa-solid fa-arrow-right"></i></a>
+        {% else %}<button class="pagination-btn" disabled><i class="fa-solid fa-arrow-right"></i></button>{% endif %}
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

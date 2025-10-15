@@ -5,26 +5,24 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // Animation system is now handled by animations.js
+    // No need for duplicate animation code here
+
     // =========================================================================
-    // ON-SCROLL ANIMATION
+    // CLICKABLE CARDS
     // =========================================================================
-    const animatedElements = document.querySelectorAll('[data-animation]');
-    if (animatedElements.length > 0) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const delay = parseInt(entry.target.dataset.animationDelay) || 0;
-                    setTimeout(() => {
-                        entry.target.classList.add('is-visible');
-                    }, delay);
-                    observer.unobserve(entry.target);
-                }
+    const clickableElements = document.querySelectorAll('[data-url]');
+    clickableElements.forEach(card => {
+        const url = card.dataset.url;
+        if (url && url !== '#') {
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open(url, '_blank');
             });
-        }, {
-            threshold: 0.1
-        });
-        animatedElements.forEach(el => observer.observe(el));
-    }
+            card.style.cursor = 'pointer';
+        }
+    });
 
     // =========================================================================
     // TOOLBAR LOGIC (SORT & FILTER)
@@ -61,18 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
-    // CLICKABLE BLOG CARDS
-    // =========================================================================
-    document.querySelectorAll('.blog-card[data-url]').forEach(card => {
-        card.addEventListener('click', (e) => {
-            if (e.target.closest('a, button')) return;
-            if (window.getSelection().toString()) return;
-            window.location.href = card.dataset.url;
-        });
-    });
-
-    // =========================================================================
-    // PAGINATION LOGIC (FOR DEMO PURPOSES)
+    // Pagination Logic
     // =========================================================================
     const cardContainer = document.getElementById('blog-card-container');
     const pageNumbersContainer = document.getElementById('page-numbers');
@@ -123,4 +110,21 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.pagination')?.style.setProperty('display', 'none');
         }
     }
+
+    // =========================================================================
+    // BLOG CARDS HOVER EFFECTS
+    // =========================================================================
+    const blogCards = document.querySelectorAll('.blog-card');
+    
+    blogCards.forEach(card => {
+        // Add hover effects for better UX
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
 });

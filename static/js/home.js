@@ -1,70 +1,7 @@
 // home.js
-
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 1. Hero Section Typing Effect
-    const skillTextElement = document.getElementById('skill-text');
-    if (skillTextElement) {
-        // MODIFIED: Load skills dynamically with a fallback
-        let skillsToType = ["Web Developer", "AI Enthusiast", "Python Programmer", "Creative Coder"]; // Default skills if DB is empty
-        
-        try {
-            const skillsDataElement = document.getElementById('skills-data');
-            if (skillsDataElement) {
-                const skillsFromDB = JSON.parse(skillsDataElement.textContent);
-                // Use skills from DB only if the array is not empty
-                if (skillsFromDB && skillsFromDB.length > 0) {
-                    skillsToType = skillsFromDB;
-                }
-            }
-        } catch (e) {
-            console.error("Could not parse skills data from Django. Using default skills.", e);
-        }
-        // END OF MODIFICATION
-
-        let skillIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-        const typingSpeed = 150;
-        const deletingSpeed = 100;
-        const delayBetweenWords = 2000;
-
-        function type() {
-            const currentSkill = skillsToType[skillIndex];
-            
-            if (isDeleting) {
-                skillTextElement.textContent = currentSkill.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                skillTextElement.textContent = currentSkill.substring(0, charIndex + 1);
-                charIndex++;
-            }
-
-            if (!isDeleting && charIndex === currentSkill.length) {
-                setTimeout(() => { isDeleting = true; type(); }, delayBetweenWords);
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                skillIndex = (skillIndex + 1) % skillsToType.length;
-                setTimeout(type, 500);
-            } else {
-                setTimeout(type, isDeleting ? deletingSpeed : typingSpeed);
-            }
-        }
-        setTimeout(type, 500);
-    }
-
-    // 2. FAQ Accordion Functionality
-    const faqCards = document.querySelectorAll('.faq-card');
-    faqCards.forEach(card => {
-        card.addEventListener('click', () => {
-            const isActive = card.classList.contains('active');
-            if (!isActive) {
-                card.classList.add('active');
-            } else {
-                card.classList.remove('active');
-            }
-        });
-    });
+    // Typing effect removed - now using static text
 
 
     // 3. Clickable Cards (UPDATED)
@@ -73,7 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     clickableElements.forEach(card => {
         const url = card.dataset.url;
         if (url && url !== '#') {
-            card.addEventListener('click', () => {
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 window.open(url, '_blank');
             });
             card.style.cursor = 'pointer';
@@ -91,36 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 5. Contact Form Submission Simulation
-    const contactForm = document.querySelector('.right-contact-form form');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert("Thank you for your message! I'll get back to you soon.");
-            contactForm.reset();
-        });
-    }
-
-    // 6. On-Scroll Animation Functionality
-    const animatedElements = document.querySelectorAll('[data-animation]');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const delay = parseInt(entry.target.dataset.animationDelay) || 0;
-                setTimeout(() => {
-                    entry.target.classList.add('is-visible');
-                }, delay);
-                observer.unobserve(entry.target);
-            }
-        });
-    }, {
-        threshold: 0.1
-    });
-
-    animatedElements.forEach(el => {
-        observer.observe(el);
-    });
+    // Animation system is now handled by animations.js
+    // No need for duplicate animation code here
 
     // 7. Particles.js Initialization
     if (document.getElementById('particles-js')) {
@@ -188,4 +99,5 @@ document.addEventListener('DOMContentLoaded', () => {
             "retina_detect": true
         });
     }
+
 });

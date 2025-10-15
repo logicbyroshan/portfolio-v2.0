@@ -1,7 +1,75 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}My Projects - Roshan Damor{% endblock %}
+{% block body_class %}project-list-page{% endblock %}
+
+{% block title %}
+{% if request.GET.category and request.GET.category != 'all' %}
+{{ request.GET.category|title }} Projects - Roshan Damor Portfolio
+{% else %}
+Projects Portfolio - Full Stack & AI Applications by Roshan Damor
+{% endif %}
+{% endblock %}
+
+{% block extra_meta %}
+<!-- SEO Meta Tags -->
+<meta name="description"
+    content="Explore Roshan Damor's portfolio of innovative projects including full-stack web applications, AI solutions, machine learning projects, and open-source contributions. See real-world implementations and code.">
+<meta name="keywords"
+    content="Roshan Damor projects, full stack projects, AI projects, machine learning applications, Python projects, Django applications, React projects, web development portfolio, software projects">
+<meta name="author" content="Roshan Damor">
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+<!-- Open Graph Meta Tags -->
+<meta property="og:title" content="Projects Portfolio - Full Stack & AI Applications by Roshan Damor">
+<meta property="og:description"
+    content="Discover innovative projects by Roshan Damor including full-stack web applications, AI solutions, and machine learning implementations. Real-world code and live demos.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:image" content="{% static 'images/projects-og-image.jpg' %}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Roshan Damor's Projects Portfolio">
+<meta property="og:site_name" content="Roshan Damor - Portfolio">
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Projects Portfolio - Full Stack & AI Applications by Roshan Damor">
+<meta name="twitter:description"
+    content="Innovative projects including full-stack web applications, AI solutions, and machine learning implementations with real-world code examples.">
+<meta name="twitter:image" content="{% static 'images/projects-og-image.jpg' %}">
+<meta name="twitter:image:alt" content="Roshan Damor's Projects">
+<meta name="twitter:site" content="@logicbyroshan">
+<meta name="twitter:creator" content="@logicbyroshan">
+
+<!-- Structured Data for Projects Portfolio -->
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Roshan Damor's Projects Portfolio",
+        "description": "Collection of innovative full-stack web applications, AI solutions, and machine learning projects",
+        "url": "{{ request.build_absolute_uri }}",
+        "author": {
+            "@type": "Person",
+            "name": "Roshan Damor",
+            "url": "{{ request.scheme }}://{{ request.get_host }}",
+            "sameAs": [
+                "https://github.com/logicbyroshan",
+                "https://linkedin.com/in/logicbyroshan",
+                "https://twitter.com/logicbyroshan"
+            ]
+        },
+        "about": [
+            "Full Stack Development",
+            "AI Applications",
+            "Machine Learning Projects",
+            "Web Development",
+            "Software Engineering"
+        ]
+    }
+    </script>
+{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/projects.css' %}">
@@ -45,32 +113,46 @@
         
         <!-- ======================= Project Grid ======================= -->
         <div class="project-grid" id="project-card-container">
-            <!-- DYNAMIC: Loop through paginated project objects -->
             {% for project in projects %}
-            <div class="project-card card" data-animation="zoom-in">
-                <a href="{% url 'portfolio:project_detail' slug=project.slug %}" class="project-image">
-                    <img src="{{ project.cover_image.url }}" alt="{{ project.title }}">
-                </a>
+            <div class="project-card card clickable-card" data-animation="zoom-in" data-url="{% url 'portfolio:project_detail' slug=project.slug %}">
+                <div class="project-media">
+                    {% if project.youtube_video_id %}
+                        <div class="youtube-video-container">
+                            <iframe 
+                                src="https://www.youtube.com/embed/{{ project.youtube_video_id }}?rel=0&modestbranding=1&showinfo=0" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen
+                                loading="lazy"
+                                title="{{ project.title }} - YouTube Video">
+                            </iframe>
+                        </div>
+                    {% elif project.cover_image %}
+                        <img src="{{ project.cover_image.url }}" alt="{{ project.title }}" class="project-image">
+                    {% else %}
+                        <img src="https://placehold.co/1920x1080/010409/eaeaea?text={{ project.title|urlencode }}" alt="{{ project.title }}" class="project-image placeholder">
+                    {% endif %}
+                </div>
                 <div class="project-content">
-                    <h3><a href="{% url 'portfolio:project_detail' slug=project.slug %}">{{ project.title }}</a></h3>
-                    <p>{{ project.summary|truncatewords:20 }}</p>
+                    <h3>{{ project.title }}</h3>
                     <div class="skills">
-                        {% for tech in project.technologies.all %}
+                        {% for tech in project.technologies.all|slice:":5" %}
                         <span class="teg">{{ tech.name }}</span>
                         {% endfor %}
+                        {% if project.technologies.count > 5 %}
+                        <span class="teg more-tech">+{{ project.technologies.count|add:"-5" }} more</span>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="project-links">
                     {% if project.github_url %}
-                        <a href="{{ project.github_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i>Github</a>
+                        <a href="{{ project.github_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-brands fa-github"></i>Github</a>
                     {% endif %}
                     {% if project.live_url %}
-                        <a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live Preview</a>
+                        <a href="{{ project.live_url }}" class="outline-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();"><i class="fa-solid fa-arrow-up-right-from-square"></i>Live Preview</a>
                     {% endif %}
                 </div>
             </div>
-            {% empty %}
-                <p class="no-results-message">No projects found matching your criteria. Please check back later!</p>
             {% endfor %}
         </div>
 

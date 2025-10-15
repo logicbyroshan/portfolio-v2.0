@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About Roshan Damor - Full Stack Developer & AI Engineer Story{% endblock %}
+
+{% block extra_meta %}
+<!-- SEO Meta Tags -->
+<meta name="description"
+    content="Learn about Roshan Damor's journey as a Full Stack Developer & AI Engineer. Discover his passion for building innovative web applications, AI solutions, and contributing to open-source projects.">
+<meta name="keywords"
+    content="About Roshan Damor, Full Stack Developer story, AI Engineer background, Python developer journey, web development experience, software engineer bio, tech career">
+<meta name="author" content="Roshan Damor">
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+<!-- Open Graph Meta Tags -->
+<meta property="og:title" content="About Roshan Damor - Full Stack Developer & AI Engineer Story">
+<meta property="og:description"
+    content="Discover Roshan Damor's journey as a passionate Full Stack Developer & AI Engineer, his mission to build impactful software, and his interests in AI ethics and open-source contribution.">
+<meta property="og:type" content="profile">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+{% if config.profile_image %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ config.profile_image.url }}">
+{% else %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/hero.png' %}">
+{% endif %}
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Roshan Damor - About Me">
+<meta property="og:site_name" content="Roshan Damor - Portfolio">
+<meta property="profile:first_name" content="Roshan">
+<meta property="profile:last_name" content="Damor">
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About Roshan Damor - Full Stack Developer & AI Engineer">
+<meta name="twitter:description"
+    content="Discover Roshan Damor's journey as a passionate Full Stack Developer & AI Engineer, building impactful software and contributing to open-source projects.">
+{% if config.profile_image %}
+<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ config.profile_image.url }}">
+{% else %}
+<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/hero.png' %}">
+{% endif %}
+<meta name="twitter:image:alt" content="About Roshan Damor">
+<meta name="twitter:site" content="@logicbyroshan">
+<meta name="twitter:creator" content="@logicbyroshan">
+
+<!-- Structured Data for About Page -->
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "AboutPage",
+        "mainEntity": {
+            "@type": "Person",
+            "name": "Roshan Damor",
+            "jobTitle": "Full Stack Developer & AI Engineer",
+            "description": "{{ config.intro_paragraph|default:'Passionate Full Stack Developer & AI Engineer building innovative web applications and AI solutions' }}",
+            "url": "{{ request.scheme }}://{{ request.get_host }}",
+            {% if config.profile_image %}
+            "image": "{{ request.scheme }}://{{ request.get_host }}{{ config.profile_image.url }}",
+            {% endif %}
+            "sameAs": [
+                "https://github.com/logicbyroshan",
+                "https://linkedin.com/in/logicbyroshan",
+                "https://twitter.com/logicbyroshan"
+            ],
+            "knowsAbout": [
+                "Full Stack Development",
+                "Python Programming",
+                "Django Framework",
+                "React Development",
+                "Machine Learning",
+                "Artificial Intelligence",
+                "Web Development",
+                "Software Engineering",
+                "Open Source Contribution"
+            ],
+            "hasOccupation": {
+                "@type": "Occupation",
+                "name": "Full Stack Developer & AI Engineer",
+                "occupationLocation": {
+                    "@type": "Country",
+                    "name": "India"
+                },
+                "skills": "Python, Django, React, Machine Learning, AI, Web Development"
+            }
+        }
+    }
+    </script>
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/about.js' %}" defer></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="about-page-container">
+    <!-- ======================= Profile Section ======================= -->
+    <section class="profile-section">
+        <div class="profile-left-column">
+            <div class="profile-image-wrapper" data-animation="zoom-in">
+                {% if config.profile_image %}
+                    <img src="{{ config.profile_image.url }}" alt="Photo of Roshan Damor">
+                {% else %}
+                    <img src="https://placehold.co/400x400/010409/eaeaea?text=Roshan" alt="Placeholder photo">
+                {% endif %}
+            </div>
+
+            <!-- Profile Info Card -->
+            <div class="profile-info-card" data-animation="fade-in-up">
+                <!-- Personal Info -->
+                <div class="profile-details">
+                    {% if config.open_to_work %}
+                    <div class="profile-badge">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Open to Work</span>
+                    </div>
+                    {% endif %}
+
+                    {% if config.location %}
+                    <div class="profile-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ config.location }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if config.website_url %}
+                    <div class="profile-website">
+                        <i class="fas fa-link"></i>
+                        <a href="{{ config.website_url }}" target="_blank" rel="noopener">{{ config.website_url|cut:"https://"|cut:"http://"|cut:"www." }}</a>
+                    </div>
+                    {% endif %}
+
+                    {% if config.birthday and config.age %}
+                    <div class="profile-birthday">
+                        <i class="fas fa-birthday-cake"></i>
+                        <span>{{ config.age }} years old</span>
+                    </div>
+                    {% endif %}
+
+                    {% if config.email %}
+                    <div class="profile-email">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:{{ config.email }}">{{ config.email }}</a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Social Links -->
+                <div class="profile-social">
+                    {% if config.github_url %}
+                    <a href="{{ config.github_url }}" target="_blank" rel="noopener" title="GitHub">
+                        <i class="fab fa-github"></i>
+                        <span class="sr-only">GitHub</span>
+                    </a>
+                    {% endif %}
+                    {% if config.linkedin_url %}
+                    <a href="{{ config.linkedin_url }}" target="_blank" rel="noopener" title="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                        <span class="sr-only">LinkedIn</span>
+                    </a>
+                    {% endif %}
+                    {% if config.twitter_url %}
+                    <a href="{{ config.twitter_url }}" target="_blank" rel="noopener" title="Twitter">
+                        <i class="fab fa-x-twitter"></i>
+                        <span class="sr-only">Twitter</span>
+                    </a>
+                    {% endif %}
+                    {% if config.youtube_url %}
+                    <a href="{{ config.youtube_url }}" target="_blank" rel="noopener" title="YouTube">
+                        <i class="fab fa-youtube"></i>
+                        <span class="sr-only">YouTube</span>
+                    </a>
+                    {% endif %}
+                    {% if config.instagram_url %}
+                    <a href="{{ config.instagram_url }}" target="_blank" rel="noopener" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                        <span class="sr-only">Instagram</span>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-content" data-animation="fade-in-up">
+            <header class="page-header">
+                <h1>{{ config.page_title|safe|default:"A Bit More <span>About Me</span>" }}</h1>
+                <p>{{ config.intro_paragraph|safe|default:"This is my story, my journey, and what drives me." }}</p>
+            </header>
+            <div class="details-from-cms">
+                <!-- IMPORTANT: The |safe filter renders the HTML from your TinyMCE editor -->
+                {{ config.detailed_description|safe|default:"<ul><li><strong>Mission:</strong> To build software that is not only functional but also intuitive and impactful.</li><li><strong>Interests:</strong> Beyond coding, I'm passionate about AI ethics, open-source contribution, and exploring the intersection of technology and art.</li></ul>" }}
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================= Action Links Section ======================= -->
+    <section class="action-links-section">
+        <div class="action-grid">
+            <!-- Card 1: Music -->
+            <div class="action-card card" data-animation="fade-in-up" data-animation-delay="200">
+                <i class="fa-solid fa-music action-icon"></i>
+                <h3>My Song Playlists</h3>
+                <p>Discover the music that fuels my coding sessions and creative work.</p>
+                <a href="{% url 'roshan:my_playlist' %}" class="outline-btn">Listen Now</a>
+            </div>
+
+            <!-- Card 2: Resources -->
+            <div class="action-card card" data-animation="fade-in-up" data-animation-delay="600">
+                <i class="fa-solid fa-book-open action-icon"></i>
+                <h3>View My Resources</h3>
+                <p>A curated list of tools, articles, and learning materials that I find valuable.</p>
+                <a href="{% url 'roshan:resources' %}" class="outline-btn">Explore Resources</a>
+            </div>
+
+            <!-- Card 3: Achievements -->
+            <div class="action-card card" data-animation="fade-in-up" data-animation-delay="800">
+                <i class="fa-solid fa-trophy action-icon"></i>
+                <h3>My Achievements</h3>
+                <p>Explore my certifications, awards, and milestones that showcase my journey and growth as a developer.</p>
+                <a href="{% url 'portfolio:achievements_list' %}" class="outline-btn">View Achievements</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================= FAQ SECTION ========================= -->
+    <section class="faq-section portfolio-container">
+        <div class="section-title" data-animation="fade-in-up">
+            <h2>Got Some <span>Questions?</span></h2>
+        </div>
+        <div class="card-container" id="faq-container">
+            {% for faq in faqs %}
+            <div class="faq-card card {% if forloop.counter > 4 %}faq-hidden{% endif %}" data-animation="fade-in-up">
+                <div class="faq-question">
+                    <span>{{ faq.question }}</span>
+                    <i class="fa-solid fa-plus faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>{{ faq.answer|safe }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Show More Button (only visible if more than 4 FAQs) -->
+        {% if faqs|length > 4 %}
+        <div class="faq-show-more-container" data-animation="fade-in-up">
+            <button class="outline-btn" id="faq-show-more-btn">
+                <i class="fas fa-chevron-down"></i>
+                Show More FAQs
+            </button>
+        </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

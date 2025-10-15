@@ -1,7 +1,72 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}My Blog - Roshan Damor{% endblock %}
+{% block body_class %}blog-list-page{% endblock %}
+
+{% block title %}
+{% if request.GET.category and request.GET.category != 'all' %}
+{{ request.GET.category|title }} Blog Posts - Roshan Damor
+{% else %}
+Blog - Web Development & AI Insights by Roshan Damor
+{% endif %}
+{% endblock %}
+
+{% block extra_meta %}
+<!-- SEO Meta Tags -->
+<meta name="description"
+    content="Explore Roshan Damor's blog featuring in-depth articles on web development, AI, machine learning, Python, Django, and software engineering insights. Learn from real-world projects and tutorials.">
+<meta name="keywords"
+    content="Roshan Damor blog, web development, AI tutorials, machine learning, Python, Django, software engineering, full-stack development, programming insights, tech articles">
+<meta name="author" content="Roshan Damor">
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+<!-- Open Graph Meta Tags -->
+<meta property="og:title" content="Blog - Web Development & AI Insights by Roshan Damor">
+<meta property="og:description"
+    content="Discover comprehensive tutorials, insights, and real-world experiences in web development, AI, and software engineering from Roshan Damor's technical blog.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:image" content="{% static 'images/blog-og-image.jpg' %}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Roshan Damor's Blog - Web Development & AI Insights">
+<meta property="og:site_name" content="Roshan Damor - Portfolio">
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blog - Web Development & AI Insights by Roshan Damor">
+<meta name="twitter:description"
+    content="Discover comprehensive tutorials, insights, and real-world experiences in web development, AI, and software engineering.">
+<meta name="twitter:image" content="{% static 'images/blog-og-image.jpg' %}">
+<meta name="twitter:image:alt" content="Roshan Damor's Blog">
+<meta name="twitter:site" content="@logicbyroshan">
+<meta name="twitter:creator" content="@logicbyroshan">
+
+<!-- Structured Data for Blog -->
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Roshan Damor's Blog",
+        "description": "Web development, AI, and software engineering insights from Roshan Damor",
+        "url": "{{ request.build_absolute_uri }}",
+        "author": {
+            "@type": "Person",
+            "name": "Roshan Damor",
+            "url": "{{ request.scheme }}://{{ request.get_host }}",
+            "sameAs": [
+                "https://github.com/logicbyroshan",
+                "https://linkedin.com/in/logicbyroshan",
+                "https://twitter.com/logicbyroshan"
+            ]
+        },
+        "publisher": {
+            "@type": "Person",
+            "name": "Roshan Damor"
+        }
+    }
+    </script>
+{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/blogs.css' %}">
@@ -26,7 +91,7 @@
                 <button class="scroll-btn" id="scroll-left" aria-label="Scroll left"><i class="fa-solid fa-chevron-left"></i></button>
                 <div class="categories-list" id="categories-list">
                     <!-- DYNAMIC: Category links with active state check -->
-                    <a href="{% url 'portfolio:blog_list' %}" class="category-badge {% if not request.GET.category or request.GET.category == 'all' %}active{% endif %}">All</a>
+                    <a href="{% url 'blog:blog_list' %}" class="category-badge {% if not request.GET.category or request.GET.category == 'all' %}active{% endif %}">All</a>
                     {% for category in categories %}
                         <a href="?category={{ category.slug }}" class="category-badge {% if request.GET.category == category.slug %}active{% endif %}">{{ category.name }}</a>
                     {% endfor %}
@@ -45,13 +110,13 @@
         
         <!-- ======================= Blog Grid ======================= -->
         <div class="blog-grid" id="blog-card-container">
-            <!-- DYNAMIC: Loop through paginated blog posts -->
             {% for blog in blogs %}
-            <a href="{% url 'portfolio:blog_detail' slug=blog.slug %}" class="blog-card card" data-animation="zoom-in">
-                <div class="blog-image"><img src="{{ blog.cover_image.url }}" alt="{{ blog.title }}"></div>
+            <div class="blog-card card clickable-card" data-animation="zoom-in"
+                data-url="{% url 'blog:blog_detail' slug=blog.slug %}">
+                <div class="blog-image"><img src="{% if blog.cover_image %}{{ blog.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ blog.title|urlencode }}{% endif %}" alt="{{ blog.title }}"></div>
                 <div class="blog-content">
                     <h4>{{ blog.title }}</h4>
-                    <p>{{ blog.summary|truncatewords:25 }}</p> {# Truncate for consistency #}
+                    <p>{{ blog.summary|truncatewords:20|safe }}</p>
                 </div>
                 <div class="blog-footer">
                     <div class="publisher">
@@ -64,9 +129,7 @@
                     </div>
                     <span class="blog-date">{{ blog.created_date|date:"M d, Y" }}</span>
                 </div>
-            </a>
-            {% empty %}
-                <p class="no-results-message">No blog posts found. Check back soon!</p>
+            </div>
             {% endfor %}
         </div>
 

@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}achievements-list-page{% endblock %}
+
+{% block title %}
+{% if request.GET.category %}
+{{ request.GET.category|title }} Achievements & Certifications - Roshan Damor
+{% else %}
+Achievements & Certifications - Roshan Damor Portfolio
+{% endif %}
+{% endblock %}
+
+{% block extra_meta %}
+<!-- SEO Meta Tags -->
+<meta name="description"
+    content="View Roshan Damor's professional achievements, certifications, awards, and recognitions in Full Stack Development, AI, Python, Django, and Machine Learning. Credentials showcasing expertise and continuous learning.">
+<meta name="keywords"
+    content="Roshan Damor achievements, certifications, awards, Python certification, Django certification, AI certifications, machine learning credentials, full-stack developer certifications, professional achievements">
+<meta name="author" content="Roshan Damor">
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+<!-- Open Graph Meta Tags -->
+<meta property="og:title" content="Achievements & Certifications - Roshan Damor Portfolio">
+<meta property="og:description"
+    content="Professional achievements, certifications, and awards showcasing expertise in Full Stack Development, AI, Python, Django, and Machine Learning.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:image" content="{% static 'images/achievements-og-image.jpg' %}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Roshan Damor's Achievements & Certifications">
+<meta property="og:site_name" content="Roshan Damor - Portfolio">
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Achievements & Certifications - Roshan Damor">
+<meta name="twitter:description"
+    content="Professional achievements, certifications, and awards showcasing expertise in Full Stack Development, AI, and software engineering.">
+<meta name="twitter:image" content="{% static 'images/achievements-og-image.jpg' %}">
+<meta name="twitter:image:alt" content="Roshan Damor's Achievements">
+<meta name="twitter:site" content="@logicbyroshan">
+<meta name="twitter:creator" content="@logicbyroshan">
+
+<!-- Structured Data for Achievements -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Roshan Damor's Achievements & Certifications",
+    "description": "Professional achievements, certifications, awards, and recognitions in Full Stack Development, AI, and software engineering",
+    "url": "{{ request.build_absolute_uri }}",
+    "author": {
+        "@type": "Person",
+        "name": "Roshan Damor",
+        "url": "{{ request.scheme }}://{{ request.get_host }}",
+        "sameAs": [
+            "https://github.com/logicbyroshan",
+            "https://linkedin.com/in/logicbyroshan",
+            "https://twitter.com/logicbyroshan"
+        ]
+    }
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/achievements.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/achievements.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="achievements-container">
+    <!-- Page Header -->
+    <header class="page-header" data-animation="fade-in-up">
+        <h1>Certifications & <span>Awards</span></h1>
+        <p>A showcase of my credentials, awards, and other recognitions that mark my commitment to continuous learning and excellence.</p>
+    </header>
+
+    <!-- Page Toolbar -->
+    <div class="page-toolbar" data-animation="fade-in-up" data-animation-delay="200">
+        <div class="categories-scroller">
+            <button class="scroll-btn" id="scroll-left" aria-label="Scroll left"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="categories-list" id="categories-list">
+                <a href="{% url 'portfolio:achievements_list' %}" class="category-badge {% if not request.GET.category or request.GET.category == 'all' %}active{% endif %}">All</a>
+                {% for cat in achievement_categories %}
+                    <a href="?category={{ cat.id }}" 
+                    class="category-badge {% if request.GET.category == cat.id|stringformat:'s' %}active{% endif %}">
+                        {{ cat.name }}
+                    </a>
+                {% endfor %}
+            </div>
+            <button class="scroll-btn" id="scroll-right" aria-label="Scroll right"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        <div class="sort-dropdown">
+            <button id="sort-button">Sort By <i class="fa-solid fa-caret-down"></i></button>
+            <ul id="sort-items">
+                <li><a href="?sort=newest{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Newest First</a></li>
+                <li><a href="?sort=oldest{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Oldest First</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Achievements Grid -->
+    <div class="achievements-grid" id="achievements-card-container">
+        {% if achievements %}
+            {% for ach in achievements %}
+            <div class="achievement-card card {% if ach.image %}has-image{% endif %}" data-animation="zoom-in">
+                <div class="card-banner">{{ ach.category.name }}</div>
+                {% if ach.image %}
+                <div class="ach-image">
+                    <img src="{{ ach.image.url }}" alt="{{ ach.title }} Preview">
+                </div>
+                {% endif %}
+                <div class="ach-content">
+                    <h3>{{ ach.title }}</h3>
+                    <p class="issuer">Issued by <strong>{{ ach.issuing_organization }}</strong> on {{ ach.date_issued|date:"M d, Y" }}</p>
+                    <p>{{ ach.summary|truncatewords:20|safe }}</p>
+                </div>
+                {% if ach.credential_url %}
+                <div class="ach-footer">
+                    <a href="{{ ach.credential_url }}" class="credential-link" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> View Credential
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav class="pagination" aria-label="Achievement pages">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="pagination-btn" aria-label="Previous Page"><i class="fa-solid fa-arrow-left"></i></a>
+        {% else %}
+            <button class="pagination-btn" disabled><i class="fa-solid fa-arrow-left"></i></button>
+        {% endif %}
+        <div class="page-numbers">
+            {% for num in page_obj.paginator.page_range %}
+                <a href="?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="page-number {% if page_obj.number == num %}active{% endif %}">{{ num }}</a>
+            {% endfor %}
+        </div>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" class="pagination-btn" aria-label="Next Page"><i class="fa-solid fa-arrow-right"></i></a>
+        {% else %}
+            <button class="pagination-btn" disabled><i class="fa-solid fa-arrow-right"></i></button>
+        {% endif %}
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

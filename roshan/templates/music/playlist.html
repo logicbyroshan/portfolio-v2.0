@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Music - Roshan Damor{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/music.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/music.js' %}" defer></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="music-container">
+    <!-- Page Header -->
+    <header class="page-header" data-animation="fade-in-up">
+        <h1>My Musical <span>Vibes</span></h1>
+        <p>A collection of my favorite Spotify playlists for coding, focusing, or just relaxing. Feel free to have a listen!</p>
+        
+        {% if user.is_staff %}
+        <div class="admin-actions">
+            <button class="filled-btn" onclick="openCreatePlaylistModal()">
+                <i class="fa-solid fa-plus"></i> Create Playlist
+            </button>
+        </div>
+        {% endif %}
+    </header>
+
+    <!-- Playlist Grid -->
+    <div class="playlist-grid">
+        {% if playlists.items %}
+            {% for playlist in playlists.items %}
+            <div class="playlist-card card" data-animation="zoom-in">
+                <a href="{% url 'roshan:playlist_detail' playlist.id %}" class="playlist-image">
+                    <img src="{{ playlist.images.0.url }}" alt="{{ playlist.name }} playlist cover" loading="lazy">
+                    <div class="play-overlay">
+                        <i class="fa-solid fa-play"></i>
+                    </div>
+                    {% if playlist.type == 'manual' %}
+                    <div class="playlist-type-badge manual">
+                        <i class="fa-solid fa-music"></i> Manual
+                    </div>
+                    {% else %}
+                    <div class="playlist-type-badge spotify">
+                        <i class="fa-brands fa-spotify"></i> Spotify
+                    </div>
+                    {% endif %}
+                </a>
+                <div class="playlist-content">
+                    <h3>{{ playlist.name }}</h3>
+                    {% if playlist.description %}
+                    <p class="playlist-description">{{ playlist.description|truncatewords:12 }}</p>
+                    {% endif %}
+                    <div class="playlist-meta">
+                        <span class="track-count">{{ playlist.tracks.total }} tracks</span>
+                        {% if playlist.type == 'manual' and user.is_staff %}
+                        <div class="admin-controls">
+                            <button class="admin-btn edit-btn" onclick="openAddTrackModal('{{ playlist.playlist_obj.id }}')" title="Add Track">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                            <button class="admin-btn edit-btn" onclick="openEditPlaylistModal('{{ playlist.playlist_obj.id }}')" title="Edit Playlist">
+                                <i class="fa-solid fa-edit"></i>
+                            </button>
+                            <button class="admin-btn delete-btn" onclick="deletePlaylist('{{ playlist.playlist_obj.id }}')" title="Delete Playlist">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="playlist-footer">
+                    <a href="{% url 'roshan:playlist_detail' playlist.id %}" class="outline-btn">
+                        <i class="fa-solid fa-headphones-simple"></i> Listen
+                    </a>
+                    {% if playlist.type == 'spotify' %}
+                    <a href="{{ playlist.external_urls.spotify }}" class="outline-btn" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-brands fa-spotify"></i> Spotify
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- Demo Playlists -->
+            {% if is_demo %}
+                {% for playlist in playlists.items %}
+                <div class="playlist-card card" data-animation="zoom-in">
+                    <div class="playlist-image">
+                        <img src="{{ playlist.images.0.url }}" alt="{{ playlist.name }} playlist cover" loading="lazy">
+                        <div class="play-overlay">
+                            <i class="fa-solid fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="playlist-content">
+                        <h3>{{ playlist.name }}</h3>
+                        <p class="playlist-description">{{ playlist.description }}</p>
+                        <small class="demo-label">Demo Content</small>
+                    </div>
+                    <div class="playlist-footer">
+                        <span class="outline-btn disabled">Demo</span>
+                        <a href="{{ playlist.external_urls.spotify }}" class="outline-btn" target="_blank" rel="noopener noreferrer">
+                            <i class="fa-brands fa-spotify"></i> Spotify
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- FALLBACK CONTENT -->
+                <div class="playlist-card card" data-animation="zoom-in">
+                    <div class="playlist-image">
+                        <img src="https://placehold.co/300x300/010409/00A9FF?text=No+Playlists" alt="No playlists available">
+                    </div>
+                    <div class="playlist-content">
+                        <h3>No Playlists Found</h3>
+                        <p class="playlist-owner">Check back later for updates!</p>
+                    </div>
+                    <div class="playlist-footer">
+                        <span class="outline-btn disabled">Coming Soon</span>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    {% if show_admin_sync %}
+    <!-- Admin Controls -->
+    <div class="admin-controls card" data-animation="fade-in-up">
+        <h3>Admin Controls</h3>
+        <p>Manage Spotify playlist synchronization.</p>
+        <div class="admin-buttons">
+            <a href="{% url 'roshan:sync_playlists' %}" class="filled-btn">
+                <i class="fa-solid fa-sync"></i> Sync Now
+            </a>
+            <a href="{% url 'roshan:admin_spotify_config' %}" class="outline-btn">
+                <i class="fa-brands fa-spotify"></i> Re-authenticate
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal Overlay (initially hidden) -->
+<div class="modal-overlay" id="modal-overlay" style="display: none;">
+    <div class="modal-container">
+        <div id="modal-content">
+            <!-- Modal content will be loaded here -->
+        </div>
+    </div>
+</div>
+
+{% if user.is_staff %}
+<script>
+// Modal functions
+function openCreatePlaylistModal() {
+    fetch('{% url "roshan:create_manual_playlist" %}')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('modal-content').innerHTML = html;
+            document.getElementById('modal-overlay').style.display = 'flex';
+        })
+        .catch(error => {
+            console.error('Error loading modal:', error);
+        });
+}
+
+function openAddTrackModal(playlistId) {
+    fetch(`/playlist/${playlistId}/add-track/`)
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('modal-content').innerHTML = html;
+            document.getElementById('modal-overlay').style.display = 'flex';
+        })
+        .catch(error => {
+            console.error('Error loading modal:', error);
+        });
+}
+
+function openEditPlaylistModal(playlistId) {
+    fetch(`/playlist/${playlistId}/edit/`)
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('modal-content').innerHTML = html;
+            document.getElementById('modal-overlay').style.display = 'flex';
+        })
+        .catch(error => {
+            console.error('Error loading modal:', error);
+        });
+}
+
+function deletePlaylist(playlistId) {
+    if (confirm('Are you sure you want to delete this playlist? This action cannot be undone.')) {
+        fetch(`/playlist/${playlistId}/delete/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error deleting playlist: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the playlist.');
+        });
+    }
+}
+
+// Close modal functionality
+document.addEventListener('click', function(e) {
+    if (e.target.matches('.modal-overlay') || e.target.matches('.close-modal') || e.target.matches('[data-dismiss="modal"]')) {
+        document.getElementById('modal-overlay').style.display = 'none';
+    }
+});
+
+// Escape key to close modal
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        document.getElementById('modal-overlay').style.display = 'none';
+    }
+});
+</script>
+{% endif %}
+{% endblock %}
