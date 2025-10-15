@@ -1,0 +1,558 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}400 - Bad Request | Roshan Damor - Portfolio{% endblock %}
+
+{% block meta_description %}Bad request - the server cannot process your request. Please check your input and try again. Return to Roshan Damor's portfolio.{% endblock %}
+
+{% block body_class %}error-page error-400{% endblock %}
+
+{% block extra_css %}
+<style>
+.error-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+.error-content {
+    text-align: center;
+    max-width: 600px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    box-shadow: 0 20px 40px var(--card-shadow);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.error-content::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, #ff6b6b, transparent);
+    animation: rotate 6s linear infinite;
+    z-index: -1;
+}
+
+.error-content::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: var(--card-bg);
+    border-radius: 14px;
+    z-index: -1;
+}
+
+@keyframes rotate {
+    100% { transform: rotate(360deg); }
+}
+
+.error-illustration {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 2rem;
+    position: relative;
+}
+
+.error-illustration svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 10px 20px rgba(255, 107, 107, 0.3));
+}
+
+.error-code {
+    font-size: 6rem;
+    font-family: var(--heading-font);
+    color: #ff6b6b;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+    animation: wobble 2s ease-in-out infinite;
+}
+
+@keyframes wobble {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(5deg); }
+    75% { transform: rotate(-5deg); }
+}
+
+.error-title {
+    font-size: 2.5rem;
+    font-family: var(--heading-font);
+    color: var(--title-color);
+    margin-bottom: 1rem;
+}
+
+.error-message {
+    font-size: 1.1rem;
+    color: var(--paragraph-color);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.error-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--accent-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.error-btn:hover {
+    background: var(--accent-color-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 169, 255, 0.3);
+}
+
+.error-btn.secondary {
+    background: transparent;
+    border: 2px solid #ff6b6b;
+    color: #ff6b6b;
+}
+
+.error-btn.secondary:hover {
+    background: #ff6b6b;
+    color: white;
+}
+
+.request-info {
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.request-info h3 {
+    color: #ff6b6b;
+    font-family: var(--heading-font);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.request-info p {
+    color: var(--paragraph-color);
+    margin: 0;
+}
+
+.common-causes {
+    text-align: left;
+}
+
+.common-causes h3 {
+    color: var(--title-color);
+    font-family: var(--heading-font);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.causes-list {
+    list-style: none;
+    padding: 0;
+}
+
+.causes-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    color: var(--paragraph-color);
+    border-bottom: 1px solid var(--card-border);
+}
+
+.causes-list li:last-child {
+    border-bottom: none;
+}
+
+.causes-list li i {
+    color: #ff6b6b;
+    width: 20px;
+    margin-top: 2px;
+}
+
+.causes-list li a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.causes-list li a:hover {
+    color: var(--accent-color-hover);
+}
+
+/* Broken request animation */
+@keyframes broken-request {
+    0%, 100% { 
+        transform: translateY(0px) rotate(0deg);
+    }
+    25% { 
+        transform: translateY(-10px) rotate(2deg);
+    }
+    75% { 
+        transform: translateY(10px) rotate(-2deg);
+    }
+}
+
+.error-illustration {
+    animation: broken-request 3s ease-in-out infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .error-container {
+        min-height: 70vh;
+        padding: 1rem;
+    }
+    
+    .error-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    .error-code {
+        font-size: 4rem;
+    }
+    
+    .error-title {
+        font-size: 2rem;
+    }
+    
+    .error-illustration {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .error-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .error-btn {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-content">
+        <!-- 400 Illustration -->
+        <div class="error-illustration">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background Circle -->
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#ff6b6b" stroke-width="2" opacity="0.3"/>
+                
+                <!-- Broken Document -->
+                <rect x="70" y="60" width="60" height="80" rx="4" fill="none" stroke="#ff6b6b" stroke-width="2"/>
+                
+                <!-- Document Lines (Broken) -->
+                <line x1="80" y1="75" x2="110" y2="75" stroke="#ff6b6b" stroke-width="2" opacity="0.6"/>
+                <line x1="80" y1="85" x2="100" y2="85" stroke="#ff6b6b" stroke-width="2" opacity="0.6"/>
+                <line x1="105" y1="85" x2="120" y2="85" stroke="#ff6b6b" stroke-width="2" opacity="0.6"/>
+                <line x1="80" y1="95" x2="95" y2="95" stroke="#ff6b6b" stroke-width="2" opacity="0.6"/>
+                <line x1="105" y1="95" x2="120" y2="95" stroke="#ff6b6b" stroke-width="2" opacity="0.6"/>
+                
+                <!-- Crack through document -->
+                <path d="M 90 60 L 95 80 L 85 100 L 100 120 L 95 140" 
+                      fill="none" stroke="#ff6b6b" stroke-width="3" stroke-linecap="round">
+                    <animate attributeName="stroke-dasharray" values="0,100;20,80;0,100" dur="2s" repeatCount="indefinite"/>
+                </path>
+                
+                <!-- Error X -->
+                <g transform="translate(110, 110)">
+                    <circle r="15" fill="none" stroke="#ff6b6b" stroke-width="2"/>
+                    <line x1="-8" y1="-8" x2="8" y2="8" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="8" y1="-8" x2="-8" y2="8" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round"/>
+                </g>
+                
+                <!-- Warning Indicators -->
+                <circle cx="60" cy="50" r="3" fill="#ff6b6b" opacity="0.6">
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="1.5s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="150" cy="70" r="2" fill="#ff6b6b" opacity="0.4">
+                    <animate attributeName="opacity" values="0.4;0.8;0.4" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="50" cy="130" r="2.5" fill="#ff6b6b" opacity="0.5">
+                    <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+
+        <div class="error-code">400</div>
+        <h1 class="error-title">Bad Request</h1>
+        
+        <div class="request-info">
+            <h3>
+                <i class="fas fa-exclamation-triangle"></i>
+                Invalid Request
+            </h3>
+            <p>
+                The server cannot process your request due to malformed syntax or invalid parameters. 
+                Please check your input and try again.
+            </p>
+        </div>
+
+        <p class="error-message">
+            Something about your request doesn't look quite right. This usually happens when 
+            data is missing, incorrectly formatted, or contains invalid characters.
+        </p>
+
+        <div class="error-actions">
+            <a href="{% url 'portfolio:home' %}" class="error-btn">
+                <i class="fas fa-home"></i>
+                Go Home
+            </a>
+            <button onclick="history.back()" class="error-btn secondary">
+                <i class="fas fa-arrow-left"></i>
+                Go Back
+            </button>
+        </div>
+
+        <div class="common-causes">
+            <h3>Common causes:</h3>
+            <ul class="causes-list">
+                <li>
+                    <i class="fas fa-edit"></i>
+                    <span>Missing or incorrect form data</span>
+                </li>
+                <li>
+                    <i class="fas fa-code"></i>
+                    <span>Invalid characters in URL parameters</span>
+                </li>
+                <li>
+                    <i class="fas fa-upload"></i>
+                    <span>File upload that exceeds size limits</span>
+                </li>
+                <li>
+                    <i class="fas fa-key"></i>
+                    <span>Malformed API request or missing authentication</span>
+                </li>
+                <li>
+                    <i class="fas fa-home"></i>
+                    <span><a href="{% url 'portfolio:home' %}">Return to homepage to start fresh</a></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Add interactive elements to the 400 error page
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate error code with wobble effect
+    const errorCode = document.querySelector('.error-code');
+    if (errorCode) {
+        errorCode.style.transform = 'scale(0) rotate(180deg)';
+        errorCode.style.opacity = '0';
+        
+        setTimeout(() => {
+            errorCode.style.transition = 'all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            errorCode.style.transform = 'scale(1) rotate(0deg)';
+            errorCode.style.opacity = '1';
+        }, 400);
+    }
+
+    // Add diagnostic information if available
+    function showDiagnostics() {
+        const requestInfo = document.querySelector('.request-info');
+        if (requestInfo) {
+            // Check if there are URL parameters that might be causing issues
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.toString()) {
+                const diagnosticDiv = document.createElement('div');
+                diagnosticDiv.style.marginTop = '1rem';
+                diagnosticDiv.style.padding = '0.5rem';
+                diagnosticDiv.style.background = 'rgba(255, 107, 107, 0.05)';
+                diagnosticDiv.style.borderRadius = '4px';
+                diagnosticDiv.style.fontSize = '0.9rem';
+                diagnosticDiv.innerHTML = `
+                    <strong>Detected URL parameters:</strong><br>
+                    <code style="color: #ff6b6b;">${urlParams.toString()}</code>
+                `;
+                requestInfo.appendChild(diagnosticDiv);
+            }
+        }
+    }
+
+    showDiagnostics();
+
+    // Interactive request validation
+    function createRequestValidator() {
+        const validatorDiv = document.createElement('div');
+        validatorDiv.style.marginTop = '2rem';
+        validatorDiv.style.padding = '1.5rem';
+        validatorDiv.style.background = 'rgba(0, 169, 255, 0.05)';
+        validatorDiv.style.border = '1px solid rgba(0, 169, 255, 0.2)';
+        validatorDiv.style.borderRadius = '8px';
+        
+        validatorDiv.innerHTML = `
+            <h4 style="margin-bottom: 1rem; color: var(--title-color);">
+                <i class="fas fa-tools"></i> Quick Request Validator
+            </h4>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <input type="text" placeholder="Test your URL or data..." 
+                       style="flex: 1; padding: 0.5rem; border: 1px solid var(--card-border); 
+                              border-radius: 4px; background: var(--card-bg); color: var(--paragraph-color);
+                              min-width: 200px;" id="validator-input">
+                <button onclick="validateInput()" 
+                        style="padding: 0.5rem 1rem; background: var(--accent-color); 
+                               color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Validate
+                </button>
+            </div>
+            <div id="validation-result" style="margin-top: 1rem;"></div>
+        `;
+        
+        document.querySelector('.error-content').appendChild(validatorDiv);
+    }
+
+    // Add validator
+    createRequestValidator();
+
+    // Validation function
+    window.validateInput = function() {
+        const input = document.getElementById('validator-input');
+        const result = document.getElementById('validation-result');
+        const value = input.value.trim();
+        
+        if (!value) {
+            result.innerHTML = '<span style="color: #ff6b6b;">⚠️ Please enter something to validate</span>';
+            return;
+        }
+
+        // Simple validation checks
+        let issues = [];
+        
+        // Check for common problematic characters
+        if (/[<>\"'&]/.test(value)) {
+            issues.push('Contains potentially problematic characters: < > " \' &');
+        }
+        
+        // Check URL format if it looks like a URL
+        if (value.includes('://') || value.startsWith('/')) {
+            try {
+                if (value.includes('://')) {
+                    new URL(value);
+                }
+            } catch (e) {
+                issues.push('Invalid URL format');
+            }
+        }
+        
+        // Check for extremely long input
+        if (value.length > 2000) {
+            issues.push('Input is very long (might exceed server limits)');
+        }
+        
+        // Show results
+        if (issues.length === 0) {
+            result.innerHTML = '<span style="color: #2ed573;">✅ Input looks good!</span>';
+        } else {
+            result.innerHTML = `
+                <span style="color: #ff6b6b;">⚠️ Potential issues found:</span>
+                <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                    ${issues.map(issue => `<li style="color: var(--paragraph-color);">${issue}</li>`).join('')}
+                </ul>
+            `;
+        }
+    };
+
+    // Add enter key support for validator
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && e.target.id === 'validator-input') {
+            validateInput();
+        }
+    });
+
+    // Create floating error particles
+    function createErrorParticle() {
+        const particle = document.createElement('div');
+        particle.innerHTML = '<i class="fas fa-exclamation"></i>';
+        particle.style.position = 'absolute';
+        particle.style.fontSize = '10px';
+        particle.style.color = '#ff6b6b';
+        particle.style.pointerEvents = 'none';
+        particle.style.animation = 'errorFloat 3s ease-out forwards';
+        particle.style.opacity = '0.7';
+        
+        const container = document.querySelector('.error-content');
+        particle.style.left = Math.random() * container.offsetWidth + 'px';
+        particle.style.top = '100%';
+        
+        container.appendChild(particle);
+        
+        setTimeout(() => {
+            particle.remove();
+        }, 3000);
+    }
+
+    // Create particles occasionally
+    setInterval(createErrorParticle, 3000);
+
+    // Add particle animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes errorFloat {
+            0% {
+                opacity: 0.7;
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-150px) rotate(180deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-300px) rotate(360deg);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Causes list interaction
+    const causes = document.querySelectorAll('.causes-list li');
+    causes.forEach(cause => {
+        cause.addEventListener('click', function() {
+            this.style.background = 'rgba(255, 107, 107, 0.1)';
+            this.style.transform = 'scale(0.98)';
+            
+            setTimeout(() => {
+                this.style.background = '';
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+    });
+});
+</script>
+{% endblock %}

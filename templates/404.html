@@ -1,0 +1,395 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}404 - Page Not Found | Roshan Damor - Portfolio{% endblock %}
+
+{% block meta_description %}The page you're looking for doesn't exist. Explore Roshan Damor's portfolio to find amazing projects, blogs, and more.{% endblock %}
+
+{% block body_class %}error-page error-404{% endblock %}
+
+{% block extra_css %}
+<style>
+.error-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+.error-content {
+    text-align: center;
+    max-width: 600px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    box-shadow: 0 20px 40px var(--card-shadow);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.error-content::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, var(--accent-color), transparent);
+    animation: rotate 6s linear infinite;
+    z-index: -1;
+}
+
+.error-content::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: var(--card-bg);
+    border-radius: 14px;
+    z-index: -1;
+}
+
+@keyframes rotate {
+    100% { transform: rotate(360deg); }
+}
+
+.error-illustration {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 2rem;
+    position: relative;
+}
+
+.error-illustration svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 10px 20px rgba(0, 169, 255, 0.3));
+}
+
+.error-code {
+    font-size: 6rem;
+    font-family: var(--heading-font);
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px rgba(0, 169, 255, 0.5);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.error-title {
+    font-size: 2.5rem;
+    font-family: var(--heading-font);
+    color: var(--title-color);
+    margin-bottom: 1rem;
+}
+
+.error-message {
+    font-size: 1.1rem;
+    color: var(--paragraph-color);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.error-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--accent-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.error-btn:hover {
+    background: var(--accent-color-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 169, 255, 0.3);
+}
+
+.error-btn.secondary {
+    background: transparent;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+}
+
+.error-btn.secondary:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+.error-suggestions {
+    margin-top: 3rem;
+    text-align: left;
+}
+
+.error-suggestions h3 {
+    color: var(--title-color);
+    font-family: var(--heading-font);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.suggestions-list {
+    list-style: none;
+    padding: 0;
+}
+
+.suggestions-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    color: var(--paragraph-color);
+    border-bottom: 1px solid var(--card-border);
+}
+
+.suggestions-list li:last-child {
+    border-bottom: none;
+}
+
+.suggestions-list li i {
+    color: var(--accent-color);
+    width: 20px;
+}
+
+.suggestions-list li a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.suggestions-list li a:hover {
+    color: var(--accent-color-hover);
+}
+
+/* Floating animation for illustration */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+.error-illustration {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .error-container {
+        min-height: 70vh;
+        padding: 1rem;
+    }
+    
+    .error-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    .error-code {
+        font-size: 4rem;
+    }
+    
+    .error-title {
+        font-size: 2rem;
+    }
+    
+    .error-illustration {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .error-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .error-btn {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-content">
+        <!-- 404 Illustration -->
+        <div class="error-illustration">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background Circle -->
+                <circle cx="100" cy="100" r="80" fill="none" stroke="var(--accent-color)" stroke-width="2" opacity="0.3"/>
+                
+                <!-- Search Icon -->
+                <circle cx="85" cy="85" r="25" fill="none" stroke="var(--accent-color)" stroke-width="3"/>
+                <line x1="105" y1="105" x2="125" y2="125" stroke="var(--accent-color)" stroke-width="3" stroke-linecap="round"/>
+                
+                <!-- Question Mark -->
+                <path d="M 100 60 Q 115 45 130 60 Q 130 75 115 85 L 115 95" 
+                      fill="none" stroke="var(--title-color)" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="115" cy="105" r="3" fill="var(--title-color)"/>
+                
+                <!-- Floating Dots -->
+                <circle cx="60" cy="70" r="3" fill="var(--accent-color)" opacity="0.6">
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="150" cy="90" r="2" fill="var(--accent-color)" opacity="0.4">
+                    <animate attributeName="opacity" values="0.4;0.8;0.4" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="70" cy="140" r="2.5" fill="var(--accent-color)" opacity="0.5">
+                    <animate attributeName="opacity" values="0.5;0.9;0.5" dur="3s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+
+        <div class="error-code">404</div>
+        <h1 class="error-title">Oops! Page Not Found</h1>
+        <p class="error-message">
+            The page you're looking for seems to have vanished into the digital void. 
+            Don't worry though, even the best explorers sometimes take a wrong turn!
+        </p>
+
+        <div class="error-actions">
+            <a href="{% url 'portfolio:home' %}" class="error-btn">
+                <i class="fas fa-home"></i>
+                Go Home
+            </a>
+            <a href="{% url 'portfolio:projects' %}" class="error-btn secondary">
+                <i class="fas fa-project-diagram"></i>
+                View Projects
+            </a>
+        </div>
+
+        <div class="error-suggestions">
+            <h3>Here's what you can do:</h3>
+            <ul class="suggestions-list">
+                <li>
+                    <i class="fas fa-search"></i>
+                    <span>Check the URL for any typos</span>
+                </li>
+                <li>
+                    <i class="fas fa-home"></i>
+                    <span><a href="{% url 'portfolio:home' %}">Return to homepage</a></span>
+                </li>
+                <li>
+                    <i class="fas fa-folder-open"></i>
+                    <span><a href="{% url 'portfolio:projects' %}">Explore my projects</a></span>
+                </li>
+                <li>
+                    <i class="fas fa-blog"></i>
+                    <span><a href="{% url 'blog:home' %}">Read my latest blogs</a></span>
+                </li>
+                <li>
+                    <i class="fas fa-envelope"></i>
+                    <span><a href="{% url 'portfolio:home' %}#contact">Get in touch</a></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Add some interactive elements to the error page
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate error code on load
+    const errorCode = document.querySelector('.error-code');
+    if (errorCode) {
+        errorCode.style.transform = 'scale(0)';
+        errorCode.style.opacity = '0';
+        
+        setTimeout(() => {
+            errorCode.style.transition = 'all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            errorCode.style.transform = 'scale(1)';
+            errorCode.style.opacity = '1';
+        }, 300);
+    }
+
+    // Add click effect to suggestions
+    const suggestions = document.querySelectorAll('.suggestions-list li');
+    suggestions.forEach(item => {
+        item.addEventListener('click', function() {
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+        });
+    });
+
+    // Particle effect on button hover
+    const buttons = document.querySelectorAll('.error-btn');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            // Create sparkle effect
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    createSparkle(this);
+                }, i * 100);
+            }
+        });
+    });
+
+    function createSparkle(element) {
+        const sparkle = document.createElement('div');
+        sparkle.style.position = 'absolute';
+        sparkle.style.width = '4px';
+        sparkle.style.height = '4px';
+        sparkle.style.background = 'var(--accent-color)';
+        sparkle.style.borderRadius = '50%';
+        sparkle.style.pointerEvents = 'none';
+        sparkle.style.animation = 'sparkle 0.6s ease-out forwards';
+        
+        const rect = element.getBoundingClientRect();
+        sparkle.style.left = Math.random() * rect.width + 'px';
+        sparkle.style.top = Math.random() * rect.height + 'px';
+        
+        element.style.position = 'relative';
+        element.appendChild(sparkle);
+        
+        setTimeout(() => {
+            sparkle.remove();
+        }, 600);
+    }
+
+    // Add sparkle animation keyframes
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes sparkle {
+            0% {
+                opacity: 1;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) rotate(360deg);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+});
+</script>
+{% endblock %}

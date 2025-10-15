@@ -1,0 +1,486 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}403 - Access Forbidden | Roshan Damor - Portfolio{% endblock %}
+
+{% block meta_description %}Access to this resource is forbidden. You don't have permission to view this page. Return to Roshan Damor's portfolio homepage.{% endblock %}
+
+{% block body_class %}error-page error-403{% endblock %}
+
+{% block extra_css %}
+<style>
+.error-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+.error-content {
+    text-align: center;
+    max-width: 600px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    box-shadow: 0 20px 40px var(--card-shadow);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.error-content::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, #ffa502, transparent);
+    animation: rotate 6s linear infinite;
+    z-index: -1;
+}
+
+.error-content::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: var(--card-bg);
+    border-radius: 14px;
+    z-index: -1;
+}
+
+@keyframes rotate {
+    100% { transform: rotate(360deg); }
+}
+
+.error-illustration {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 2rem;
+    position: relative;
+}
+
+.error-illustration svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 10px 20px rgba(255, 165, 2, 0.3));
+}
+
+.error-code {
+    font-size: 6rem;
+    font-family: var(--heading-font);
+    color: #ffa502;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px rgba(255, 165, 2, 0.5);
+    animation: shake 1s ease-in-out infinite;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.error-title {
+    font-size: 2.5rem;
+    font-family: var(--heading-font);
+    color: var(--title-color);
+    margin-bottom: 1rem;
+}
+
+.error-message {
+    font-size: 1.1rem;
+    color: var(--paragraph-color);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.error-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--accent-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.error-btn:hover {
+    background: var(--accent-color-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 169, 255, 0.3);
+}
+
+.error-btn.secondary {
+    background: transparent;
+    border: 2px solid #ffa502;
+    color: #ffa502;
+}
+
+.error-btn.secondary:hover {
+    background: #ffa502;
+    color: white;
+}
+
+.permission-info {
+    background: rgba(255, 165, 2, 0.1);
+    border: 1px solid rgba(255, 165, 2, 0.3);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.permission-info h3 {
+    color: #ffa502;
+    font-family: var(--heading-font);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.permission-info p {
+    color: var(--paragraph-color);
+    margin: 0;
+}
+
+.access-options {
+    text-align: left;
+}
+
+.access-options h3 {
+    color: var(--title-color);
+    font-family: var(--heading-font);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.options-list {
+    list-style: none;
+    padding: 0;
+}
+
+.options-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    color: var(--paragraph-color);
+    border-bottom: 1px solid var(--card-border);
+}
+
+.options-list li:last-child {
+    border-bottom: none;
+}
+
+.options-list li i {
+    color: var(--accent-color);
+    width: 20px;
+}
+
+.options-list li a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.options-list li a:hover {
+    color: var(--accent-color-hover);
+}
+
+/* Shield animation for illustration */
+@keyframes shield-glow {
+    0%, 100% { 
+        filter: drop-shadow(0 10px 20px rgba(255, 165, 2, 0.3));
+    }
+    50% { 
+        filter: drop-shadow(0 15px 30px rgba(255, 165, 2, 0.5));
+    }
+}
+
+.error-illustration {
+    animation: shield-glow 2s ease-in-out infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .error-container {
+        min-height: 70vh;
+        padding: 1rem;
+    }
+    
+    .error-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    .error-code {
+        font-size: 4rem;
+    }
+    
+    .error-title {
+        font-size: 2rem;
+    }
+    
+    .error-illustration {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .error-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .error-btn {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-content">
+        <!-- 403 Illustration -->
+        <div class="error-illustration">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background Circle -->
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#ffa502" stroke-width="2" opacity="0.3"/>
+                
+                <!-- Shield -->
+                <path d="M 100 50 L 85 60 L 85 90 Q 85 110 100 120 Q 115 110 115 90 L 115 60 Z" 
+                      fill="none" stroke="#ffa502" stroke-width="3"/>
+                
+                <!-- Lock Icon -->
+                <rect x="90" y="85" width="20" height="15" rx="2" fill="none" stroke="#ffa502" stroke-width="2"/>
+                <path d="M 95 85 L 95 80 Q 95 75 100 75 Q 105 75 105 80 L 105 85" 
+                      fill="none" stroke="#ffa502" stroke-width="2"/>
+                <circle cx="100" cy="92" r="2" fill="#ffa502"/>
+                
+                <!-- Warning Sign -->
+                <path d="M 130 130 L 145 155 L 115 155 Z" fill="none" stroke="#ffa502" stroke-width="2"/>
+                <circle cx="130" cy="148" r="2" fill="#ffa502"/>
+                <line x1="130" y1="138" x2="130" y2="145" stroke="#ffa502" stroke-width="2" stroke-linecap="round"/>
+                
+                <!-- Prohibition Symbol -->
+                <circle cx="70" cy="140" r="12" fill="none" stroke="#ffa502" stroke-width="2"/>
+                <line x1="62" y1="132" x2="78" y2="148" stroke="#ffa502" stroke-width="2" stroke-linecap="round"/>
+                
+                <!-- Floating Warning Particles -->
+                <circle cx="60" cy="70" r="2" fill="#ffa502" opacity="0.6">
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="150" cy="80" r="1.5" fill="#ffa502" opacity="0.4">
+                    <animate attributeName="opacity" values="0.4;0.8;0.4" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="160" cy="130" r="2.5" fill="#ffa502" opacity="0.5">
+                    <animate attributeName="opacity" values="0.5;0.9;0.5" dur="3s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+
+        <div class="error-code">403</div>
+        <h1 class="error-title">Access Forbidden</h1>
+        
+        <div class="permission-info">
+            <h3>
+                <i class="fas fa-shield-alt"></i>
+                Permission Required
+            </h3>
+            <p>
+                You don't have permission to access this resource. This area might be 
+                restricted or require special authentication.
+            </p>
+        </div>
+
+        <p class="error-message">
+            This content is protected for security reasons. If you believe you should 
+            have access to this page, please check your credentials or contact the administrator.
+        </p>
+
+        <div class="error-actions">
+            <a href="{% url 'portfolio:home' %}" class="error-btn">
+                <i class="fas fa-home"></i>
+                Go Home
+            </a>
+            <a href="javascript:history.back()" class="error-btn secondary">
+                <i class="fas fa-arrow-left"></i>
+                Go Back
+            </a>
+        </div>
+
+        <div class="access-options">
+            <h3>What you can do:</h3>
+            <ul class="options-list">
+                <li>
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Make sure you're logged in with the correct account</span>
+                </li>
+                <li>
+                    <i class="fas fa-key"></i>
+                    <span>Check if you have the necessary permissions</span>
+                </li>
+                <li>
+                    <i class="fas fa-home"></i>
+                    <span><a href="{% url 'portfolio:home' %}">Return to the homepage</a></span>
+                </li>
+                <li>
+                    <i class="fas fa-folder-open"></i>
+                    <span><a href="{% url 'portfolio:projects' %}">Browse public projects</a></span>
+                </li>
+                <li>
+                    <i class="fas fa-envelope"></i>
+                    <span><a href="{% url 'portfolio:home' %}#contact">Contact me for access</a></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Add interactive elements to the 403 error page
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate error code on load
+    const errorCode = document.querySelector('.error-code');
+    if (errorCode) {
+        errorCode.style.transform = 'scale(0) rotate(45deg)';
+        errorCode.style.opacity = '0';
+        
+        setTimeout(() => {
+            errorCode.style.transition = 'all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            errorCode.style.transform = 'scale(1) rotate(0deg)';
+            errorCode.style.opacity = '1';
+        }, 300);
+    }
+
+    // Add lock shake effect on permission info click
+    const permissionInfo = document.querySelector('.permission-info');
+    if (permissionInfo) {
+        permissionInfo.addEventListener('click', function() {
+            this.style.animation = 'shake 0.5s ease-in-out';
+            setTimeout(() => {
+                this.style.animation = '';
+            }, 500);
+        });
+    }
+
+    // Create floating shield particles
+    function createShieldParticle() {
+        const particle = document.createElement('div');
+        particle.innerHTML = '<i class="fas fa-shield-alt"></i>';
+        particle.style.position = 'absolute';
+        particle.style.fontSize = '12px';
+        particle.style.color = '#ffa502';
+        particle.style.pointerEvents = 'none';
+        particle.style.animation = 'shieldFloat 4s ease-out forwards';
+        particle.style.opacity = '0.7';
+        
+        const container = document.querySelector('.error-content');
+        particle.style.left = Math.random() * container.offsetWidth + 'px';
+        particle.style.top = container.offsetHeight + 'px';
+        
+        container.style.position = 'relative';
+        container.appendChild(particle);
+        
+        setTimeout(() => {
+            particle.remove();
+        }, 4000);
+    }
+
+    // Create shield particles periodically
+    setInterval(createShieldParticle, 2000);
+
+    // Add shield particle animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes shieldFloat {
+            0% {
+                opacity: 0.7;
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-200px) rotate(180deg) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-400px) rotate(360deg) scale(0.8);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Add ripple effect to buttons
+    const buttons = document.querySelectorAll('.error-btn');
+    buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const ripple = document.createElement('div');
+            ripple.style.position = 'absolute';
+            ripple.style.width = '4px';
+            ripple.style.height = '4px';
+            ripple.style.background = 'rgba(255, 255, 255, 0.6)';
+            ripple.style.borderRadius = '50%';
+            ripple.style.transform = 'scale(0)';
+            ripple.style.animation = 'ripple 0.6s ease-out';
+            ripple.style.left = (e.offsetX - 2) + 'px';
+            ripple.style.top = (e.offsetY - 2) + 'px';
+            
+            this.style.position = 'relative';
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+
+    // Add ripple animation
+    const rippleStyle = document.createElement('style');
+    rippleStyle.textContent = `
+        @keyframes ripple {
+            to {
+                transform: scale(20);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(rippleStyle);
+
+    // Options list interaction
+    const options = document.querySelectorAll('.options-list li');
+    options.forEach(option => {
+        option.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(10px)';
+            this.style.background = 'rgba(0, 169, 255, 0.05)';
+        });
+        
+        option.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(0)';
+            this.style.background = '';
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,484 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}500 - Server Error | Roshan Damor - Portfolio{% endblock %}
+
+{% block meta_description %}Something went wrong on our server. We're working to fix it. Explore Roshan Damor's portfolio while we resolve this issue.{% endblock %}
+
+{% block body_class %}error-page error-500{% endblock %}
+
+{% block extra_css %}
+<style>
+.error-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+.error-content {
+    text-align: center;
+    max-width: 600px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    box-shadow: 0 20px 40px var(--card-shadow);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.error-content::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, #ff4757, transparent);
+    animation: rotate 6s linear infinite;
+    z-index: -1;
+}
+
+.error-content::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: var(--card-bg);
+    border-radius: 14px;
+    z-index: -1;
+}
+
+@keyframes rotate {
+    100% { transform: rotate(360deg); }
+}
+
+.error-illustration {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 2rem;
+    position: relative;
+}
+
+.error-illustration svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 10px 20px rgba(255, 71, 87, 0.3));
+}
+
+.error-code {
+    font-size: 6rem;
+    font-family: var(--heading-font);
+    color: #ff4757;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+    animation: glitch 2s ease-in-out infinite;
+}
+
+@keyframes glitch {
+    0%, 100% { 
+        transform: translateX(0);
+        filter: hue-rotate(0deg);
+    }
+    20% { 
+        transform: translateX(-2px);
+        filter: hue-rotate(90deg);
+    }
+    40% { 
+        transform: translateX(2px);
+        filter: hue-rotate(180deg);
+    }
+    60% { 
+        transform: translateX(-1px);
+        filter: hue-rotate(270deg);
+    }
+    80% { 
+        transform: translateX(1px);
+        filter: hue-rotate(360deg);
+    }
+}
+
+.error-title {
+    font-size: 2.5rem;
+    font-family: var(--heading-font);
+    color: var(--title-color);
+    margin-bottom: 1rem;
+}
+
+.error-message {
+    font-size: 1.1rem;
+    color: var(--paragraph-color);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.error-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--accent-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.error-btn:hover {
+    background: var(--accent-color-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 169, 255, 0.3);
+}
+
+.error-btn.secondary {
+    background: transparent;
+    border: 2px solid #ff4757;
+    color: #ff4757;
+}
+
+.error-btn.secondary:hover {
+    background: #ff4757;
+    color: white;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: rgba(255, 71, 87, 0.1);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    border-radius: 8px;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ff4757;
+    animation: pulse-red 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-red {
+    0%, 100% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.7;
+        transform: scale(1.2);
+    }
+}
+
+.status-text {
+    color: #ff4757;
+    font-weight: 600;
+}
+
+.troubleshooting {
+    text-align: left;
+    background: rgba(0, 169, 255, 0.05);
+    border: 1px solid rgba(0, 169, 255, 0.2);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+.troubleshooting h3 {
+    color: var(--title-color);
+    font-family: var(--heading-font);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.troubleshooting-list {
+    list-style: none;
+    padding: 0;
+}
+
+.troubleshooting-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    color: var(--paragraph-color);
+    border-bottom: 1px solid rgba(0, 169, 255, 0.1);
+}
+
+.troubleshooting-list li:last-child {
+    border-bottom: none;
+}
+
+.troubleshooting-list li i {
+    color: var(--accent-color);
+    width: 20px;
+    margin-top: 2px;
+}
+
+/* Floating animation for illustration */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    25% { transform: translateY(-10px) rotate(2deg); }
+    50% { transform: translateY(-20px) rotate(0deg); }
+    75% { transform: translateY(-10px) rotate(-2deg); }
+}
+
+.error-illustration {
+    animation: float 4s ease-in-out infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .error-container {
+        min-height: 70vh;
+        padding: 1rem;
+    }
+    
+    .error-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    .error-code {
+        font-size: 4rem;
+    }
+    
+    .error-title {
+        font-size: 2rem;
+    }
+    
+    .error-illustration {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .error-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .error-btn {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+    }
+    
+    .status-indicator {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-content">
+        <!-- 500 Illustration -->
+        <div class="error-illustration">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background Circle -->
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#ff4757" stroke-width="2" opacity="0.3"/>
+                
+                <!-- Server Icon -->
+                <rect x="70" y="70" width="60" height="40" rx="4" fill="none" stroke="#ff4757" stroke-width="2"/>
+                <rect x="75" y="75" width="50" height="6" rx="2" fill="#ff4757" opacity="0.6"/>
+                <rect x="75" y="85" width="50" height="6" rx="2" fill="#ff4757" opacity="0.4"/>
+                <rect x="75" y="95" width="50" height="6" rx="2" fill="#ff4757" opacity="0.6"/>
+                
+                <!-- Error Lightning -->
+                <path d="M 90 45 L 85 65 L 95 65 L 90 85 L 105 65 L 95 65 L 100 45 Z" 
+                      fill="#ff4757" opacity="0.8">
+                    <animate attributeName="opacity" values="0.8;1;0.8" dur="1.5s" repeatCount="indefinite"/>
+                </path>
+                
+                <!-- Warning Triangle -->
+                <path d="M 120 120 L 135 145 L 105 145 Z" fill="none" stroke="#ff4757" stroke-width="2"/>
+                <circle cx="120" cy="135" r="2" fill="#ff4757"/>
+                <line x1="120" y1="125" x2="120" y2="130" stroke="#ff4757" stroke-width="2" stroke-linecap="round"/>
+                
+                <!-- Floating Error Particles -->
+                <circle cx="50" cy="60" r="2" fill="#ff4757" opacity="0.6">
+                    <animate attributeName="cy" values="60;50;60" dur="2s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="160" cy="80" r="1.5" fill="#ff4757" opacity="0.4">
+                    <animate attributeName="cy" values="80;70;80" dur="2.5s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.4;0.8;0.4" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="65" cy="150" r="2.5" fill="#ff4757" opacity="0.5">
+                    <animate attributeName="cy" values="150;140;150" dur="3s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.5;0.9;0.5" dur="3s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+
+        <div class="error-code">500</div>
+        <h1 class="error-title">Internal Server Error</h1>
+        
+        <div class="status-indicator">
+            <div class="status-dot"></div>
+            <span class="status-text">Server is experiencing issues</span>
+        </div>
+
+        <p class="error-message">
+            Oops! Something went wrong on our end. Our servers are having a moment, 
+            but don't worry - we're already working on fixing this issue.
+        </p>
+
+        <div class="error-actions">
+            <a href="{% url 'portfolio:home' %}" class="error-btn">
+                <i class="fas fa-home"></i>
+                Go Home
+            </a>
+            <button onclick="location.reload()" class="error-btn secondary">
+                <i class="fas fa-redo"></i>
+                Try Again
+            </button>
+        </div>
+
+        <div class="troubleshooting">
+            <h3>What you can do:</h3>
+            <ul class="troubleshooting-list">
+                <li>
+                    <i class="fas fa-clock"></i>
+                    <span>Wait a few moments and try refreshing the page</span>
+                </li>
+                <li>
+                    <i class="fas fa-home"></i>
+                    <span>Return to the homepage and try navigating again</span>
+                </li>
+                <li>
+                    <i class="fas fa-history"></i>
+                    <span>Check back in a few minutes - we're usually quick to fix things</span>
+                </li>
+                <li>
+                    <i class="fas fa-envelope"></i>
+                    <span>If the problem persists, feel free to contact me</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Add interactive elements to the 500 error page
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate error code with glitch effect
+    const errorCode = document.querySelector('.error-code');
+    if (errorCode) {
+        errorCode.style.transform = 'scale(0)';
+        errorCode.style.opacity = '0';
+        
+        setTimeout(() => {
+            errorCode.style.transition = 'all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            errorCode.style.transform = 'scale(1)';
+            errorCode.style.opacity = '1';
+        }, 300);
+    }
+
+    // Auto-retry functionality
+    let retryCount = 0;
+    const maxRetries = 3;
+    const retryButton = document.querySelector('.error-btn.secondary');
+    
+    if (retryButton) {
+        retryButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            retryCount++;
+            
+            // Show loading state
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Retrying...';
+            this.style.pointerEvents = 'none';
+            
+            setTimeout(() => {
+                if (retryCount < maxRetries) {
+                    location.reload();
+                } else {
+                    this.innerHTML = '<i class="fas fa-times"></i> Max Retries Reached';
+                    this.style.background = '#ff4757';
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.style.background = '';
+                        this.style.pointerEvents = '';
+                        retryCount = 0;
+                    }, 3000);
+                }
+            }, 2000);
+        });
+    }
+
+    // Add particle effects
+    function createErrorParticle() {
+        const particle = document.createElement('div');
+        particle.style.position = 'absolute';
+        particle.style.width = '3px';
+        particle.style.height = '3px';
+        particle.style.background = '#ff4757';
+        particle.style.borderRadius = '50%';
+        particle.style.pointerEvents = 'none';
+        particle.style.animation = 'errorParticle 3s ease-out forwards';
+        
+        const errorContent = document.querySelector('.error-content');
+        particle.style.left = Math.random() * errorContent.offsetWidth + 'px';
+        particle.style.top = '0px';
+        
+        errorContent.style.position = 'relative';
+        errorContent.appendChild(particle);
+        
+        setTimeout(() => {
+            particle.remove();
+        }, 3000);
+    }
+
+    // Create particles periodically
+    setInterval(createErrorParticle, 1000);
+
+    // Add particle animation keyframes
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes errorParticle {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(400px) rotate(360deg);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Status indicator interaction
+    const statusIndicator = document.querySelector('.status-indicator');
+    if (statusIndicator) {
+        statusIndicator.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+        });
+    }
+});
+</script>
+{% endblock %}

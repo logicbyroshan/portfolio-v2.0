@@ -488,3 +488,34 @@ def toggle_project_comment_like(request, comment_id):
 
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+
+# ======================= CUSTOM ERROR HANDLERS =======================
+
+
+def custom_bad_request(request, exception=None):
+    """
+    Custom 400 Bad Request error handler.
+    """
+    return render(request, "400.html", status=400)
+
+
+def custom_permission_denied(request, exception=None):
+    """
+    Custom 403 Permission Denied error handler.
+    """
+    return render(request, "403.html", status=403)
+
+
+def custom_page_not_found(request, exception=None):
+    """
+    Custom 404 Page Not Found error handler.
+    """
+    return render(request, "404.html", status=404)
+
+
+def custom_server_error(request):
+    """
+    Custom 500 Server Error handler.
+    """
+    return render(request, "500.html", status=500)
