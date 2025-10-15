@@ -1,0 +1,42 @@
+# Testing Dependencies for Portfolio Project
+# These are additional packages needed for testing
+# Install with: pip install -r requirements-test.txt
+
+# Core Testing Framework
+pytest==7.4.3
+pytest-django==4.7.0
+pytest-cov==4.0.0
+pytest-mock==3.12.0
+pytest-xdist==3.5.0  # For parallel test execution
+pytest-html==4.1.1   # HTML test reports
+
+# Test Data Generation
+factory-boy==3.3.0
+faker==20.1.0
+
+# Database Testing
+pytest-factoryboy==2.6.0
+
+# Coverage Reporting
+coverage[toml]==7.3.2
+coverage-badge==1.1.0
+
+# Performance Testing
+pytest-benchmark==4.0.0
+
+# Django Testing Helpers
+django-test-plus==2.2.1
+model-bakery==1.17.0
+
+# Mock External APIs
+responses==0.24.1
+requests-mock==1.11.0
+
+# Linting and Code Quality for Tests
+flake8==6.1.0
+black==23.11.0
+isort==5.12.0
+
+# HTML/CSS Testing
+pyquery==2.0.0
+beautifulsoup4==4.12.2

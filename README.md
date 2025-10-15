@@ -177,6 +177,17 @@ portfolio-v2.0/
 │       ├── templates/               # Resource templates
 │       └── migrations/              # Resource migrations
 │
+├── 📁 Testing Infrastructure
+│   ├── tests/                       # Test utilities and factories
+│   │   ├── __init__.py
+│   │   ├── factories.py             # Factory Boy test data generators
+│   │   └── utils.py                 # Test utilities and base classes
+│   │
+│   ├── requirements-test.txt        # Testing dependencies
+│   ├── pytest.ini                  # Pytest configuration
+│   ├── config/test_settings.py     # Test-specific Django settings
+│   └── TESTING.md                  # Comprehensive testing documentation
+│
 ├── 📁 Frontend Assets
 │   ├── static/                      # Static files (served in production)
 │   │   ├── css/                     # Compiled CSS files
@@ -526,6 +537,52 @@ Before contributing, please read our comprehensive guides:
 
 ### 🏷️ Good First Issues
 Look for issues labeled `good first issue` - these are perfect for newcomers and first-time contributors.
+
+---
+
+## 🧪 Testing & Quality Assurance
+
+This project includes comprehensive testing to ensure reliability and deployment readiness.
+
+### 🏃‍♂️ Quick Start Testing
+
+```bash
+# Install testing dependencies
+pip install -r requirements-test.txt
+
+# Run all tests
+pytest
+
+# Run tests with coverage
+pytest --cov=.
+
+# Run specific test categories
+pytest -m models      # Model tests only
+pytest -m views       # View tests only
+pytest -m security    # Security tests only
+```
+
+### 📊 Test Coverage
+
+Our test suite covers:
+
+- ✅ **Models** - Data validation and relationships (95% coverage target)
+- ✅ **Views** - HTTP responses and templates (85% coverage target)
+- ✅ **Forms** - Data validation and processing (90% coverage target)
+- ✅ **APIs** - External integrations (Spotify, Gemini AI) (85% coverage target)
+- ✅ **Security** - Authentication and data protection (95% coverage target)
+- ✅ **Performance** - Load handling and optimization (70% coverage target)
+- ✅ **Integration** - Cross-app functionality (75% coverage target)
+
+### 📚 Testing Documentation
+
+For detailed testing information, see [TESTING.md](./TESTING.md):
+- Test structure and organization
+- Running different test types
+- Writing new tests
+- Coverage reports and CI/CD integration
+- Performance testing and benchmarks
+- Troubleshooting common issues
 
 ---
 
