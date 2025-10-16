@@ -183,7 +183,19 @@
     display: block;
     overflow: hidden;
     border-radius: 10px;
+    position: relative;
 }
+
+.read-time{
+  position: absolute;
+  top: 5px;      
+  left: 5px;    
+  background-color: rgb(7, 7, 7);
+  border-radius: 20px;
+  color: #fff;
+  font-size: 12px;
+}
+
 .blog-image img {
     border-radius: 10px;
     width: 100%;
