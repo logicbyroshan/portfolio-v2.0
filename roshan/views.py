@@ -39,7 +39,7 @@ logger = logging.getLogger(__name__)
 class AboutMeView(TemplateView):
     """View for the About Me page."""
 
-    template_name = "aboutme.html"
+    template_name = "about-me.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -48,11 +48,12 @@ class AboutMeView(TemplateView):
             context["config"] = config
         except AboutMeConfiguration.DoesNotExist:
             context["config"] = None
-        
+
         # Add FAQ data for the FAQ section
         from portfolio.models import FAQ
-        context['faqs'] = FAQ.objects.order_by('order')
-        
+
+        context["faqs"] = FAQ.objects.order_by("order")
+
         return context
 
 
@@ -65,7 +66,7 @@ class ResourcesListView(ListView):
     """View for the resources list page with filtering and pagination."""
 
     model = Resource
-    template_name = "resources.html"
+    template_name = "resources-list.html"
     context_object_name = "resources"
     paginate_by = 12
 

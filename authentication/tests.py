@@ -1,5 +1,5 @@
 """
-Tests for the auth_app.
+Tests for the auth.
 Tests authentication functionality, user management, and auth flows.
 """
 
@@ -23,7 +23,7 @@ class AuthViewTest(BaseTestCase):
     def test_login_view_get(self):
         """Test login view GET request."""
         try:
-            response = self.client.get(reverse("auth_app:login"))
+            response = self.client.get(reverse("authentication:login"))
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, "login")  # Adjust based on your template
         except:
@@ -42,7 +42,7 @@ class AuthViewTest(BaseTestCase):
         login_data = {"username": "testuser", "password": "testpass123"}
 
         try:
-            response = self.client.post(reverse("auth_app:login"), data=login_data)
+            response = self.client.post(reverse("authentication:login"), data=login_data)
         except:
             # Use Django's default login
             response = self.client.post("/accounts/login/", data=login_data)
@@ -58,7 +58,7 @@ class AuthViewTest(BaseTestCase):
         login_data = {"username": "nonexistent", "password": "wrongpass"}
 
         try:
-            response = self.client.post(reverse("auth_app:login"), data=login_data)
+            response = self.client.post(reverse("authentication:login"), data=login_data)
         except:
             response = self.client.post("/accounts/login/", data=login_data)
 
@@ -72,7 +72,7 @@ class AuthViewTest(BaseTestCase):
         self.client.force_login(user)
 
         try:
-            response = self.client.post(reverse("auth_app:logout"))
+            response = self.client.post(reverse("authentication:logout"))
         except:
             response = self.client.post("/accounts/logout/")
 
@@ -85,7 +85,7 @@ class AuthViewTest(BaseTestCase):
     def test_signup_view_get(self):
         """Test signup view GET request."""
         try:
-            response = self.client.get(reverse("auth_app:signup"))
+            response = self.client.get(reverse("authentication:signup"))
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, "sign")  # "signup" or "sign up"
         except:
@@ -102,7 +102,7 @@ class AuthViewTest(BaseTestCase):
         }
 
         try:
-            response = self.client.post(reverse("auth_app:signup"), data=signup_data)
+            response = self.client.post(reverse("authentication:signup"), data=signup_data)
 
             if response.status_code in [200, 302]:
                 # User should be created
@@ -121,7 +121,7 @@ class AuthViewTest(BaseTestCase):
         }
 
         try:
-            response = self.client.post(reverse("auth_app:signup"), data=signup_data)
+            response = self.client.post(reverse("authentication:signup"), data=signup_data)
 
             if response.status_code == 200:
                 # Should show validation errors
@@ -233,7 +233,7 @@ class PasswordFunctionalityTest(BaseTestCase):
         self.client.force_login(user)
 
         try:
-            response = self.client.get(reverse("auth_app:password_change"))
+            response = self.client.get(reverse("authentication:password_change"))
         except:
             try:
                 response = self.client.get("/accounts/password/change/")
@@ -250,7 +250,7 @@ class PasswordFunctionalityTest(BaseTestCase):
 
             try:
                 response = self.client.post(
-                    reverse("auth_app:password_change"), data=password_data
+                    reverse("authentication:password_change"), data=password_data
                 )
             except:
                 try:
@@ -273,7 +273,7 @@ class PasswordFunctionalityTest(BaseTestCase):
         user = UserFactory(email="test@example.com")
 
         try:
-            response = self.client.get(reverse("auth_app:password_reset"))
+            response = self.client.get(reverse("authentication:password_reset"))
         except:
             try:
                 response = self.client.get("/accounts/password/reset/")
@@ -287,7 +287,7 @@ class PasswordFunctionalityTest(BaseTestCase):
 
             try:
                 response = self.client.post(
-                    reverse("auth_app:password_reset"), data=reset_data
+                    reverse("authentication:password_reset"), data=reset_data
                 )
             except:
                 response = self.client.post(
@@ -408,7 +408,7 @@ class AuthSecurityTest(BaseTestCase):
 
             try:
                 response = self.client.post(
-                    reverse("auth_app:signup"), data=signup_data
+                    reverse("authentication:signup"), data=signup_data
                 )
 
                 if response.status_code == 200:

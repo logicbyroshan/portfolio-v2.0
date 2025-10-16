@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     "portfolio",
     "blog",
     "ai",
-    "auth_app",
+    "authentication",
     "roshan",
     "notifications",
 ]

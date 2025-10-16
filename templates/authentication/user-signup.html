@@ -43,7 +43,7 @@
             </form>
 
             <div class="auth-links">
-                <p>Already have an account? <a href="{% url 'auth_app:login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">Sign In</a></p>
+                <p>Already have an account? <a href="{% url 'authentication:login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">Sign In</a></p>
             </div>
         </div>
     </div>

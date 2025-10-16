@@ -29,7 +29,7 @@ urlpatterns = [
     path("", include("portfolio.urls")),
     path("blogs/", include("blog.urls")),
     path("ai/", include("ai.urls")),
-    path("auth/", include("auth_app.urls")),
+    path("auth/", include("authentication.urls")),
     path("", include("roshan.urls")),  # Include roshan app URLs at root level
     path(
         "callback/", admin_spotify_callback, name="spotify_callback"

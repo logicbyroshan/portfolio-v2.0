@@ -14,7 +14,7 @@ class BlogListView(ListView):
     """View for the main blog list page with filtering and pagination."""
 
     model = Blog
-    template_name = "blogs.html"
+    template_name = "blog-list.html"
     context_object_name = "blogs"
     paginate_by = 6
 
@@ -46,7 +46,7 @@ class BlogDetailView(DetailView):
     """Handles GET for viewing and POST for commenting."""
 
     model = Blog
-    template_name = "blog-dtl.html"
+    template_name = "blog-detail.html"
     context_object_name = "blog"
     slug_field = "slug"
     slug_url_kwarg = "slug"
@@ -79,7 +79,7 @@ class BlogDetailView(DetailView):
         if not request.user.is_authenticated:
             post = self.get_object()
             login_url = (
-                reverse("auth_app:login")
+                reverse("authentication:login")
                 + f'?next={reverse("blog:blog_detail", kwargs={"slug": post.slug})}%23comments'
             )
             return HttpResponseRedirect(login_url)

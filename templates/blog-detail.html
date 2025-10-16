@@ -119,8 +119,8 @@
                         <div class="auth-prompt-content">
                             <p>Sign in to join the discussion and share your thoughts about this post.</p>
                             <div class="auth-buttons">
-                                <a href="{% url 'auth_app:login' %}?next={% url 'blog:blog_detail' slug=blog.slug %}%23comments" class="filled-btn">Sign In</a>
-                                <a href="{% url 'auth_app:signup' %}?next={% url 'blog:blog_detail' slug=blog.slug %}%23comments" class="outline-btn">Create Account</a>
+                                <a href="{% url 'authentication:login' %}?next={% url 'blog:blog_detail' slug=blog.slug %}%23comments" class="filled-btn">Sign In</a>
+                                <a href="{% url 'authentication:signup' %}?next={% url 'blog:blog_detail' slug=blog.slug %}%23comments" class="outline-btn">Create Account</a>
                             </div>
                         </div>
                     </div>

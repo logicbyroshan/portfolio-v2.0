@@ -40,7 +40,7 @@ from .forms import ContactForm, NewsletterForm
 class HomeView(TemplateView):
     """View for the homepage. Gathers context from multiple models."""
 
-    template_name = "home.html"
+    template_name = "portfolio-home.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -104,7 +104,7 @@ class ProjectListView(ListView):
     """View for the main projects list page with filtering and pagination."""
 
     model = Project
-    template_name = "projects.html"
+    template_name = "projects-list.html"
     context_object_name = "projects"
     paginate_by = 6
 
@@ -136,7 +136,7 @@ class ProjectDetailView(DetailView):
     """View for a single project detail page with comment functionality."""
 
     model = Project
-    template_name = "project-dtl.html"
+    template_name = "project-detail.html"
     context_object_name = "project"
     slug_field = "slug"
     slug_url_kwarg = "slug"
@@ -172,7 +172,7 @@ class ProjectDetailView(DetailView):
         if not request.user.is_authenticated:
             project = self.get_object()
             login_url = (
-                reverse("auth_app:login")
+                reverse("authentication:login")
                 + f'?next={reverse("portfolio:project_detail", kwargs={"slug": project.slug})}%23comments'
             )
             return HttpResponseRedirect(login_url)
@@ -250,7 +250,7 @@ class ExperienceListView(ListView):
     """View for the main experience list page."""
 
     model = Experience
-    template_name = "experience.html"
+    template_name = "experience-list.html"
     context_object_name = "experiences"
     paginate_by = 4
 
@@ -280,7 +280,7 @@ class ExperienceDetailView(DetailView):
     """View for a single experience dtl page."""
 
     model = Experience
-    template_name = "experience-dtl.html"
+    template_name = "experience-detail.html"
     context_object_name = "experience"
     pk_url_kwarg = "pk"
 
@@ -301,7 +301,7 @@ class SkillDetailView(DetailView):
     """View for a single skill dtl page, showing related projects."""
 
     model = Skill
-    template_name = "skill-dtl.html"
+    template_name = "skill-detail.html"
     context_object_name = "skill"
     slug_field = "slug"
     slug_url_kwarg = "slug"
@@ -429,7 +429,7 @@ class NewsletterSubscribeAjaxView(View):
 
 class AchievementListView(ListView):
     model = Achievement
-    template_name = "achievements.html"
+    template_name = "achievements-list.html"
     context_object_name = "achievements"
     paginate_by = 6
 
