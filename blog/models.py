@@ -50,10 +50,9 @@ class Blog(models.Model):
         self.slug = slugify(self.title)
         self.summary = sanitize_html(self.summary)
         self.content = sanitize_html(self.content)
-        super().save(*args, **kwargs)
-
-    # Calculate reading time automatically
+        # Calculate reading time automatically
         self.reading_time = self.calculate_reading_time()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title

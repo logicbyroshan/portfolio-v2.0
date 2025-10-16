@@ -240,6 +240,7 @@
                 data-url="{% url 'blog:blog_detail' slug=blog.slug %}">
                 <div class="blog-image">
                     <img src="{% if blog.cover_image %}{{ blog.cover_image.url }}{% else %}https://placehold.co/600x400/010409/eaeaea?text={{ blog.title|urlencode }}{% endif %}" alt="{{ blog.title }}">
+                    <div class="read-time"><span class="teg">{{ blog.reading_time }} min read</span></div>
                 </div>
                 <div class="blog-content">
                     <h4>{{ blog.title }}</h4>
