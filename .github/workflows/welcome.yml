@@ -5,154 +5,63 @@ on:
     types: [opened]
   pull_request_target:
     types: [opened]
-  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
 
 jobs:
-  # ======================= WELCOME NEW ISSUE CREATORS =======================
-  welcome-issue:
-    name: 🎉 Welcome New Issue Creator
+  welcome:
+    name: 🎉 Welcome Contributors
     runs-on: ubuntu-latest
-    if: github.event_name == 'issues'
+    if: github.event_name == 'issues' || github.event_name == 'pull_request_target'
     
     steps:
-    - name: 🤝 Welcome First Time Issue Creator
+    - name: 🤝 Welcome Message
       uses: actions/github-script@v7
       with:
         script: |
-          const creator = context.payload.issue.user.login;
+          let message = '';
           
-          // Check if this is the user's first issue
-          const { data: issues } = await github.rest.issues.listForRepo({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            creator: creator,
-            state: 'all'
-          });
-          
-          const isFirstIssue = issues.length <= 1;
-          
-          if (isFirstIssue) {
-            const welcomeMessage = `
-          🎉 **Welcome to Portfolio v2.0!** 
-          
-          Thank you @${creator} for opening your first issue! We're excited to have you as part of our community.
-          
-          ## 📋 What happens next?
-          - Our maintainers will review your issue soon
-          - Feel free to provide additional details if needed
-          - Check out our [Contributing Guidelines](README.md) for more info
-          
-          ## 🚀 Want to contribute?
-          - Look for issues labeled \`good first issue\` or \`help wanted\`
-          - Fork the repo and make your changes
-          - Submit a pull request when ready!
-          
-          ## 🎃 Hacktoberfest
-          If it's October, your contributions may count towards Hacktoberfest! 
-          
-          Thanks for helping make this project better! 🙏
-          `;
-          
+          if (context.eventName === 'issues') {
+            const creator = context.payload.issue.user.login;
+            message = `🎉 **Welcome to Portfolio v2.0!** 
+
+            Thank you @${creator} for opening this issue! We appreciate your contribution to the project.
+            
+            ## 📋 What's next?
+            - Our maintainers will review your issue soon
+            - Feel free to add more details if needed
+            - Check out our documentation for more info
+            
+            Thanks for being part of our community! 🚀`;
+            
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: welcomeMessage
+              issue_number: context.payload.issue.number,
+              body: message
             });
-          }
+          } 
+          
+          if (context.eventName === 'pull_request_target') {
+            const contributor = context.payload.pull_request.user.login;
+            message = `🎉 **Thank you for your contribution!** 
 
-  # ======================= WELCOME NEW PR CONTRIBUTORS =======================
-  welcome-pr:
-    name: 🚀 Welcome New PR Contributor
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request_target'
-    
-    steps:
-    - name: 🤝 Welcome First Time Contributor
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const contributor = context.payload.pull_request.user.login;
-          
-          // Check if this is the user's first PR
-          const { data: prs } = await github.rest.pulls.list({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            state: 'all'
-          });
-          
-          const userPRs = prs.filter(pr => pr.user.login === contributor);
-          const isFirstPR = userPRs.length <= 1;
-          
-          if (isFirstPR) {
-            const welcomeMessage = `
-          🎉 **Welcome and thank you for your first contribution!** 
-          
-          Hello @${contributor}! Thank you for submitting your first pull request to Portfolio v2.0! 🚀
-          
-          ## 🔍 Review Process
-          - Our CI checks will run automatically
-          - A maintainer will review your changes soon
-          - We may request some changes or ask questions
-          
-          ## ✅ Make sure your PR:
-          - [ ] Follows our coding standards
-          - [ ] Includes tests if applicable  
-          - [ ] Updates documentation if needed
-          - [ ] Has a clear description of changes
-          
-          ## 🎯 CI Checks
-          Your PR will be tested for:
-          - ✅ Python lint checks
-          - ✅ Django tests
-          - ✅ Frontend validation
-          - ✅ Security scanning
-          - ✅ CodeQL analysis
-          
-          ## 🎃 Hacktoberfest
-          If it's October, this contribution counts towards Hacktoberfest! 
-          
-          We appreciate your contribution and look forward to working with you! 🙏
-          `;
-          
+            Hello @${contributor}! Thanks for submitting this pull request to Portfolio v2.0! 🚀
+            
+            ## 🔍 What happens next?
+            - Our CI checks will run automatically
+            - A maintainer will review your changes
+            - We'll provide feedback if needed
+            
+            Thanks for helping improve the project! 🎯`;
+            
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.payload.pull_request.number,
-              body: welcomeMessage
+              body: message
             });
-          }
-
-  # ======================= PR READY FOR REVIEW =======================
-  pr-ready-review:
-    name: 📝 PR Ready for Review
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request_target'
-    
-    steps:
-    - name: 📝 Check if PR is Ready
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const pr = context.payload.pull_request;
-          
-          // Check if PR is not draft and has description
-          if (!pr.draft && pr.body && pr.body.length > 20) {
-            await github.rest.issues.addLabels({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: pr.number,
-              labels: ['ready for review']
-            });
-            
-            console.log('🏷️ Added "ready for review" label');
-          } else if (pr.draft) {
-            await github.rest.issues.addLabels({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: pr.number,
-              labels: ['work in progress']
-            });
-            
-            console.log('🏷️ Added "work in progress" label');
           }

@@ -1,4 +1,4 @@
-name: 📦 Dependency Updates & Security
+name: 📦 Dependency Security Check
 
 on:
   schedule:
@@ -7,7 +7,12 @@ on:
   push:
     paths:
       - 'requirements*.txt'
-      - 'package*.json'
+
+permissions:
+  contents: read
+  actions: read
+  security-events: write
+  issues: write
 
 jobs:
   # ======================= DEPENDENCY VULNERABILITY SCAN =======================

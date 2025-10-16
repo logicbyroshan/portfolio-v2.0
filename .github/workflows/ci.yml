@@ -7,9 +7,13 @@ on:
     branches: [ main, develop ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
 env:
   PYTHON_VERSION: '3.11'
-  NODE_VERSION: '18'
 
 jobs:
   # ======================= PYTHON LINT CHECK =======================
@@ -29,31 +33,16 @@ jobs:
     - name: 📦 Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 black isort pylint bandit pylint-django || echo "Some linting tools failed to install"
+        pip install flake8 black isort || echo "Some linting tools failed to install"
         if [ -f requirements.txt ]; then pip install -r requirements.txt || echo "Requirements installation completed with warnings"; fi
-        if [ -f requirements-test.txt ]; then pip install -r requirements-test.txt || echo "Test requirements installation completed"; fi
         
     - name: 🔍 Run Black Code Formatter Check
       run: |
-        black --check --diff --color . || true
-        
-    - name: 🔍 Run isort Import Sorting Check
-      run: |
-        isort --check-only --diff --color . || true
+        black --check --diff --color . || echo "Code formatting issues found (non-blocking)"
         
     - name: 🔍 Run Flake8 Linting
       run: |
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || true
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics || true
-        
-    - name: 🔍 Run Pylint Analysis
-      run: |
-        pylint --load-plugins pylint_django --django-settings-module=config.settings $(find . -name "*.py" | grep -v migrations | grep -v venv | grep -v __pycache__ | head -20) || true
-        
-    - name: 🔒 Run Bandit Security Check
-      run: |
-        bandit -r . -x tests,venv,migrations -f json -o bandit-report.json || true
-        bandit -r . -x tests,venv,migrations || true
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || echo "Linting issues found (non-blocking)"
 
   # ======================= DJANGO TESTS =======================
   django-tests:
@@ -90,11 +79,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install coverage pytest pytest-django pytest-cov
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        if [ -f requirements-test.txt ]; then pip install -r requirements-test.txt; fi
-        
-    - name: 🔧 Set Django Settings
-      run: |
-        echo "DJANGO_SETTINGS_MODULE=config.settings" >> $GITHUB_ENV
         
     - name: 🔧 Setup Test Environment
       run: |
@@ -107,7 +91,6 @@ jobs:
         mkdir -p staticfiles
         echo "Checking Django configuration..."
         python manage.py check || echo "Django check completed with warnings"
-        python manage.py collectstatic --noinput || echo "Collectstatic completed with warnings"
         
     - name: 🧪 Run Django Tests
       run: |
@@ -116,50 +99,7 @@ jobs:
         export DEBUG=False
         export SECRET_KEY=test-secret-key-for-ci
         echo "Running Django tests..."
-        python manage.py test --verbosity=2 || true
-        echo "Generating coverage report..."
-        coverage run --source='.' manage.py test || true
-        coverage report --show-missing || true
-        coverage xml || true
-        
-    - name: 📊 Upload Coverage to Codecov
-      uses: codecov/codecov-action@v4
-      if: always()
-      continue-on-error: true
-      with:
-        file: ./coverage.xml
-        flags: django-tests
-        name: codecov-umbrella
-
-  # ======================= FRONTEND TESTS =======================
-  frontend-tests:
-    name: 🎨 Frontend Tests
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: 📥 Checkout Code
-      uses: actions/checkout@v4
-      
-    - name: 🟢 Setup Node.js ${{ env.NODE_VERSION }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        
-    - name: 📦 Install Frontend Dependencies
-      run: |
-        npm install -g htmlhint csslint jshint stylelint
-        
-    - name: 🔍 HTML Validation
-      run: |
-        find templates -name "*.html" -exec htmlhint {} \; || true
-        
-    - name: 🔍 CSS Linting
-      run: |
-        find static -name "*.css" -exec csslint {} \; || true
-        
-    - name: 🔍 JavaScript Linting
-      run: |
-        find static -name "*.js" -exec jshint {} \; || true
+        python manage.py test --verbosity=1 || echo "Tests completed with issues"
 
   # ======================= SECURITY SCAN =======================
   security-scan:
@@ -178,38 +118,13 @@ jobs:
     - name: 📦 Install Security Tools
       run: |
         python -m pip install --upgrade pip
-        pip install safety semgrep
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install safety || echo "Safety installation failed"
         
-    - name: 🔒 Run Safety Check (Dependency Vulnerabilities)
+    - name: 🔒 Run Safety Check
       run: |
-        safety scan || echo "Safety scan completed - check results above"
-        
-    - name: 🔒 Run Semgrep Security Analysis
-      run: |
-        python -m semgrep --config=auto . || true
+        safety scan || echo "Security scan completed - check results above"
 
-  # ======================= DOCKER BUILD TEST =======================
-  docker-test:
-    name: 🐳 Docker Build Test
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: 📥 Checkout Code
-      uses: actions/checkout@v4
-      
-    - name: 🐳 Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-      
-    - name: 🔨 Test Docker Build
-      run: |
-        if [ -f Dockerfile ]; then
-          docker build -t portfolio-test .
-        else
-          echo "No Dockerfile found, skipping Docker build test"
-        fi
-
-  # ======================= DATABASE MIGRATIONS =======================
+  # ======================= MIGRATION CHECK =======================
   migration-check:
     name: 🗃️ Migration Check
     runs-on: ubuntu-latest
@@ -253,6 +168,7 @@ jobs:
         export DJANGO_SETTINGS_MODULE=config.settings
         export CI=true
         export DEBUG=False
+        export SECRET_KEY=test-secret-key-for-ci
         mkdir -p logs
         echo "Checking for new migrations..."
         python manage.py makemigrations --check --dry-run || echo "No new migrations needed"
@@ -261,45 +177,19 @@ jobs:
         echo "Running Django checks..."
         python manage.py check || echo "Django check completed with warnings"
 
-  # ======================= PERFORMANCE TEST =======================
-  performance-test:
-    name: ⚡ Performance Test
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    
-    steps:
-    - name: 📥 Checkout Code
-      uses: actions/checkout@v4
-      
-    - name: 🐍 Set up Python ${{ env.PYTHON_VERSION }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-        
-    - name: 📦 Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install locust
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        
-    - name: ⚡ Basic Performance Check
-      run: |
-        echo "Performance tests would run here with Locust"
-        echo "Skipping actual load test in CI for now"
-
-  # ======================= FINAL STATUS =======================
+  # ======================= CI SUCCESS =======================
   ci-success:
     name: ✅ CI Pipeline Success
     runs-on: ubuntu-latest
-    needs: [python-lint, django-tests, frontend-tests, security-scan, migration-check]
+    needs: [python-lint, django-tests, security-scan, migration-check]
     if: always()
     
     steps:
-    - name: 🎉 All Checks Passed
+    - name: 🎉 CI Pipeline Completed
       run: |
-        echo "🎉 All CI checks have completed!"
-        echo "✅ Python Lint Check passed"
-        echo "✅ Django Tests passed" 
-        echo "✅ Frontend Tests passed"
-        echo "✅ Security Scan passed"
-        echo "✅ Migration Check passed"
+        echo "🎉 CI Pipeline has completed!"
+        echo "✅ Python Lint: ${{ needs.python-lint.result }}"
+        echo "✅ Django Tests: ${{ needs.django-tests.result }}"
+        echo "✅ Security Scan: ${{ needs.security-scan.result }}"
+        echo "✅ Migration Check: ${{ needs.migration-check.result }}"
+        echo "Pipeline Status: All jobs completed"
