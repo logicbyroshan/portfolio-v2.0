@@ -114,7 +114,7 @@ body {
     justify-content: center;
     position: relative;
     z-index: 1;
-    margin-top: 150px; /* Space for sticky header */
+    margin-top: 160px; /* Space for sticky header */
 }
 
 /* ==========================================================================
@@ -1012,7 +1012,7 @@ img { max-width: 100%; height: auto; display: block; }
 @media (max-width: 768px) {
 
     body { padding: 20px 0; }
-    .main-container { gap: 100px; padding: 0 15px;} /* Reduced margin */
+    .main-container { gap: 100px; padding: 0 15px; margin-top: 140px;} /* Reduced margin */
     
     /* Responsive Typography */
     h1 { font-size: 45px; }
