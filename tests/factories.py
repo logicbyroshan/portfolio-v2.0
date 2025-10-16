@@ -94,7 +94,7 @@ class ProjectFactory(factory.django.DjangoModelFactory):
     slug = factory.LazyAttribute(lambda obj: slugify(obj.title))
     summary = factory.Faker("text", max_nb_chars=200)
     description = factory.Faker("text", max_nb_chars=500)
-    cover_image = factory.django.ImageField(filename="project_cover.jpg")
+    cover_image = factory.django.FileField(filename="project_cover.jpg")
     github_url = factory.LazyAttribute(
         lambda obj: f"https://github.com/testuser/{obj.slug}"
     )
@@ -147,7 +147,7 @@ class ProjectImageFactory(factory.django.DjangoModelFactory):
         model = ProjectImage
 
     project = factory.SubFactory(ProjectFactory)
-    image = factory.django.ImageField(filename="project_image.jpg")
+    image = factory.django.FileField(filename="project_image.jpg")
     alt_text = factory.Faker("sentence", nb_words=5)
     order = factory.Sequence(lambda n: n)
 
@@ -187,7 +187,7 @@ class AchievementFactory(factory.django.DjangoModelFactory):
     title = factory.Faker("sentence", nb_words=4)
     description = factory.Faker("text", max_nb_chars=300)
     date_achieved = factory.Faker("date_between", start_date="-2y", end_date="today")
-    certificate_image = factory.django.ImageField(filename="certificate.jpg")
+    certificate_image = factory.django.FileField(filename="certificate.jpg")
     certificate_url = factory.Faker("url")
     issuing_organization = factory.Faker("company")
     order = factory.Sequence(lambda n: n)
@@ -217,7 +217,7 @@ class BlogFactory(factory.django.DjangoModelFactory):
     slug = factory.LazyAttribute(lambda obj: slugify(obj.title))
     summary = factory.Faker("text", max_nb_chars=200)
     content = factory.Faker("text", max_nb_chars=1000)
-    cover_image = factory.django.ImageField(filename="blog_cover.jpg")
+    cover_image = factory.django.FileField(filename="blog_cover.jpg")
     created_date = factory.Faker("date_time_this_year")
 
     @factory.post_generation
@@ -262,7 +262,7 @@ class AboutMeConfigurationFactory(factory.django.DjangoModelFactory):
     projects_completed = factory.Faker("random_int", min=10, max=100)
     technologies_learned = factory.Faker("random_int", min=5, max=50)
     certifications_earned = factory.Faker("random_int", min=1, max=20)
-    profile_image = factory.django.ImageField(filename="profile.jpg")
+    profile_image = factory.django.FileField(filename="profile.jpg")
 
 
 class ResourceCategoryFactory(factory.django.DjangoModelFactory):

@@ -1,0 +1,104 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/custom_admin.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Additional global admin styles */
+        .admin-header-stats {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+        }
+        
+        .admin-header-stats .stat {
+            text-align: center;
+        }
+        
+        .admin-header-stats .stat-number {
+            font-size: 18px;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .admin-header-stats .stat-label {
+            font-size: 11px;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+        
+        #header .welcome {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .breadcrumbs {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 0;
+            font-size: 13px;
+        }
+        
+        .breadcrumbs a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .breadcrumbs a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+    </style>
+{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">
+            <i class="fas fa-laptop-code" style="margin-right: 10px;"></i>
+            Portfolio Admin
+        </a>
+    </h1>
+    {% if request.user.is_staff %}
+        <div class="admin-header-stats">
+            <div class="stat">
+                <span class="stat-number">{{ total_projects|default:"0" }}</span>
+                <span class="stat-label">Projects</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">{{ total_blogs|default:"0" }}</span>
+                <span class="stat-label">Blogs</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">{{ total_comments|default:"0" }}</span>
+                <span class="stat-label">Comments</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">{{ total_contacts|default:"0" }}</span>
+                <span class="stat-label">Messages</span>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block welcome-msg %}
+    <div class="welcome">
+        <span>
+            <i class="fas fa-user-shield" style="margin-right: 5px;"></i>
+            Welcome, <strong>{{ user.first_name|default:user.username }}</strong>
+        </span>
+        <span style="opacity: 0.8; font-size: 12px;">
+            <i class="fas fa-clock" style="margin-right: 5px;"></i>
+            {{ "now"|date:"F j, Y - H:i" }}
+        </span>
+    </div>
+{% endblock %}

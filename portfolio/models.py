@@ -20,6 +20,32 @@ def sanitize_html(value):
     return value
 
 
+def validate_image_file(file):
+    """
+    Validates that the uploaded file is an image with allowed extensions.
+    Supports all common image formats including modern ones like WebP.
+    """
+    valid_extensions = [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
+        ".bmp",
+        ".webp",
+        ".svg",
+        ".tiff",
+        ".tif",
+        ".ico",
+        ".avif",
+    ]
+    ext = os.path.splitext(file.name)[1].lower()
+    if ext not in valid_extensions:
+        raise ValidationError(
+            f"Only image files are allowed. Supported formats: "
+            f"{', '.join(valid_extensions).upper().replace('.', '')}"
+        )
+
+
 # =========================================================================
 # SITE-WIDE CONFIGURATION MODEL
 # =========================================================================
@@ -72,7 +98,13 @@ class SiteConfiguration(models.Model):
 
 class Technology(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    icon = models.ImageField(upload_to="tech_icons/", blank=True, null=True)
+    icon = models.FileField(
+        upload_to="tech_icons/",
+        blank=True,
+        null=True,
+        validators=[validate_image_file],
+        help_text="Technology icon (supports all image formats including SVG, WebP)",
+    )
     category = models.ForeignKey(
         "Category",
         limit_choices_to={"category_type": "SKL"},
@@ -117,11 +149,6 @@ class Category(models.Model):
     def __str__(self):
         return f"{self.name} ({self.get_category_type_display()})"
 
-def validate_image_file(file):
-    valid_extensions = ['.jpg', '.jpeg', '.png', '.svg']
-    ext = os.path.splitext(file.name)[1].lower()
-    if ext not in valid_extensions:
-        raise ValidationError("Only JPG, JPEG, PNG, or SVG files are allowed.")
 
 class Project(models.Model):
     title = models.CharField(max_length=200)
@@ -132,7 +159,12 @@ class Project(models.Model):
     content = HTMLField(
         help_text="The main detailed content for the project detail page."
     )
-    cover_image = models.FileField(upload_to="project_covers/",  validators=[validate_image_file], blank=True, null=True)
+    cover_image = models.FileField(
+        upload_to="project_covers/",
+        validators=[validate_image_file],
+        blank=True,
+        null=True,
+    )
     youtube_url = models.URLField(
         blank=True, null=True, help_text="YouTube video URL for project demonstration"
     )
@@ -199,7 +231,9 @@ class ProjectImage(models.Model):
     project = models.ForeignKey(
         Project, related_name="images", on_delete=models.CASCADE
     )
-    image = models.FileField(upload_to="project_images/",  validators=[validate_image_file])
+    image = models.FileField(
+        upload_to="project_images/", validators=[validate_image_file]
+    )
     caption = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
@@ -276,9 +310,10 @@ class Resume(models.Model):
     """Enhanced Resume modal with dynamic content."""
 
     # Main resume file and preview
-    preview_image = models.ImageField(
+    preview_image = models.FileField(
         upload_to="resume/",
-        help_text="Upload a preview image of your resume (JPG/PNG recommended)",
+        validators=[validate_image_file],
+        help_text="Upload a preview image of your resume (supports all image formats)",
     )
     downloadable_file = models.FileField(
         upload_to="resume/", help_text="Upload your resume PDF file"
@@ -434,11 +469,12 @@ class Achievement(models.Model):
         null=True,
         help_text="Link to verify the credential, if available.",
     )
-    image = models.ImageField(
+    image = models.FileField(
         upload_to="achievements/",
         blank=True,
         null=True,
-        help_text="Optional: A scan or image of the certificate/award.",
+        validators=[validate_image_file],
+        help_text="Optional: A scan or image of the certificate/award (supports all image formats).",
     )
     category = models.ForeignKey(
         Category,

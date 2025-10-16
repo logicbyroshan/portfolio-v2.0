@@ -2,7 +2,9 @@ from django.db import models
 from django.utils.text import slugify
 from django.utils import timezone
 from tinymce.models import HTMLField
+from django.core.exceptions import ValidationError
 import bleach
+import os
 
 ALLOWED_TAGS = ["b", "i", "strong", "em", "u", "a", "br", "p", "ul", "ol", "li", "span"]
 ALLOWED_ATTRIBUTES = {
@@ -19,6 +21,32 @@ def sanitize_html(value):
     return value
 
 
+def validate_image_file(file):
+    """
+    Validates that the uploaded file is an image with allowed extensions.
+    Supports all common image formats including modern ones like WebP.
+    """
+    valid_extensions = [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
+        ".bmp",
+        ".webp",
+        ".svg",
+        ".tiff",
+        ".tif",
+        ".ico",
+        ".avif",
+    ]
+    ext = os.path.splitext(file.name)[1].lower()
+    if ext not in valid_extensions:
+        raise ValidationError(
+            f"Only image files are allowed. Supported formats: "
+            f"{', '.join(valid_extensions).upper().replace('.', '')}"
+        )
+
+
 # =========================================================================
 # ABOUT ME PAGE CONFIGURATION MODEL
 # =========================================================================
@@ -32,11 +60,12 @@ class AboutMeConfiguration(models.Model):
     intro_paragraph = models.TextField(
         default="This is my story, my journey, and what drives me."
     )
-    profile_image = models.ImageField(
+    profile_image = models.FileField(
         upload_to="about/",
         blank=True,
         null=True,
-        help_text="Profile image for About Me page",
+        validators=[validate_image_file],
+        help_text="Profile image for About Me page (supports all image formats)",
     )
     detailed_description = HTMLField(
         default="""<ul>
@@ -247,17 +276,19 @@ class Resource(models.Model):
     custom_embed_code = HTMLField(
         blank=True, help_text="Custom embed code for other video platforms or widgets"
     )
-    thumbnail = models.ImageField(
+    thumbnail = models.FileField(
         upload_to="resources/thumbnails/",
         blank=True,
         null=True,
-        help_text="Thumbnail image for the resource",
+        validators=[validate_image_file],
+        help_text="Thumbnail image for the resource (supports all image formats)",
     )
-    preview_image = models.ImageField(
+    preview_image = models.FileField(
         upload_to="resources/previews/",
         blank=True,
         null=True,
-        help_text="Preview image for PDFs or other documents",
+        validators=[validate_image_file],
+        help_text="Preview image for PDFs or other documents (supports all image formats)",
     )
     categories = models.ManyToManyField(
         ResourceCategory, related_name="resources", blank=True
@@ -447,11 +478,12 @@ class ManualPlaylist(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True, editable=False)
     description = models.TextField(blank=True, null=True)
-    cover_image = models.ImageField(
+    cover_image = models.FileField(
         upload_to="playlists/covers/",
         blank=True,
         null=True,
-        help_text="Cover image for the playlist",
+        validators=[validate_image_file],
+        help_text="Cover image for the playlist (supports all image formats)",
     )
     is_public = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)

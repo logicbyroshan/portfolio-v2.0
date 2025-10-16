@@ -3,15 +3,43 @@ from django.utils.text import slugify
 from tinymce.models import HTMLField
 from portfolio.models import Category
 from roshan.models import AboutMeConfiguration
+from django.core.exceptions import ValidationError
 import bleach
 import math
 import re
+import os
 
 ALLOWED_TAGS = ["b", "i", "strong", "em", "u", "a", "br", "p", "ul", "ol", "li", "span"]
 ALLOWED_ATTRIBUTES = {
     "a": ["href", "title", "target", "rel"],
     "span": ["style"],
 }
+
+
+def validate_image_file(file):
+    """
+    Validates that the uploaded file is an image with allowed extensions.
+    Supports all common image formats including modern ones like WebP.
+    """
+    valid_extensions = [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
+        ".bmp",
+        ".webp",
+        ".svg",
+        ".tiff",
+        ".tif",
+        ".ico",
+        ".avif",
+    ]
+    ext = os.path.splitext(file.name)[1].lower()
+    if ext not in valid_extensions:
+        raise ValidationError(
+            f"Only image files are allowed. Supported formats: "
+            f"{', '.join(valid_extensions).upper().replace('.', '')}"
+        )
 
 
 def sanitize_html(value):
@@ -27,8 +55,12 @@ class Blog(models.Model):
     slug = models.SlugField(max_length=200, unique=True, editable=False)
     summary = models.TextField(help_text="A short excerpt for the blog list page.")
     content = HTMLField()
-    reading_time = models.PositiveIntegerField(default=0) 
-    cover_image = models.ImageField(upload_to="blog_covers/")
+    reading_time = models.PositiveIntegerField(default=0)
+    cover_image = models.FileField(
+        upload_to="blog_covers/",
+        validators=[validate_image_file],
+        help_text="Upload blog cover image (supports JPG, PNG, WebP, SVG, etc.)",
+    )
     categories = models.ManyToManyField(
         Category, limit_choices_to={"category_type": Category.CategoryType.BLOG}
     )
@@ -36,7 +68,6 @@ class Blog(models.Model):
 
     class Meta:
         ordering = ["-created_date"]
-
 
     def calculate_reading_time(self):
         """Estimate reading time based on word count (avg: 200 words/minute)."""

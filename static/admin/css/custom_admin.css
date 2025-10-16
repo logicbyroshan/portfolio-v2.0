@@ -1,0 +1,373 @@
+/* =========================================================================
+   PORTFOLIO ADMIN CUSTOM STYLES
+   ========================================================================= */
+
+/* Admin Header Styling */
+#header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+#header h1 {
+    color: white;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+#header h1 a {
+    color: white;
+    text-decoration: none;
+}
+
+#user-tools {
+    color: rgba(255,255,255,0.9);
+}
+
+#user-tools a {
+    color: rgba(255,255,255,0.9);
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-bottom: 2px;
+}
+
+#user-tools a:hover {
+    color: white;
+    border-bottom-color: white;
+}
+
+/* Navigation Styling */
+.module {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.module h2 {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 15px 20px;
+    margin: 0;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+}
+
+.module table {
+    border-radius: 0 0 8px 8px;
+}
+
+/* Dashboard Cards */
+#content-main .module {
+    background: white;
+}
+
+.dashboard .module table th {
+    background: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    padding: 12px 15px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.dashboard .module table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.dashboard .module table tr:hover {
+    background: #f8f9fa;
+}
+
+/* Action Buttons */
+.button, input[type="submit"], input[type="button"], .submit-row input {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.button:hover, input[type="submit"]:hover, input[type="button"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.button.default, .default {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.button.default:hover {
+    box-shadow: 0 4px 12px rgba(17, 153, 142, 0.4);
+}
+
+/* Form Styling */
+.form-row {
+    margin-bottom: 15px;
+}
+
+.form-row .field-box {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.vTextField, .vTextarea, select {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 8px 12px;
+    transition: border-color 0.3s ease;
+}
+
+.vTextField:focus, .vTextarea:focus, select:focus {
+    border-color: #667eea;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Fieldsets */
+fieldset.module {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+fieldset.module h2 {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    margin: 0;
+    padding: 12px 20px;
+    border-radius: 8px 8px 0 0;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* List View Enhancements */
+#result_list {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#result_list thead th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px;
+    font-weight: 500;
+    border: none;
+}
+
+#result_list tbody tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+#result_list tbody tr:hover {
+    background: #e3f2fd;
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+}
+
+#result_list tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Pagination */
+.paginator {
+    padding: 20px 0;
+    text-align: center;
+}
+
+.paginator a {
+    background: #667eea;
+    color: white;
+    padding: 8px 12px;
+    margin: 0 2px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.paginator a:hover {
+    background: #764ba2;
+    transform: translateY(-1px);
+}
+
+.paginator .this-page {
+    background: #f093fb;
+    color: white;
+    padding: 8px 12px;
+    margin: 0 2px;
+    border-radius: 4px;
+}
+
+/* Search Bar */
+#searchbar {
+    border: 2px solid #667eea;
+    border-radius: 25px;
+    padding: 10px 20px;
+    width: 300px;
+    transition: all 0.3s ease;
+}
+
+#searchbar:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    width: 350px;
+}
+
+/* Filter Sidebar */
+#changelist-filter {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 0;
+}
+
+#changelist-filter h2 {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: white;
+    padding: 12px 15px;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px 8px 0 0;
+}
+
+#changelist-filter h3 {
+    background: #f8f9fa;
+    color: #495057;
+    padding: 10px 15px;
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#changelist-filter ul {
+    padding: 0;
+    margin: 0;
+}
+
+#changelist-filter li {
+    padding: 8px 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+#changelist-filter li:hover {
+    background: #f8f9fa;
+}
+
+#changelist-filter a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+#changelist-filter a:hover {
+    color: #764ba2;
+}
+
+/* Status Indicators */
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-published {
+    background: #28a745;
+}
+
+.status-draft {
+    background: #ffc107;
+}
+
+.status-private {
+    background: #dc3545;
+}
+
+/* Custom Icons */
+.admin-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #header h1 {
+        font-size: 18px;
+    }
+    
+    .module {
+        margin-bottom: 15px;
+    }
+    
+    #searchbar {
+        width: 100%;
+        max-width: 250px;
+    }
+    
+    #searchbar:focus {
+        width: 100%;
+        max-width: 280px;
+    }
+}
+
+/* Dark Theme Support */
+@media (prefers-color-scheme: dark) {
+    .module {
+        background: #2d3748;
+        color: #e2e8f0;
+    }
+    
+    .dashboard .module table th {
+        background: #4a5568;
+        color: #e2e8f0;
+    }
+    
+    .vTextField, .vTextarea, select {
+        background: #4a5568;
+        color: #e2e8f0;
+        border-color: #718096;
+    }
+}
+
+/* Success Messages */
+.success {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: none;
+}
+
+/* Error Messages */
+.error {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: none;
+}
+
+/* Info Messages */
+.info {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: none;
+}
