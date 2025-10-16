@@ -29,11 +29,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install safety pip-audit
         
-    - name: 🔒 Run Safety Check
+    - name: 🔒 Run Safety Scan
       run: |
         if [ -f requirements.txt ]; then
-          safety check -r requirements.txt --json --output safety-report.json || true
-          safety check -r requirements.txt || true
+          safety scan -r requirements.txt --json --output safety-report.json || true
+          safety scan -r requirements.txt || true
         fi
         
     - name: 🔍 Run pip-audit
