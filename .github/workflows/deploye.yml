@@ -26,9 +26,34 @@ jobs:
             echo "➡ Activating virtualenv..."
             source /home/roshanpr/virtualenv/roshandamor.me/3.13/bin/activate
 
+            echo "➡ Backing up production files..."
+            cp .env .env.backup 2>/dev/null || echo "No .env file to backup"
+            cp db.sqlite3 db.backup 2>/dev/null || echo "No database to backup"
+
             echo "➡ Fetching latest code..."
             git fetch origin main
             git reset --hard origin/main
+
+            echo "➡ Removing development/non-production files..."
+            rm -rf .github/ || true
+            rm -rf tests/ || true
+            rm -rf screenshots/ || true
+            rm -rf venv/ || true
+            rm -rf __pycache__/ || true
+            find . -name "*.pyc" -delete || true
+            find . -name "__pycache__" -type d -exec rm -rf {} + || true
+            rm -f pytest.ini || true
+            rm -f requirements-test.txt || true
+            rm -f CONTRIBUTING.md || true
+            rm -f .env.example || true
+            rm -f .safety-project.ini || true
+            rm -f deploye_key* || true
+            rm -rf .vscode/ || true
+            rm -rf logs/*.log || true
+
+            echo "➡ Restoring production files..."
+            mv .env.backup .env 2>/dev/null || echo "No .env backup to restore"
+            mv db.backup db.sqlite3 2>/dev/null || echo "No database backup to restore"
 
             echo "➡ Installing dependencies..."
             pip install -r requirements.txt
@@ -39,6 +64,13 @@ jobs:
             echo "➡ Collecting static files..."
             python manage.py collectstatic --noinput
 
+            echo "➡ Setting proper permissions..."
+            chmod -R 755 static/
+            chmod -R 755 media/
+            chmod 644 manage.py
+
             echo "➡ Restarting Passenger app..."
             touch tmp/restart.txt
+
+            echo "✅ Deployment completed successfully!"
           EOF

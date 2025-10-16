@@ -1,307 +1,610 @@
-# 🤝 Contributing to Portfolio v2.0
+# Contributing to Portfolio v2.0# 🤝 Contributing to Portfolio v2.0
 
-Thank you for your interest in contributing to Portfolio v2.0! This is an open-source Django portfolio project and we welcome contributions from developers of all skill levels. This document will guide you through the contribution process.
 
-## 📋 Table of Contents
 
-- [Code of Conduct](#code-of-conduct)
-- [Getting Started](#getting-started)
-- [Development Setup](#development-setup)
-- [Contribution Workflow](#contribution-workflow)
-- [Coding Standards](#coding-standards)
+Thank you for your interest in contributing to this Django portfolio project! This document provides guidelines and information for contributors.Thank you for your interest in contributing to Portfolio v2.0! This is an open-source Django portfolio project and we welcome contributions from developers of all skill levels. This document will guide you through the contribution process.
+
+
+
+## 🚀 Getting Started## 📋 Table of Contents
+
+
+
+### Prerequisites- [Code of Conduct](#code-of-conduct)
+
+- Python 3.8 or higher- [Getting Started](#getting-started)
+
+- Django 5.2.7- [Development Setup](#development-setup)
+
+- Git- [Contribution Workflow](#contribution-workflow)
+
+- Virtual environment (recommended)- [Coding Standards](#coding-standards)
+
 - [Pull Request Guidelines](#pull-request-guidelines)
-- [Issue Reporting](#issue-reporting)
+
+### Local Development Setup- [Issue Reporting](#issue-reporting)
+
 - [Community](#community)
 
-## 📜 Code of Conduct
+1. **Fork and Clone the Repository**
 
-By participating in this project, you agree to abide by our Code of Conduct:
+   ```bash## 📜 Code of Conduct
+
+   git clone https://github.com/yourusername/portfolio-v2.0.git
+
+   cd portfolio-v2.0By participating in this project, you agree to abide by our Code of Conduct:
+
+   ```
 
 ### Our Pledge
-- Be respectful and inclusive to all contributors
-- Use welcoming and constructive language
-- Focus on what's best for the community
-- Show empathy towards other community members
-- Accept constructive criticism gracefully
 
-### Unacceptable Behavior
-- Harassment, trolling, or discriminatory language
-- Personal attacks or political arguments
-- Publishing private information without permission
-- Any behavior that would be inappropriate in a professional setting
+2. **Create Virtual Environment**- Be respectful and inclusive to all contributors
 
-## 🚀 Getting Started
+   ```bash- Use welcoming and constructive language
 
-### Prerequisites
-- Python 3.11+
-- Git
-- Basic understanding of Django framework
-- Familiarity with HTML, CSS, JavaScript
-- Knowledge of database concepts (MySQL/SQLite)
+   python -m venv venv- Focus on what's best for the community
 
-### Initial Setup
-1. Fork the repository on GitHub
-2. Clone your forked repository:
+   source venv/bin/activate  # On Windows: venv\Scripts\activate- Show empathy towards other community members
+
+   ```- Accept constructive criticism gracefully
+
+
+
+3. **Install Dependencies**### Unacceptable Behavior
+
+   ```bash- Harassment, trolling, or discriminatory language
+
+   pip install -r requirements.txt- Personal attacks or political arguments
+
+   pip install -r requirements-test.txt  # For development/testing- Publishing private information without permission
+
+   ```- Any behavior that would be inappropriate in a professional setting
+
+
+
+4. **Environment Setup**## 🚀 Getting Started
+
    ```bash
-   git clone https://github.com/YOUR_USERNAME/portfolio-v2.0.git
-   cd portfolio-v2.0
-   ```
-3. Follow the [SETUP.md](./SETUP.md) guide for local development setup
 
-## 🛠 Development Setup
+   cp .env.example .env### Prerequisites
 
-### Environment Setup
-```bash
-# Create virtual environment
-python -m venv venv
-venv\Scripts\activate  # Windows
-source venv/bin/activate  # macOS/Linux
+   # Edit .env with your configuration- Python 3.11+
 
-# Install dependencies
-pip install -r requirements.txt
-pip install -r requirements-dev.txt  # Development dependencies
-```
+   ```- Git
 
-### Pre-commit Hooks
-Install pre-commit hooks to ensure code quality:
-```bash
+- Basic understanding of Django framework
+
+5. **Database Setup**- Familiarity with HTML, CSS, JavaScript
+
+   ```bash- Knowledge of database concepts (MySQL/SQLite)
+
+   python manage.py migrate
+
+   python manage.py collectstatic### Initial Setup
+
+   python manage.py createsuperuser  # Optional1. Fork the repository on GitHub
+
+   ```2. Clone your forked repository:
+
+   ```bash
+
+6. **Run Development Server**   git clone https://github.com/YOUR_USERNAME/portfolio-v2.0.git
+
+   ```bash   cd portfolio-v2.0
+
+   python manage.py runserver   ```
+
+   ```3. Follow the [SETUP.md](./SETUP.md) guide for local development setup
+
+
+
+## 📁 Project Structure## 🛠 Development Setup
+
+
+
+```### Environment Setup
+
+portfolio-v2.0/```bash
+
+├── ai/               # AI-powered features (Gemini integration)# Create virtual environment
+
+├── authentication/   # User authentication systempython -m venv venv
+
+├── blog/            # Blog management and displayvenv\Scripts\activate  # Windows
+
+├── music/           # Spotify integration and music featuressource venv/bin/activate  # macOS/Linux
+
+├── notifications/   # Notification system
+
+├── portfolio/       # Main portfolio app (projects, skills, etc.)# Install dependencies
+
+├── roshan/         # Personal sections and configurationspip install -r requirements.txt
+
+├── config/         # Django settings and URL configurationpip install -r requirements-dev.txt  # Development dependencies
+
+├── templates/      # HTML templates```
+
+├── static/         # CSS, JavaScript, images
+
+├── media/          # User-uploaded files### Pre-commit Hooks
+
+└── tests/          # Test files and utilitiesInstall pre-commit hooks to ensure code quality:
+
+``````bash
+
 pip install pre-commit
-pre-commit install
+
+## 🛠️ Development Guidelinespre-commit install
+
 ```
 
-### Database Setup
-```bash
-python manage.py migrate
-python manage.py createsuperuser  # Optional
+### Code Style
+
+- Follow PEP 8 standards### Database Setup
+
+- Use meaningful variable and function names```bash
+
+- Add docstrings to functions and classespython manage.py migrate
+
+- Keep functions small and focusedpython manage.py createsuperuser  # Optional
+
 ```
 
-### Running Tests
-```bash
-# Run all tests
-python manage.py test
+### Django Best Practices
 
-# Run specific app tests
-python manage.py test portfolio
-python manage.py test blog
+- Use Django's built-in features when possible### Running Tests
+
+- Follow the Model-View-Template (MVT) pattern```bash
+
+- Use Django forms for user input validation# Run all tests
+
+- Implement proper error handling and user feedbackpython manage.py test
+
+
+
+### Database# Run specific app tests
+
+- Always create migrations for model changespython manage.py test portfolio
+
+- Use descriptive migration namespython manage.py test blog
+
+- Test migrations both forward and backward
 
 # Run with coverage
-coverage run manage.py test
-coverage report
-```
 
-## 🔄 Contribution Workflow
+### Securitycoverage run manage.py test
 
-### 1. Choose an Issue
+- Never commit sensitive information (API keys, passwords)coverage report
+
+- Use environment variables for configuration```
+
+- Validate and sanitize user input
+
+- Follow Django security best practices## 🔄 Contribution Workflow
+
+
+
+## 🧪 Testing### 1. Choose an Issue
+
 - Check the [Issues](https://github.com/logicbyroshan/portfolio-v2.0/issues) page
-- Look for issues labeled `good first issue` for beginners
-- Comment on the issue to let others know you're working on it
 
-### 2. Create a Branch
+### Running Tests- Look for issues labeled `good first issue` for beginners
+
+```bash- Comment on the issue to let others know you're working on it
+
+# Run all tests
+
+python manage.py test### 2. Create a Branch
+
 ```bash
-# Create and switch to a new branch
-git checkout -b feature/your-feature-name
+
+# Run tests with pytest# Create and switch to a new branch
+
+pytestgit checkout -b feature/your-feature-name
+
 # or
-git checkout -b fix/issue-description
-```
 
-### Branch Naming Convention:
-- `feature/feature-name` - New features
-- `fix/bug-description` - Bug fixes
+# Run specific test filegit checkout -b fix/issue-description
+
+python manage.py test portfolio.tests```
+
+
+
+# Run with coverage### Branch Naming Convention:
+
+pytest --cov=. --cov-report=html- `feature/feature-name` - New features
+
+```- `fix/bug-description` - Bug fixes
+
 - `docs/documentation-update` - Documentation updates
-- `refactor/component-name` - Code refactoring
-- `test/test-description` - Adding tests
 
-### 3. Make Changes
-- Write clean, readable code
+### Writing Tests- `refactor/component-name` - Code refactoring
+
+- Write tests for new features and bug fixes- `test/test-description` - Adding tests
+
+- Use Django's TestCase for database-related tests
+
+- Use factories for creating test data### 3. Make Changes
+
+- Test both positive and negative scenarios- Write clean, readable code
+
 - Follow the coding standards (see below)
-- Add tests for new features
-- Update documentation if necessary
 
-### 4. Commit Changes
-```bash
+### Test Structure- Add tests for new features
+
+```python- Update documentation if necessary
+
+from django.test import TestCase
+
+from django.contrib.auth.models import User### 4. Commit Changes
+
+from portfolio.models import Project```bash
+
 # Stage changes
-git add .
 
-# Commit with descriptive message
-git commit -m "feat: add user authentication system"
-```
+class ProjectTestCase(TestCase):git add .
 
-### Commit Message Convention:
-- `feat:` - New feature
-- `fix:` - Bug fix
-- `docs:` - Documentation changes
-- `style:` - Formatting changes
-- `refactor:` - Code refactoring
-- `test:` - Adding tests
-- `chore:` - Maintenance tasks
+    def setUp(self):
 
-### 5. Push and Create PR
+        self.user = User.objects.create_user(# Commit with descriptive message
+
+            username='testuser',git commit -m "feat: add user authentication system"
+
+            password='testpass123'```
+
+        )
+
+        ### Commit Message Convention:
+
+    def test_project_creation(self):- `feat:` - New feature
+
+        project = Project.objects.create(- `fix:` - Bug fix
+
+            title='Test Project',- `docs:` - Documentation changes
+
+            summary='A test project',- `style:` - Formatting changes
+
+            content='<p>Test content</p>'- `refactor:` - Code refactoring
+
+        )- `test:` - Adding tests
+
+        self.assertEqual(project.title, 'Test Project')- `chore:` - Maintenance tasks
+
+        self.assertTrue(project.slug)
+
+```### 5. Push and Create PR
+
 ```bash
-# Push to your fork
+
+## 📝 Contribution Process# Push to your fork
+
 git push origin feature/your-feature-name
-```
-Then create a Pull Request on GitHub.
 
-## 📝 Coding Standards
+### 1. Choose an Issue```
 
-### Python/Django Standards
+- Check the [Issues](https://github.com/logicbyroshan/portfolio-v2.0/issues) pageThen create a Pull Request on GitHub.
 
-#### Code Style
-- Follow [PEP 8](https://pep8.org/) style guide
-- Use [Black](https://black.readthedocs.io/) for code formatting
-- Line length: 88 characters maximum
+- Look for issues labeled `good first issue` for beginners
+
+- Comment on the issue to let others know you're working on it## 📝 Coding Standards
+
+
+
+### 2. Create a Branch### Python/Django Standards
+
+```bash
+
+git checkout -b feature/your-feature-name#### Code Style
+
+# or- Follow [PEP 8](https://pep8.org/) style guide
+
+git checkout -b fix/your-bug-fix- Use [Black](https://black.readthedocs.io/) for code formatting
+
+```- Line length: 88 characters maximum
+
 - Use meaningful variable and function names
 
-#### Django Best Practices
-```python
-# ✅ Good
-class ProjectViewSet(viewsets.ModelViewSet):
-    """ViewSet for managing portfolio projects."""
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+### 3. Make Changes
 
-    def get_queryset(self):
-        """Filter projects based on user permissions."""
+- Write clean, documented code#### Django Best Practices
+
+- Follow the existing code style```python
+
+- Add tests for new functionality# ✅ Good
+
+- Update documentation if neededclass ProjectViewSet(viewsets.ModelViewSet):
+
+    """ViewSet for managing portfolio projects."""
+
+### 4. Test Your Changes    queryset = Project.objects.all()
+
+```bash    serializer_class = ProjectSerializer
+
+python manage.py test    permission_classes = [IsAuthenticatedOrReadOnly]
+
+python manage.py check
+
+python manage.py check --deploy  # For deployment readiness    def get_queryset(self):
+
+```        """Filter projects based on user permissions."""
+
         return Project.objects.filter(is_published=True)
 
-# ❌ Bad
-class PrjVS(viewsets.ModelViewSet):
-    q = Project.objects.all()
-    s = ProjectSerializer
+### 5. Commit Your Changes
+
+```bash# ❌ Bad
+
+git add .class PrjVS(viewsets.ModelViewSet):
+
+git commit -m "Add: brief description of your changes"    q = Project.objects.all()
+
+```    s = ProjectSerializer
+
 ```
 
-#### Model Guidelines
-```python
-# ✅ Good
-class Project(models.Model):
-    """Model representing a portfolio project."""
+**Commit Message Format:**
+
+- `Add:` for new features#### Model Guidelines
+
+- `Fix:` for bug fixes```python
+
+- `Update:` for modifications# ✅ Good
+
+- `Remove:` for deletionsclass Project(models.Model):
+
+- `Docs:` for documentation changes    """Model representing a portfolio project."""
+
     
-    title = models.CharField(
-        max_length=200, 
-        help_text="Project title"
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        ordering = ['-created_at']
+
+### 6. Push and Create Pull Request    title = models.CharField(
+
+```bash        max_length=200, 
+
+git push origin your-branch-name        help_text="Project title"
+
+```    )
+
+Then create a Pull Request on GitHub with:    created_at = models.DateTimeField(auto_now_add=True)
+
+- Clear description of changes    
+
+- Reference to related issues    class Meta:
+
+- Screenshots for UI changes        ordering = ['-created_at']
+
         verbose_name = "Project"
-        verbose_name_plural = "Projects"
+
+## 🎨 Frontend Guidelines        verbose_name_plural = "Projects"
+
     
-    def __str__(self):
-        return self.title
-```
 
-#### View Guidelines
+### HTML/Templates    def __str__(self):
+
+- Use semantic HTML elements        return self.title
+
+- Follow Django template best practices```
+
+- Include proper meta tags for SEO
+
+- Ensure accessibility (ARIA labels, alt text)#### View Guidelines
+
 - Use class-based views when possible
-- Handle exceptions properly
-- Add proper logging
-- Validate user input
 
-### Frontend Standards
+### CSS- Handle exceptions properly
 
-#### HTML/CSS
-- Use semantic HTML5 elements
-- Follow BEM methodology for CSS classes
-- Ensure responsive design (mobile-first)
-- Optimize for accessibility (WCAG guidelines)
+- Use consistent naming conventions- Add proper logging
 
-#### JavaScript
+- Follow mobile-first responsive design- Validate user input
+
+- Optimize for performance
+
+- Use CSS Grid/Flexbox for layouts### Frontend Standards
+
+
+
+### JavaScript#### HTML/CSS
+
+- Write vanilla JavaScript when possible- Use semantic HTML5 elements
+
+- Use ES6+ features- Follow BEM methodology for CSS classes
+
+- Add comments for complex logic- Ensure responsive design (mobile-first)
+
+- Ensure cross-browser compatibility- Optimize for accessibility (WCAG guidelines)
+
+
+
+## 🔧 Apps Overview#### JavaScript
+
 - Use ES6+ features
-- Follow consistent naming conventions
-- Add JSDoc comments for functions
-- Avoid global variables
 
-### Database Guidelines
-- Use descriptive field names
-- Add proper indexes for performance
+### Portfolio App- Follow consistent naming conventions
+
+Main application containing:- Add JSDoc comments for functions
+
+- Projects showcase- Avoid global variables
+
+- Skills management
+
+- Experience timeline### Database Guidelines
+
+- Achievements display- Use descriptive field names
+
+- Contact form handling- Add proper indexes for performance
+
 - Use foreign keys appropriately
-- Add help_text to model fields
 
-## 📋 Pull Request Guidelines
+### Blog App- Add help_text to model fields
 
-### Before Submitting
-- [ ] Code follows the style guidelines
+Blog functionality including:
+
+- Article creation and management## 📋 Pull Request Guidelines
+
+- Comment system with moderation
+
+- Category organization### Before Submitting
+
+- SEO optimization- [ ] Code follows the style guidelines
+
 - [ ] Tests pass locally
-- [ ] New tests added for new features
-- [ ] Documentation updated
-- [ ] No console errors or warnings
-- [ ] Performance impact considered
+
+### AI App- [ ] New tests added for new features
+
+AI-powered features:- [ ] Documentation updated
+
+- Chatbot integration with Gemini API- [ ] No console errors or warnings
+
+- Content generation assistance- [ ] Performance impact considered
+
+- Smart recommendations
 
 ### PR Description Template
-```markdown
-## Description
-Brief description of changes
 
-## Type of Change
+### Authentication App```markdown
+
+User management system:## Description
+
+- User registration and loginBrief description of changes
+
+- Password reset functionality
+
+- Profile management## Type of Change
+
 - [ ] Bug fix
-- [ ] New feature
-- [ ] Documentation update
-- [ ] Performance improvement
-- [ ] Other (please describe)
+
+### Music App- [ ] New feature
+
+Spotify integration:- [ ] Documentation update
+
+- Currently playing display- [ ] Performance improvement
+
+- Playlist management- [ ] Other (please describe)
+
+- Music recommendations
 
 ## Testing
-- [ ] Tests pass
-- [ ] Manual testing completed
 
-## Screenshots (if applicable)
-Add screenshots for UI changes
+### Notifications App- [ ] Tests pass
 
-## Additional Notes
+Notification system:- [ ] Manual testing completed
+
+- Email notifications
+
+- In-app messaging## Screenshots (if applicable)
+
+- Alert managementAdd screenshots for UI changes
+
+
+
+## 🐛 Bug Reports## Additional Notes
+
 Any additional information or context
-```
 
-### Review Process
-1. Automated checks must pass
-2. At least one maintainer review required
-3. Address feedback promptly
-4. Keep PR focused and atomic
+When reporting bugs, please include:```
 
-## 🐛 Issue Reporting
+- Python/Django version
 
-### Bug Reports
-Use the bug report template and include:
-- Clear description of the issue
-- Steps to reproduce
-- Expected vs actual behavior
+- Browser and version (for frontend issues)### Review Process
+
+- Steps to reproduce1. Automated checks must pass
+
+- Expected vs actual behavior2. At least one maintainer review required
+
+- Error messages or screenshots3. Address feedback promptly
+
+- Environment details4. Keep PR focused and atomic
+
+
+
+## 💡 Feature Requests## 🐛 Issue Reporting
+
+
+
+For new features:### Bug Reports
+
+- Describe the problem you're solvingUse the bug report template and include:
+
+- Explain your proposed solution- Clear description of the issue
+
+- Consider backwards compatibility- Steps to reproduce
+
+- Discuss potential alternatives- Expected vs actual behavior
+
 - Environment details (OS, Python version, etc.)
-- Screenshots/error messages
 
-### Feature Requests
-Use the feature request template and include:
-- Clear description of the feature
-- Use cases and benefits
+## 📚 Resources- Screenshots/error messages
+
+
+
+### Documentation### Feature Requests
+
+- [Django Documentation](https://docs.djangoproject.com/)Use the feature request template and include:
+
+- [Python Style Guide (PEP 8)](https://pep8.org/)- Clear description of the feature
+
+- [Git Best Practices](https://git-scm.com/book/en/v2)- Use cases and benefits
+
 - Possible implementation ideas
-- Alternative solutions considered
 
-### Security Issues
-For security vulnerabilities, please email directly instead of creating public issues.
+### APIs Used- Alternative solutions considered
 
-## 🎯 Areas for Contribution
+- [Google Gemini AI](https://ai.google.dev/)
 
-### High Priority
-- [ ] Performance optimization
-- [ ] Mobile responsiveness improvements
-- [ ] Accessibility enhancements
-- [ ] Test coverage improvements
+- [Spotify Web API](https://developer.spotify.com/documentation/web-api/)### Security Issues
 
-### Medium Priority
+- [TinyMCE](https://www.tiny.cloud/docs/)For security vulnerabilities, please email directly instead of creating public issues.
+
+
+
+## 🤝 Community Guidelines## 🎯 Areas for Contribution
+
+
+
+- Be respectful and inclusive### High Priority
+
+- Help others learn and grow- [ ] Performance optimization
+
+- Provide constructive feedback- [ ] Mobile responsiveness improvements
+
+- Follow the code of conduct- [ ] Accessibility enhancements
+
+- Ask questions if you're unsure- [ ] Test coverage improvements
+
+
+
+## 📄 License### Medium Priority
+
 - [ ] New integrations (APIs, services)
-- [ ] UI/UX improvements
+
+By contributing to this project, you agree that your contributions will be licensed under the same license as the project.- [ ] UI/UX improvements
+
 - [ ] Documentation updates
-- [ ] Code refactoring
 
-### Good First Issues
-- [ ] Fix typos in documentation
-- [ ] Add missing tests
+## 📞 Contact- [ ] Code refactoring
+
+
+
+- **Project Maintainer**: Roshan Damor### Good First Issues
+
+- **Email**: [Your Email]- [ ] Fix typos in documentation
+
+- **GitHub**: [@logicbyroshan](https://github.com/logicbyroshan)- [ ] Add missing tests
+
 - [ ] Improve error messages
-- [ ] Update dependencies
 
-## 🏷 Labels Guide
+## 🙏 Acknowledgments- [ ] Update dependencies
 
-- `bug` - Something isn't working
+
+
+Thank you to all contributors who help make this project better! Your contributions, whether they're code, documentation, bug reports, or feature suggestions, are greatly appreciated.## 🏷 Labels Guide
+
+
+
+---- `bug` - Something isn't working
+
 - `enhancement` - New feature or request
-- `good first issue` - Good for newcomers
+
+**Happy Contributing! 🚀**- `good first issue` - Good for newcomers
 - `help wanted` - Extra attention is needed
 - `documentation` - Improvements to documentation
 - `performance` - Performance related
