@@ -1,6 +1,6 @@
-# 🤝 Contributing to DevMitra Portfolio
+# 🤝 Contributing to Portfolio v2.0
 
-Thank you for your interest in contributing to the DevMitra Portfolio project! We welcome contributions from developers of all skill levels. This document will guide you through the contribution process.
+Thank you for your interest in contributing to Portfolio v2.0! This is an open-source Django portfolio project and we welcome contributions from developers of all skill levels. This document will guide you through the contribution process.
 
 ## 📋 Table of Contents
 

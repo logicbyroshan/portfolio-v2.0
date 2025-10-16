@@ -1,0 +1,123 @@
+name: ✨ Feature Request
+description: Suggest a new feature or enhancement for the portfolio
+title: "[FEATURE] "
+labels: ["enhancement", "feature request", "needs triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ✨ Feature Request
+        We love new ideas! Please fill out the form below to suggest a new feature.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Pre-flight Checklist
+      description: Please confirm the following before submitting your feature request
+      options:
+        - label: I have searched existing issues to ensure this feature hasn't been requested before
+          required: true
+        - label: This feature would benefit other users, not just me
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 🎯 Problem Statement
+      description: What problem does this feature solve? What use case does it address?
+      placeholder: Describe the problem or limitation you're trying to solve
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 💡 Proposed Solution
+      description: Describe the solution you'd like to see
+      placeholder: A clear and concise description of what you want to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 🔄 Alternative Solutions
+      description: Describe any alternative solutions or features you've considered
+      placeholder: What other approaches could solve this problem?
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: 📂 Feature Category
+      description: Which category does this feature belong to?
+      options:
+        - Frontend/UI - User interface improvements
+        - Backend/API - Server-side functionality
+        - Performance - Speed and optimization
+        - Security - Security enhancements
+        - SEO - Search engine optimization
+        - Accessibility - Making the site more accessible
+        - DevOps - Development and deployment
+        - Documentation - Docs and guides
+        - Testing - Test coverage and quality
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: ⚡ Priority Level
+      description: How important is this feature to you?
+      options:
+        - Low - Nice to have, not urgent
+        - Medium - Would improve the experience
+        - High - Important for key functionality
+        - Critical - Essential for the project
+    validations:
+      required: true
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: 🎨 Mockups/Examples
+      description: If applicable, add mockups, screenshots, or examples to help explain your feature
+      placeholder: Drag and drop images here, paste URLs, or describe visual elements
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: 🔧 Implementation Ideas
+      description: If you have ideas about how this could be implemented, please share them
+      placeholder: Technical details, libraries, or approaches that could be used
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: 🤝 Contribution
+      description: Are you willing to help implement this feature?
+      options:
+        - label: I'm willing to work on this feature myself
+        - label: I can help with testing once implemented
+        - label: I can provide additional feedback during development
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 📝 Additional Context
+      description: Add any other context, links, or information about the feature request
+      placeholder: Any additional information that might be helpful
+
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: 🎯 Estimated Difficulty
+      description: In your opinion, how complex would this feature be to implement?
+      options:
+        - Beginner - Good first issue
+        - Intermediate - Requires some experience
+        - Advanced - Complex implementation
+        - Expert - Requires significant expertise
+        - Not sure

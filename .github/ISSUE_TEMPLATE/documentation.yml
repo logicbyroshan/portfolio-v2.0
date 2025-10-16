@@ -1,0 +1,100 @@
+name: 📚 Documentation Issue
+description: Report issues or improvements for documentation
+title: "[DOCS] "
+labels: ["documentation", "needs triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📚 Documentation Issue
+        Help us improve our documentation! Please describe what needs to be fixed or added.
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: 📖 Documentation Type
+      description: What type of documentation needs attention?
+      options:
+        - README - Main project README file
+        - API Documentation - Code documentation
+        - Setup Guide - Installation instructions
+        - User Guide - How to use the portfolio
+        - Contributing Guide - How to contribute
+        - Code Comments - Inline code documentation
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: 🔍 Issue Type
+      description: What type of documentation issue is this?
+      options:
+        - Missing Documentation - Information that doesn't exist
+        - Incorrect Information - Wrong or outdated content  
+        - Unclear Explanation - Confusing or hard to understand
+        - Broken Links - Links that don't work
+        - Formatting Issues - Display or markdown problems
+        - Typos/Grammar - Text corrections needed
+        - New Documentation Needed - Completely new docs required
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 📝 Description
+      description: Describe the documentation issue or improvement needed
+      placeholder: What specific documentation needs attention?
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: 📍 Location
+      description: Where is this documentation located (or where should it be added)?
+      placeholder: |
+        - File path: (e.g., README.md, docs/setup.md)
+        - Section: (e.g., Installation, API Reference)
+        - Line numbers: (if applicable)
+
+  - type: textarea
+    id: current-content
+    attributes:
+      label: 📄 Current Content (if applicable)
+      description: Copy the current text that needs to be changed
+      placeholder: Paste the existing content here
+
+  - type: textarea
+    id: suggested-content
+    attributes:
+      label: ✏️ Suggested Content
+      description: What should the documentation say instead?
+      placeholder: Provide your suggested improvement or new content
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: 🤝 Contribution
+      description: Are you willing to help fix this documentation?
+      options:
+        - label: I can write the documentation fix myself
+        - label: I can help review the changes
+        - label: I can provide additional information if needed
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: ⚡ Priority
+      description: How important is this documentation fix?
+      options:
+        - Low - Minor improvement
+        - Medium - Would help users significantly  
+        - High - Important for user experience
+        - Critical - Prevents users from using the project
+    validations:
+      required: true

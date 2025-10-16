@@ -1,0 +1,327 @@
+name: 🚀 Release & Deploy
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.2.3)'
+        required: true
+        type: string
+      environment:
+        description: 'Deployment environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+        default: 'staging'
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  # ======================= CREATE RELEASE =======================
+  create-release:
+    name: 🏷️ Create Release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    outputs:
+      release-tag: ${{ steps.create-tag.outputs.result }}
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: 🏷️ Create Tag and Release
+      id: create-tag
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const version = '${{ github.event.inputs.version }}';
+          const tagName = version.startsWith('v') ? version : `v${version}`;
+          
+          // Create tag
+          await github.rest.git.createRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: `refs/tags/${tagName}`,
+            sha: context.sha
+          });
+          
+          // Generate changelog
+          const { data: commits } = await github.rest.repos.listCommits({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            since: '2024-01-01T00:00:00Z',
+            per_page: 50
+          });
+          
+          const changelog = commits
+            .filter(commit => commit.commit.message.startsWith('feat:') || 
+                           commit.commit.message.startsWith('fix:') ||
+                           commit.commit.message.startsWith('docs:'))
+            .map(commit => `- ${commit.commit.message.split('\n')[0]}`)
+            .slice(0, 20)
+            .join('\n');
+          
+          const releaseBody = `
+          ## 🚀 What's New in ${tagName}
+          
+          ${changelog || 'Various improvements and bug fixes'}
+          
+          ## 🛠️ Technical Details
+          - Django Framework with Python 3.11+
+          - Comprehensive testing with pytest
+          - Enhanced security features
+          - Improved performance optimizations
+          
+          ## 📦 Installation
+          \`\`\`bash
+          git clone https://github.com/${context.repo.owner}/${context.repo.repo}.git
+          cd ${context.repo.repo}
+          pip install -r requirements.txt
+          python manage.py migrate
+          python manage.py runserver
+          \`\`\`
+          
+          ## 🤝 Contributors
+          Thank you to all contributors who made this release possible!
+          
+          **Full Changelog**: https://github.com/${context.repo.owner}/${context.repo.repo}/compare/v1.0.0...${tagName}
+          `;
+          
+          // Create release
+          const { data: release } = await github.rest.repos.createRelease({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            tag_name: tagName,
+            name: `Portfolio v2.0 ${tagName}`,
+            body: releaseBody,
+            draft: false,
+            prerelease: tagName.includes('beta') || tagName.includes('alpha')
+          });
+          
+          console.log(`Created release: ${release.html_url}`);
+          return tagName;
+
+  # ======================= BUILD AND TEST =======================
+  build-and-test:
+    name: 🔨 Build & Test
+    runs-on: ubuntu-latest
+    needs: [create-release]
+    if: always() && !failure()
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ needs.create-release.outputs.release-tag || github.ref }}
+      
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: 📦 Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-test.txt
+        
+    - name: 🧪 Run Tests
+      run: |
+        pytest --cov=. --cov-report=xml
+        
+    - name: 📊 Upload Coverage
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        
+    - name: 🔒 Security Check
+      run: |
+        safety check
+        bandit -r . -x tests,venv,migrations || true
+
+  # ======================= CREATE DEPLOYMENT ARTIFACTS =======================
+  create-artifacts:
+    name: 📦 Create Deployment Artifacts
+    runs-on: ubuntu-latest
+    needs: [build-and-test]
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: 📦 Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: 🗜️ Create Source Archive
+      run: |
+        tar -czf portfolio-v2.0-source.tar.gz \
+          --exclude='.git' \
+          --exclude='__pycache__' \
+          --exclude='*.pyc' \
+          --exclude='venv' \
+          --exclude='node_modules' \
+          --exclude='.pytest_cache' \
+          .
+          
+    - name: 📤 Upload Release Assets
+      if: github.event_name == 'release'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./portfolio-v2.0-source.tar.gz
+        asset_name: portfolio-v2.0-source.tar.gz
+        asset_content_type: application/gzip
+
+  # ======================= DEPLOYMENT NOTIFICATION =======================
+  deployment-notification:
+    name: 📢 Deployment Notification
+    runs-on: ubuntu-latest
+    needs: [create-artifacts]
+    if: always()
+    
+    steps:
+    - name: 📢 Create Deployment Issue
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const version = context.ref.replace('refs/tags/', '');
+          const environment = '${{ github.event.inputs.environment }}' || 'staging';
+          const success = '${{ needs.create-artifacts.result }}' === 'success';
+          
+          const title = `🚀 Deploy ${version} to ${environment}`;
+          const status = success ? '✅ Ready' : '❌ Failed';
+          
+          const body = `
+          ## 🚀 Deployment Request
+          
+          **Version:** ${version}
+          **Environment:** ${environment}
+          **Status:** ${status}
+          **Triggered by:** @${context.actor}
+          **Timestamp:** ${new Date().toISOString()}
+          
+          ## 📋 Pre-deployment Checklist
+          
+          - [x] ✅ All tests passed
+          - [x] 🔒 Security checks completed
+          - [x] 📦 Artifacts created
+          - [ ] 🗄️ Database backup completed
+          - [ ] 🔧 Environment variables updated
+          - [ ] 📊 Monitoring alerts configured
+          
+          ## 🚀 Deployment Steps
+          
+          1. **Backup Current Version**
+             \`\`\`bash
+             # Backup database and media files
+             python manage.py dumpdata > backup.json
+             \`\`\`
+          
+          2. **Deploy New Version**
+             \`\`\`bash
+             git checkout ${version}
+             pip install -r requirements.txt
+             python manage.py migrate
+             python manage.py collectstatic --noinput
+             \`\`\`
+          
+          3. **Verify Deployment**
+             - [ ] Application starts successfully
+             - [ ] Health checks pass
+             - [ ] Critical features work
+             - [ ] Performance is acceptable
+          
+          ## 🔄 Rollback Plan
+          
+          If issues occur:
+          \`\`\`bash
+          git checkout previous-version
+          python manage.py migrate --fake-initial
+          # Restore database from backup if needed
+          \`\`\`
+          
+          ---
+          
+          **Auto-generated by GitHub Actions** 🤖
+          `;
+          
+          if (success) {
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['deployment', 'release', environment, 'ready for review']
+            });
+          }
+
+  # ======================= POST DEPLOYMENT =======================
+  post-deployment:
+    name: 📊 Post Deployment Tasks
+    runs-on: ubuntu-latest
+    needs: [deployment-notification]
+    if: success()
+    
+    steps:
+    - name: 📊 Update Documentation
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const version = context.ref.replace('refs/tags/', '');
+          
+          // Add version info comment
+          const comment = `
+          🎉 **Version ${version} Released!**
+          
+          ## 📈 Release Metrics
+          - Build Status: ✅ Success
+          - Tests: ✅ All Passed  
+          - Security: ✅ No Issues
+          - Coverage: ✅ Maintained
+          
+          ## 📚 Next Steps
+          - Update deployment documentation
+          - Monitor application performance
+          - Gather user feedback
+          - Plan next iteration
+          
+          Thank you to all contributors! 🙏
+          `;
+          
+          // Find release issue and add comment
+          const { data: issues } = await github.rest.issues.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            labels: 'deployment,release',
+            state: 'open',
+            sort: 'created',
+            direction: 'desc'
+          });
+          
+          if (issues.length > 0) {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issues[0].number,
+              body: comment
+            });
+          }

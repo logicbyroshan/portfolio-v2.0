@@ -1,0 +1,122 @@
+name: 🐛 Bug Report
+description: Report a bug to help us improve the portfolio
+title: "[BUG] "
+labels: ["bug", "needs triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐛 Bug Report
+        Thanks for taking the time to report a bug! Please fill out the form below.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Pre-flight Checklist
+      description: Please confirm the following before submitting your bug report
+      options:
+        - label: I have searched existing issues to ensure this bug hasn't been reported before
+          required: true
+        - label: I have tested this on the latest version
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 🔍 Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: Describe what happened and what you expected to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 🔄 Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: ✅ Expected Behavior
+      description: What you expected to happen
+      placeholder: Describe what should have happened
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 📸 Screenshots
+      description: If applicable, add screenshots to help explain your problem
+      placeholder: Drag and drop images here or paste URLs
+
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: 🌐 Browser
+      description: What browser are you using?
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Opera
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: 📱 Device Type
+      description: What type of device are you using?
+      options:
+        - Desktop
+        - Mobile
+        - Tablet
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 🖥️ Environment Details
+      description: |
+        Please provide details about your environment:
+        - OS: (e.g., Windows 10, macOS Big Sur, Ubuntu 20.04)
+        - Browser Version: (e.g., Chrome 94.0.4606.71)
+        - Screen Resolution: (if relevant)
+      placeholder: |
+        - OS: 
+        - Browser Version: 
+        - Screen Resolution:
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 📝 Additional Context
+      description: Add any other context about the problem here
+      placeholder: Any additional information that might be helpful
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: 🚨 Bug Severity
+      description: How severe is this bug?
+      options:
+        - Low - Minor issue, doesn't affect core functionality
+        - Medium - Affects functionality but has workarounds
+        - High - Breaks important functionality
+        - Critical - Prevents use of the application
+    validations:
+      required: true

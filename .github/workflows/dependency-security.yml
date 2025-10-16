@@ -1,0 +1,141 @@
+name: 📦 Dependency Updates & Security
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 6 AM UTC
+  workflow_dispatch:
+  push:
+    paths:
+      - 'requirements*.txt'
+      - 'package*.json'
+
+jobs:
+  # ======================= DEPENDENCY VULNERABILITY SCAN =======================
+  security-audit:
+    name: 🔒 Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: 📦 Install Security Tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install safety pip-audit
+        
+    - name: 🔒 Run Safety Check
+      run: |
+        if [ -f requirements.txt ]; then
+          safety check -r requirements.txt --json --output safety-report.json || true
+          safety check -r requirements.txt || true
+        fi
+        
+    - name: 🔍 Run pip-audit
+      run: |
+        if [ -f requirements.txt ]; then
+          pip-audit -r requirements.txt --format=json --output=pip-audit-report.json || true
+          pip-audit -r requirements.txt || true
+        fi
+        
+    - name: 📊 Upload Security Reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-reports
+        path: |
+          safety-report.json
+          pip-audit-report.json
+
+  # ======================= OUTDATED DEPENDENCIES CHECK =======================
+  dependency-check:
+    name: 📦 Check Outdated Dependencies
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: 📦 Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
+    - name: 📊 Check for Outdated Packages
+      run: |
+        pip list --outdated --format=json > outdated-packages.json || true
+        pip list --outdated || true
+        
+    - name: 📤 Upload Outdated Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: outdated-dependencies
+        path: outdated-packages.json
+
+  # ======================= CREATE SECURITY ISSUE =======================
+  create-security-issue:
+    name: 🚨 Create Security Issue
+    runs-on: ubuntu-latest
+    needs: [security-audit]
+    if: failure()
+    
+    steps:
+    - name: 🚨 Create Security Issue
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const title = '🚨 Security Vulnerabilities Detected';
+          const body = `
+          ## 🚨 Security Alert
+          
+          Our automated security scan has detected potential vulnerabilities in the project dependencies.
+          
+          ### 🔍 What was found?
+          - Check the workflow run for detailed information
+          - Review the security reports in the workflow artifacts
+          
+          ### ⚡ Immediate Actions Required
+          1. Review the security scan results
+          2. Update vulnerable dependencies
+          3. Test the application after updates
+          4. Close this issue once resolved
+          
+          ### 📊 Workflow Run
+          [View the failed security scan](${context.payload.repository.html_url}/actions/runs/${context.runId})
+          
+          **Priority:** High 🔴
+          **Auto-generated:** ${new Date().toISOString()}
+          `;
+          
+          const { data: existingIssues } = await github.rest.issues.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            labels: 'security,vulnerability',
+            state: 'open'
+          });
+          
+          const hasOpenSecurityIssue = existingIssues.length > 0;
+          
+          if (!hasOpenSecurityIssue) {
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['security', 'vulnerability', 'high priority', 'bug']
+            });
+            
+            console.log('🚨 Created security issue');
+          } else {
+            console.log('Security issue already exists, skipping creation');
+          }

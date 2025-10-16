@@ -1,0 +1,196 @@
+# 🏷️ Repository Labels Configuration
+# This file defines all labels used in the repository for consistent issue and PR management
+
+# ======================= BUG LABELS =======================
+- name: "bug"
+  color: "d73a4a"
+  description: "Something isn't working correctly"
+
+- name: "critical bug"
+  color: "b60205"
+  description: "Critical bug that needs immediate attention"
+
+- name: "security"
+  color: "ee0701"
+  description: "Security-related issue or vulnerability"
+
+# ======================= FEATURE LABELS =======================
+- name: "enhancement"
+  color: "a2eeef"
+  description: "New feature or request"
+
+- name: "feature request"
+  color: "84b6eb"
+  description: "Request for a new feature"
+
+- name: "improvement"
+  color: "5ebeff"
+  description: "Enhancement to existing functionality"
+
+# ======================= TYPE LABELS =======================
+- name: "frontend"
+  color: "1d76db"
+  description: "Frontend/UI related changes"
+
+- name: "backend"
+  color: "0e8a16"
+  description: "Backend/API related changes"
+
+- name: "database"
+  color: "006b75"
+  description: "Database related changes"
+
+- name: "documentation"
+  color: "0075ca"
+  description: "Improvements or additions to documentation"
+
+- name: "testing"
+  color: "d4c5f9"
+  description: "Testing related changes"
+
+- name: "performance"
+  color: "fbca04"
+  description: "Performance improvements"
+
+# ======================= PRIORITY LABELS =======================
+- name: "low priority"
+  color: "c2e0c6"
+  description: "Low priority issue"
+
+- name: "medium priority"
+  color: "fbca04"
+  description: "Medium priority issue"
+
+- name: "high priority"
+  color: "ff9500"
+  description: "High priority issue"
+
+- name: "critical"
+  color: "d93f0b"
+  description: "Critical issue that needs immediate attention"
+
+# ======================= SIZE LABELS =======================
+- name: "size/XS"
+  color: "c5def5"
+  description: "Extra small PR (1-10 lines)"
+
+- name: "size/S"
+  color: "bfd4f2"
+  description: "Small PR (11-30 lines)"
+
+- name: "size/M"
+  color: "9dc7ea"
+  description: "Medium PR (31-100 lines)"
+
+- name: "size/L"
+  color: "7bb8e7"
+  description: "Large PR (101-500 lines)"
+
+- name: "size/XL"
+  color: "5aa3e4"
+  description: "Extra large PR (500+ lines)"
+
+# ======================= STATUS LABELS =======================
+- name: "needs triage"
+  color: "ededed"
+  description: "Needs initial review and categorization"
+
+- name: "ready for review"
+  color: "0e8a16"
+  description: "Ready for code review"
+
+- name: "work in progress"
+  color: "fbca04"
+  description: "Work in progress, not ready for review"
+
+- name: "blocked"
+  color: "d93f0b"
+  description: "Blocked by dependencies or other issues"
+
+- name: "on hold"
+  color: "fef2c0"
+  description: "On hold, not being actively worked on"
+
+# ======================= HELP LABELS =======================
+- name: "good first issue"
+  color: "7057ff"
+  description: "Good for newcomers"
+
+- name: "help wanted"
+  color: "008672"
+  description: "Extra attention is needed"
+
+- name: "question"
+  color: "cc317c"
+  description: "Further information is requested"
+
+# ======================= SPECIAL LABELS =======================
+- name: "hacktoberfest"
+  color: "ff6600"
+  description: "Hacktoberfest contribution"
+
+- name: "duplicate"
+  color: "cfd3d7"
+  description: "This issue or pull request already exists"
+
+- name: "invalid"
+  color: "e4e669"
+  description: "This doesn't seem right"
+
+- name: "wontfix"
+  color: "ffffff"
+  description: "This will not be worked on"
+
+# ======================= DOMAIN SPECIFIC LABELS =======================
+- name: "django"
+  color: "0e4b2a"
+  description: "Related to Django framework"
+
+- name: "python"
+  color: "3776ab"
+  description: "Related to Python code"
+
+- name: "html/css"
+  color: "e34c26"
+  description: "Related to HTML/CSS"
+
+- name: "javascript"
+  color: "f1e05a"
+  description: "Related to JavaScript"
+
+- name: "ui/ux"
+  color: "ff69b4"
+  description: "User interface and experience"
+
+- name: "accessibility"
+  color: "1f0068"
+  description: "Accessibility improvements"
+
+- name: "seo"
+  color: "25c2a0"
+  description: "Search engine optimization"
+
+- name: "mobile"
+  color: "ff6b6b"
+  description: "Mobile-specific issues"
+
+- name: "responsive"
+  color: "4ecdc4"
+  description: "Responsive design related"
+
+# ======================= CI/CD LABELS =======================
+- name: "ci/cd"
+  color: "2f363d"
+  description: "Continuous integration and deployment"
+
+- name: "deployment"
+  color: "0052cc"
+  description: "Deployment related changes"
+
+- name: "dependencies"
+  color: "0366d6"
+  description: "Pull requests that update a dependency file"
+
+- name: "vulnerability"
+  color: "ee0701"
+  description: "Security vulnerability detected"
