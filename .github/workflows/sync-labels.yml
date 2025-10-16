@@ -20,6 +20,7 @@ jobs:
       
     - name: 🏷️ Sync Labels
       uses: crazy-max/ghaction-github-labeler@v5
+      continue-on-error: true
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         yaml-file: .github/labels.yml
