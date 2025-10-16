@@ -10,6 +10,9 @@ jobs:
   sync-labels:
     name: 🏷️ Sync Repository Labels
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
     
     steps:
     - name: 📥 Checkout Code
