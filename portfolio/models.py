@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.text import slugify
 from tinymce.models import HTMLField
 import bleach
+from django.core.exceptions import ValidationError
+import os
 
 ALLOWED_TAGS = ["b", "i", "strong", "em", "u", "a", "br", "p", "ul", "ol", "li", "span"]
 ALLOWED_ATTRIBUTES = {
@@ -115,6 +117,11 @@ class Category(models.Model):
     def __str__(self):
         return f"{self.name} ({self.get_category_type_display()})"
 
+def validate_image_file(file):
+    valid_extensions = ['.jpg', '.jpeg', '.png', '.svg']
+    ext = os.path.splitext(file.name)[1].lower()
+    if ext not in valid_extensions:
+        raise ValidationError("Only JPG, JPEG, PNG, or SVG files are allowed.")
 
 class Project(models.Model):
     title = models.CharField(max_length=200)
@@ -125,7 +132,7 @@ class Project(models.Model):
     content = HTMLField(
         help_text="The main detailed content for the project detail page."
     )
-    cover_image = models.ImageField(upload_to="project_covers/", blank=True, null=True)
+    cover_image = models.FileField(upload_to="project_covers/",  validators=[validate_image_file], blank=True, null=True)
     youtube_url = models.URLField(
         blank=True, null=True, help_text="YouTube video URL for project demonstration"
     )
@@ -192,7 +199,7 @@ class ProjectImage(models.Model):
     project = models.ForeignKey(
         Project, related_name="images", on_delete=models.CASCADE
     )
-    image = models.ImageField(upload_to="project_images/")
+    image = models.FileField(upload_to="project_images/",  validators=[validate_image_file])
     caption = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
