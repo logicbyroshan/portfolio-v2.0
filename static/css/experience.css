@@ -121,6 +121,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    white-space: nowrap !important;
     transition: all 0.3s ease;
 }
 #sort-button:hover {
