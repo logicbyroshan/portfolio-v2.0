@@ -4,6 +4,8 @@ from tinymce.models import HTMLField
 from portfolio.models import Category
 from roshan.models import AboutMeConfiguration
 import bleach
+import math
+import re
 
 ALLOWED_TAGS = ["b", "i", "strong", "em", "u", "a", "br", "p", "ul", "ol", "li", "span"]
 ALLOWED_ATTRIBUTES = {
@@ -25,6 +27,7 @@ class Blog(models.Model):
     slug = models.SlugField(max_length=200, unique=True, editable=False)
     summary = models.TextField(help_text="A short excerpt for the blog list page.")
     content = HTMLField()
+    reading_time = models.PositiveIntegerField(default=0) 
     cover_image = models.ImageField(upload_to="blog_covers/")
     categories = models.ManyToManyField(
         Category, limit_choices_to={"category_type": Category.CategoryType.BLOG}
@@ -34,11 +37,23 @@ class Blog(models.Model):
     class Meta:
         ordering = ["-created_date"]
 
+
+    def calculate_reading_time(self):
+        """Estimate reading time based on word count (avg: 200 words/minute)."""
+        # Remove HTML tags from TinyMCE content
+        text = re.sub(r"<[^>]+>", "", self.content)
+        word_count = len(text.split())
+        minutes = math.ceil(word_count / 200)
+        return minutes if minutes > 0 else 1
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         self.summary = sanitize_html(self.summary)
         self.content = sanitize_html(self.content)
         super().save(*args, **kwargs)
+
+    # Calculate reading time automatically
+        self.reading_time = self.calculate_reading_time()
 
     def __str__(self):
         return self.title
