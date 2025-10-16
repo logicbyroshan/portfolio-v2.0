@@ -3,7 +3,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 from roshan.views import admin_spotify_callback
 from portfolio.sitemaps import (
     StaticViewSitemap,
@@ -25,6 +25,7 @@ sitemaps = {
 }
 
 urlpatterns = [
+    path("admin", RedirectView.as_view(url="/admin/", permanent=True)),
     path("admin/", admin.site.urls),
     path("", include("portfolio.urls")),
     path("blogs/", include("blog.urls")),
