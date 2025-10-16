@@ -482,11 +482,18 @@ document.addEventListener('DOMContentLoaded', function() {
             result.innerHTML = `
                 <span style="color: #ff6b6b;">⚠️ Potential issues found:</span>
                 <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
-                    ${issues.map(issue => `<li style="color: var(--paragraph-color);">${issue}</li>`).join('')}
+                    ${issues.map(issue => `<li style="color: var(--paragraph-color);">${escapeHtml(issue)}</li>`).join('')}
                 </ul>
             `;
         }
     };
+
+    // Helper function to escape HTML to prevent XSS
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
 
     // Add enter key support for validator
     document.addEventListener('keydown', function(e) {

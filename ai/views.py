@@ -27,8 +27,11 @@ class AIQuerySubmitView(View):
             question_text = request.POST.get("question", "").strip()
             attached_file = request.FILES.get("attachment")
 
-            # Debug logging
-            logger.info(f"Received question: '{question_text}'")
+            # Debug logging - sanitize user input to prevent log injection
+            safe_question = question_text.replace("\n", "\\n").replace("\r", "\\r")[
+                :200
+            ]
+            logger.info(f"Received question: '{safe_question}'")
             logger.info(f"Content type: {request.content_type}")
             logger.info(f"POST data keys: {list(request.POST.keys())}")
             logger.info(f"FILES data keys: {list(request.FILES.keys())}")
@@ -87,8 +90,9 @@ class AIQuerySubmitView(View):
             )
 
         except Exception as e:
-            # Log the error (should use proper logging in production)
-            logger.error(f"Error in AIQuerySubmitView: {str(e)}")
+            # Log the error (sanitize exception message to prevent log injection)
+            safe_error = str(e).replace("\n", "\\n").replace("\r", "\\r")[:200]
+            logger.error(f"Error in AIQuerySubmitView: {safe_error}")
             return JsonResponse(
                 {
                     "success": False,
