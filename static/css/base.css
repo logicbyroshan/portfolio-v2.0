@@ -851,8 +851,6 @@ img { max-width: 100%; height: auto; display: block; }
 
 @media (max-width: 992px) {
     .main-container { gap: 100px; }
-    /* Mobile Navigation */
-    /* Header Responsive */
     .nav-left, .nav-right { display: none; }
     .mobile-nav-toggle, .mobile-header-theme-toggle { display: block; }
     
@@ -894,9 +892,7 @@ img { max-width: 100%; height: auto; display: block; }
         width: auto;
         /* Preserve aspect ratio */
         max-width: none;
-        /* Override any max-width constraints */
         flex-shrink: 0;
-        /* Prevent shrinking */
     }
     
     /* Mobile theme toggle - right side */
@@ -1016,7 +1012,7 @@ img { max-width: 100%; height: auto; display: block; }
 @media (max-width: 768px) {
 
     body { padding: 20px 0; }
-    .main-container { gap: 100px; padding: 0 15px; margin-top: 80px; } /* Reduced margin */
+    .main-container { gap: 100px; padding: 0 15px;} /* Reduced margin */
     
     /* Responsive Typography */
     h1 { font-size: 45px; }
@@ -1063,7 +1059,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 @media (max-width: 576px) {
-    .main-container { gap: 75px; margin-top: 60px !important; } /* Reduced margin */
+    .main-container { gap: 75px; } /* Reduced margin */
     
     /* Responsive Typography */
     h1 { font-size: 40px; }
@@ -1136,7 +1132,6 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* Very Small Screens - Stack mobile nav buttons vertically */
 @media (max-width: 400px) {
-    .main-container { margin-top: 40px;}
     
     /* Responsive Typography for very small screens */
     h1 { font-size: 36px !important; }
