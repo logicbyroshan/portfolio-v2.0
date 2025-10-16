@@ -3,7 +3,7 @@ asgiref==3.9.1
 asttokens==3.0.0
 bleach==6.2.0
 cachetools==5.5.2
-certifi==2024.8.30
+certifi==2024.12.14
 cffi==1.17.1
 charset-normalizer==3.4.3
 colorama==0.4.6
@@ -27,7 +27,7 @@ grpcio==1.74.0
 grpcio-status==1.71.2
 gunicorn==23.0.0
 httplib2==0.30.0
-idna==3.10
+idna==3.8
 jedi==0.19.2
 MarkupSafe==3.0.2
 mysqlclient==2.2.7
