@@ -64,6 +64,9 @@ jobs:
             echo "➡ Collecting static files..."
             python manage.py collectstatic --noinput
 
+            echo "➡ Testing admin functionality..."
+            python manage.py test_admin_production || echo "Admin test failed"
+
             echo "➡ Setting proper permissions..."
             chmod -R 755 static/
             chmod -R 755 media/

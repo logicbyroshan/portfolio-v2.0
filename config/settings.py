@@ -16,16 +16,6 @@ DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 # Development settings for better error handling
 if DEBUG:
     INTERNAL_IPS = ["127.0.0.1", "localhost"]
-    
-    # Enhanced error reporting
-    import logging
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format='%(asctime)s %(levelname)s %(message)s',
-        handlers=[
-            logging.StreamHandler()
-        ]
-    )
 
 # Production ALLOWED_HOSTS for cPanel
 ALLOWED_HOSTS = [
@@ -179,45 +169,18 @@ TINYMCE_DEFAULT_CONFIG = {
     "width": "100%",
     "cleanup_on_startup": True,
     "custom_undo_redo_levels": 20,
-    "skin": "oxide-dark",  # Dark theme for editor UI
-    "content_css": "dark",  # Dark content area inside editor
-    "encoding": "UTF-8",  # Ensure UTF-8 encoding for emojis and special chars
-    "entity_encoding": "raw",  # Preserve emojis and special characters as-is
-    "verify_html": False,  # Don't strip emojis/special chars
-    "forced_root_block": "p",  # Ensure proper paragraph handling
-    "force_br_newlines": False,
-    "force_p_newlines": True,
     "plugins": """
-        advlist autolink lists link image charmap print preview hr anchor pagebreak
-        searchreplace wordcount visualblocks visualchars code fullscreen
-        insertdatetime media nonbreaking save table directionality
-        emoticons template paste textpattern help codesample
+        advlist autolink lists link image charmap preview anchor
+        searchreplace wordcount visualblocks code fullscreen
+        insertdatetime media table emoticons
     """,
-    "toolbar1": """
-        fullscreen preview bold italic underline | fontselect fontsizeselect |
-        forecolor backcolor | alignleft alignright aligncenter alignjustify |
-        indent outdent | bullist numlist table | link image media | codesample |
+    "toolbar": """
+        undo redo | bold italic underline | alignleft aligncenter alignright |
+        bullist numlist | link image media | code preview fullscreen |
         emoticons charmap
     """,
-    "toolbar2": """
-        undo redo | searchreplace | code visualblocks | help
-    """,
-    "contextmenu": "formats | link image",
     "menubar": True,
     "statusbar": True,
-    "paste_data_images": True,
-    "paste_as_text": False,
-    "paste_webkit_styles": "color font-size",
-    "charmap_append": [
-        [0x1f600, "grinning face"],
-        [0x1f601, "beaming face with smiling eyes"],
-        [0x1f602, "face with tears of joy"],
-        [0x1f603, "grinning face with big eyes"],
-        [0x1f604, "grinning face with smiling eyes"],
-        [0x1f605, "grinning squinting face"],
-        [0x1f970, "smiling face with hearts"],
-        [0x1f929, "star-struck"],
-    ],
 }
 
 
@@ -335,6 +298,11 @@ LOGGING = {
             "handlers": ["console"],
             "level": "INFO" if DEBUG else "WARNING",
             "propagate": False,
+        },
+        "django.contrib.admin": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": True,
         },
     },
 }
