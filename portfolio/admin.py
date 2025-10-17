@@ -50,11 +50,14 @@ class ProjectImageInline(admin.TabularInline):
     readonly_fields = ("image_preview",)
 
     def image_preview(self, obj):
-        if obj.image:
-            return format_html(
-                '<img src="{}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px;">',
-                obj.image.url,
-            )
+        try:
+            if obj.image and hasattr(obj.image, 'url'):
+                return format_html(
+                    '<img src="{}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px;">',
+                    obj.image.url,
+                )
+        except (ValueError, AttributeError, OSError):
+            pass
         return "No image"
 
     image_preview.short_description = "Preview"
@@ -113,11 +116,14 @@ class ResumeAdmin(BaseModelAdmin):
     readonly_fields = ("preview_thumbnail",)
 
     def preview_thumbnail(self, obj):
-        if obj.preview_image:
-            return format_html(
-                '<img src="{}" style="width: 100px; height: auto; border-radius: 5px;">',
-                obj.preview_image.url,
-            )
+        try:
+            if obj.preview_image and hasattr(obj.preview_image, 'url'):
+                return format_html(
+                    '<img src="{}" style="width: 100px; height: auto; border-radius: 5px;">',
+                    obj.preview_image.url,
+                )
+        except (ValueError, AttributeError, OSError):
+            pass
         return "No preview"
 
     preview_thumbnail.short_description = "Preview"
@@ -138,11 +144,14 @@ class TechnologyAdmin(BaseModelAdmin):
     readonly_fields = ("icon_preview",)
 
     def icon_preview(self, obj):
-        if obj.icon:
-            return format_html(
-                '<img src="{}" style="width: 32px; height: 32px; object-fit: cover;">',
-                obj.icon.url,
-            )
+        try:
+            if obj.icon and hasattr(obj.icon, 'url'):
+                return format_html(
+                    '<img src="{}" style="width: 32px; height: 32px; object-fit: cover;">',
+                    obj.icon.url,
+                )
+        except (ValueError, AttributeError, OSError):
+            pass
         return "No icon"
 
     icon_preview.short_description = "Icon"
@@ -193,7 +202,7 @@ class ProjectAdmin(BaseModelAdmin):
         "has_youtube",
     )
     list_filter = ("categories", "technologies", "created_date")
-    search_fields = ("title", "summary", "content")
+    search_fields = ("title", "summary")
     filter_horizontal = ("technologies", "categories")
     readonly_fields = ("cover_preview", "slug")
     date_hierarchy = "created_date"
@@ -201,7 +210,7 @@ class ProjectAdmin(BaseModelAdmin):
     fieldsets = (
         (
             "📝 Basic Information",
-            {"fields": ("title", "slug", "summary", "content"), "classes": ("wide",)},
+            {"fields": ("title", "slug", "summary"), "classes": ("wide",)},
         ),
         (
             "🖼️ Media",
@@ -218,11 +227,14 @@ class ProjectAdmin(BaseModelAdmin):
     )
 
     def cover_preview(self, obj):
-        if obj.cover_image:
-            return format_html(
-                '<img src="{}" style="width: 100px; height: 60px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">',
-                obj.cover_image.url,
-            )
+        try:
+            if obj.cover_image and hasattr(obj.cover_image, 'url'):
+                return format_html(
+                    '<img src="{}" style="width: 100px; height: 60px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">',
+                    obj.cover_image.url,
+                )
+        except (ValueError, AttributeError, OSError):
+            pass
         return "No cover image"
 
     cover_preview.short_description = "Cover Preview"
@@ -537,11 +549,14 @@ class AchievementAdmin(BaseModelAdmin):
     has_image.short_description = "Has Image"
 
     def image_preview(self, obj):
-        if obj.image:
-            return format_html(
-                '<img src="{}" style="width: 150px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">',
-                obj.image.url,
-            )
+        try:
+            if obj.image and hasattr(obj.image, 'url'):
+                return format_html(
+                    '<img src="{}" style="width: 150px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">',
+                    obj.image.url,
+                )
+        except (ValueError, AttributeError, OSError):
+            pass
         return "No image uploaded"
 
     image_preview.short_description = "Image Preview"

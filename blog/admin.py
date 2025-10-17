@@ -37,7 +37,7 @@ class BlogAdmin(admin.ModelAdmin):
         "created_date",
     )
     list_filter = ("categories", "created_date")
-    search_fields = ("title", "summary", "content")
+    search_fields = ("title", "summary")
     filter_horizontal = ("categories",)
     readonly_fields = ("slug", "reading_time", "cover_preview")
     date_hierarchy = "created_date"
@@ -45,7 +45,7 @@ class BlogAdmin(admin.ModelAdmin):
     fieldsets = (
         (
             "📝 Content",
-            {"fields": ("title", "slug", "summary", "content"), "classes": ("wide",)},
+            {"fields": ("title", "slug", "summary"), "classes": ("wide",)},
         ),
         ("🖼️ Media", {"fields": ("cover_image", "cover_preview"), "classes": ("wide",)}),
         ("🏷️ Categorization", {"fields": ("categories",), "classes": ("wide",)}),
@@ -53,11 +53,14 @@ class BlogAdmin(admin.ModelAdmin):
     )
 
     def cover_preview(self, obj):
-        if obj.cover_image:
-            return format_html(
-                '<img src="{}" style="width: 100px; height: 60px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">',
-                obj.cover_image.url,
-            )
+        try:
+            if obj.cover_image and hasattr(obj.cover_image, 'url'):
+                return format_html(
+                    '<img src="{}" style="width: 100px; height: 60px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">',
+                    obj.cover_image.url,
+                )
+        except (ValueError, AttributeError, OSError):
+            pass
         return "No cover image"
 
     cover_preview.short_description = "Cover Preview"
