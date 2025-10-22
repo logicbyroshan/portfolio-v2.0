@@ -123,6 +123,7 @@
     </section>
 
     <!-- ========================= 2. SKILLS SECTION ========================= -->
+    {% if skill_categories %}
     <section id="skills" class="skills-section portfolio-container" data-animation="fade-in">
         <div class="section-title">
             <h2>My Tech <span>Skills</span></h2>
@@ -151,8 +152,10 @@
             {% endfor %}
         </div>
     </section>
+    {% endif %}
 
     <!-- ========================= 3. EXPERIENCE SECTION ========================= -->
+     {% if experiences %}
     <section id="experience" class="experience-section portfolio-container" data-animation="fade-in">
         <div class="section-title">
             <h2>My Work <span>Experiences</span></h2>
@@ -174,8 +177,10 @@
             {% endfor %}
         </div>
     </section>
+    {% endif %}
 
     <!-- ========================= 4. PROJECTS SECTION ========================= -->
+     {% if projects %}
     <section class="projects-section portfolio-container">
         <div class="section-title" data-animation="fade-in-up">
             <h2>My Featured <span>Projects</span></h2>
@@ -228,8 +233,10 @@
             {% endfor %}
         </div>
     </section>
+    {% endif %}
 
     <!-- ========================= 5. BLOGS SECTION ========================= -->
+     {% if blogs %}
     <section class="blogs-section portfolio-container">
         <div class="section-title" data-animation="fade-in-up">
             <h2>Latest I've <span>Written</span></h2>
@@ -258,6 +265,7 @@
             {% endfor %}
         </div>
     </section>
+    {% endif %}
 
     <!-- ========================= 6. NEWSLETTER CTA SECTION (NEW) ========================= -->
     <section id="newsletter" class="cta-section portfolio-container portfolio" data-animation="fade-in">
